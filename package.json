@@ -1,0 +1,47 @@
+{
+  "name": "re-web",
+  "version": "0.1.0",
+  "description": "ReasonML web framework",
+  "license": "MIT",
+  "esy": {
+    "build": "dune build -w -p #{self.name}",
+    "NOTE": "Optional release Section. Customizes result of `esy release`",
+    "release": {
+      "bin": [
+        "Main"
+      ]
+    },
+    "buildEnv": {
+      "ODOC_SYNTAX": "ml"
+    }
+  },
+  "repository": {
+    "url": ""
+  },
+  "scripts": {
+    "test": "esy x Main",
+    "doc": "esy dune build @doc"
+  },
+  "dependencies": {
+    "@esy-ocaml/reason": ">= 3.4.0 < 3.6.0",
+    "@opam/dune": "*",
+    "@opam/ezjsonm-lwt": "1.1.0",
+    "@opam/httpaf": "0.6.0",
+    "@opam/httpaf-lwt-unix": "0.6.0",
+    "@opam/lwt": "4.4.0",
+    "@opam/lwt-pipe": "*",
+    "@opam/mustache": "3.1.0",
+    "@reason-native/console": "*",
+    "@reason-native/rely": "*"
+  },
+  "devDependencies": {
+    "@opam/merlin": "*",
+    "ocaml": "~4.8.1000",
+    "@opam/odoc": "*",
+    "@opam/utop": "*",
+    "@opam/rtop": "*"
+  },
+  "resolutions": {
+    "@opam/lwt-pipe": "c-cube/lwt-pipe:lwt-pipe.opam#85da2e95"
+  }
+}

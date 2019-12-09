@@ -1,0 +1,4 @@
+(library
+  (name reWeb)
+  (flags (-w -40 -w +26))
+  (libraries ezjsonm-lwt httpaf httpaf-lwt-unix lwt.unix mustache))
