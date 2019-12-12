@@ -1,3 +1,17 @@
+type t = {envelope : Httpaf.Response.t; body : Bigstringaf.t Lwt_stream.t}
+
+val make :
+  status:Httpaf.Status.t ->
+  headers:Httpaf.Headers.t ->
+  body:Bigstringaf.t Lwt_stream.t ->
+  'ctx Request.t ->
+  t
+
+val return : ('ctx Request.t -> t) -> 'ctx Request.t -> t Lwt.t
+
+val string : ?status:Httpaf.Status.t -> string -> 'ctx Request.t -> t
+
+(*
 type headers = (string * string) list
 (** Key-value pair. Used for both headers and cookies. For cookies, you
     can add directives to the value in the same way as shown in the
@@ -61,3 +75,4 @@ val set :
 val text : string -> t -> t
 (** [text string response] sends a plain text response [string] with
     status 200. *)
+*)

@@ -16,7 +16,11 @@ type 'ctx t = route -> 'ctx service
 
 val scope : route -> 'ctx t -> 'ctx service
 val filter : ('ctx1, 'ctx2) filter -> ('ctx1, 'ctx2) filter
-val serve : ?port:int -> 'ctx t -> unit Lwt.t
+
+val serve : ?port:int -> unit t -> unit Lwt.t
+(** [serve ?port server] starts the top-level [server] listening on
+    [port]. Top-level servers must have no context i.e. their context is
+    [()]. *)
 
 (*
 let () =
@@ -51,7 +55,7 @@ let contains_msie string = Str.string_match msie string 0
 
 let server = function
   | `GET, [""] -> filter reject_ua contains_msie index
-  | _ -> fun _req -> Response.status `NotFound
+  | _ -> Response.status `NotFound
 
 let () = server |> serve |> Lwt_main.run
 

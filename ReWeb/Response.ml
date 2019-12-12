@@ -1,3 +1,28 @@
+module H = Httpaf
+
+type t = {envelope : H.Response.t; body : Bigstringaf.t Lwt_stream.t}
+
+let make ~status ~headers ~body {Request.reqd; _} = {
+  envelope = H.Response.create ~headers status;
+  body;
+}
+
+let return service request = request |> service |> Lwt.return
+
+let string ?(status=`OK) body =
+  let len = String.length body in
+  let headers = H.Headers.of_list [
+    "content-type", "text/plain";
+    "connection", "close";
+    "content-length", string_of_int len;
+  ]
+  in
+  let body = Lwt_stream.of_list
+    [Bigstringaf.of_string ~off:0 ~len body]
+  in
+  make ~status ~headers ~body
+
+(*
 type headers = (string * string) list
 
 type t = {
@@ -83,3 +108,4 @@ let text string response =
   let headers = content_type_header "txt" in
   let body = to_byte_channel string in
   set ~headers ~body response
+*)

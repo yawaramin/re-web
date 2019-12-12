@@ -1,7 +1,10 @@
 open Httpaf
 
-type 'ctx t = {ctx : 'ctx; reqd: Reqd.t}
+type 'ctx t = {ctx : 'ctx; reqd : Reqd.t}
 
+let make reqd = {ctx = (); reqd}
+
+(*
 (*
 module BodyBuilder = struct
   let build ~len body_builder = Bigstringaf.sub ~off:0 ~len body_builder
@@ -74,3 +77,4 @@ let body_json request = request |> body |> Lwt.map begin fun body ->
   let len = Bigstringaf.length body in
   body |> Bigstringaf.substring ~off:0 ~len |> Ezjsonm.from_string
 end
+*)
