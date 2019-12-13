@@ -9,10 +9,10 @@ let make ~status ~headers ~body {Request.reqd; _} = {
 
 let return service request = request |> service |> Lwt.return
 
-let string ?(status=`OK) body =
+let text ?(status=`OK) ?(content_type="text/plain") body =
   let len = String.length body in
   let headers = H.Headers.of_list [
-    "content-type", "text/plain";
+    "content-type", content_type;
     "connection", "close";
     "content-length", string_of_int len;
   ]
@@ -21,6 +21,12 @@ let string ?(status=`OK) body =
     [Bigstringaf.of_string ~off:0 ~len body]
   in
   make ~status ~headers ~body
+
+let html ?(status=`OK) = text ~status ~content_type:"text/html"
+
+let json ?(status=`OK) body = body
+  |> Ezjsonm.to_string ~minify:true
+  |> text ~status ~content_type:"application/json"
 
 (*
 type headers = (string * string) list

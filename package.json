@@ -25,7 +25,8 @@
   "dependencies": {
     "@esy-ocaml/reason": ">= 3.4.0 < 3.6.0",
     "@opam/dune": "*",
-    "@opam/ezjsonm-lwt": "1.1.0",
+    "@opam/ezjsonm": ">= 1.1.0 < 2.0.0",
+    "@opam/ezjsonm-lwt": ">= 1.1.0 < 2.0.0",
     "@opam/httpaf": "0.6.0",
     "@opam/httpaf-lwt-unix": "0.6.0",
     "@opam/lwt": "4.4.0",
