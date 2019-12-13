@@ -2,12 +2,10 @@ module H = Httpaf
 
 type t = {envelope : H.Response.t; body : Bigstringaf.t Lwt_stream.t}
 
-let make ~status ~headers ~body {Request.reqd; _} = {
+let make ~status ~headers ~body = {
   envelope = H.Response.create ~headers status;
   body;
 }
-
-let return service request = request |> service |> Lwt.return
 
 let text ?(status=`OK) ?(content_type="text/plain") body =
   let len = String.length body in

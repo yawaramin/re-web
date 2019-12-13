@@ -1,23 +1,19 @@
 type t = {envelope : Httpaf.Response.t; body : Bigstringaf.t Lwt_stream.t}
 
-val html : ?status:Httpaf.Status.t -> string -> 'ctx Request.t -> t
+val html : ?status:Httpaf.Status.t -> string -> t
 
-val json : ?status:Httpaf.Status.t -> Ezjsonm.t -> 'ctx Request.t -> t
+val json : ?status:Httpaf.Status.t -> Ezjsonm.t -> t
 
 val make :
   status:Httpaf.Status.t ->
   headers:Httpaf.Headers.t ->
   body:Bigstringaf.t Lwt_stream.t ->
-  'ctx Request.t ->
   t
-
-val return : ('ctx Request.t -> t) -> 'ctx Request.t -> t Lwt.t
 
 val text :
   ?status:Httpaf.Status.t ->
   ?content_type:string ->
   string ->
-  'ctx Request.t ->
   t
 
 (*
