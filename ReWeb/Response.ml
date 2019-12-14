@@ -2,7 +2,7 @@ module H = Httpaf
 
 type t = {envelope : H.Response.t; body : Bigstringaf.t Lwt_stream.t}
 
-let make ~status ~headers ~body = {
+let make ~status ~headers body = {
   envelope = H.Response.create ~headers status;
   body;
 }
@@ -18,7 +18,7 @@ let text ?(status=`OK) ?(content_type="text/plain") body =
   let body = Lwt_stream.of_list
     [Bigstringaf.of_string ~off:0 ~len body]
   in
-  make ~status ~headers ~body
+  make ~status ~headers body
 
 let html ?(status=`OK) = text ~status ~content_type:"text/html"
 

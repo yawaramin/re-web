@@ -7,7 +7,7 @@ val json : ?status:Httpaf.Status.t -> Ezjsonm.t -> t
 val make :
   status:Httpaf.Status.t ->
   headers:Httpaf.Headers.t ->
-  body:Bigstringaf.t Lwt_stream.t ->
+  Bigstringaf.t Lwt_stream.t ->
   t
 
 val text :

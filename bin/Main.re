@@ -16,10 +16,25 @@ let getHeader = (name, request) =>
   | None => notFound(request)
   };
 
+let echoBody = request =>
+  request
+  |> Request.body
+  |> Request.context
+  |> Response.make(
+       ~status=`OK,
+       ~headers=
+         Httpaf.Headers.of_list([
+           ("content-type", "application/octet-stream"),
+           ("connection", "close"),
+         ]),
+     )
+  |> Lwt.return;
+
 let server =
   fun
   | (`GET, ["hello"]) => hello
   | (`GET, ["header", name]) => getHeader(name)
+  | (`POST, ["body"]) => echoBody
   | _ => notFound;
 
 let () = server |> Server.serve |> Lwt_main.run;

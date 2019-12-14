@@ -1,5 +1,7 @@
 type 'ctx t = {ctx : 'ctx; reqd : Httpaf.Reqd.t}
 
+val body : unit t -> Bigstringaf.t Lwt_stream.t t
+
 val context : 'ctx t -> 'ctx
 
 val header : string -> _ t -> string option
