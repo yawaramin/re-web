@@ -12,6 +12,9 @@ let filter f = f
 let parse_route {H.Request.meth; target; _} =
   meth, target |> String.split_on_char '/' |> List.tl
 
+let schedule_chunk writer {Body.off; len; bigstring} =
+  H.Body.schedule_bigstring writer ~off ~len bigstring
+
 let error_handler _client_addr ?(request) _error _start_resp =
   ignore request;
   failwith "!"
@@ -24,10 +27,14 @@ let serve ?(port=8080) server =
     let response = reqd |> Request.make |> server route in
     let send {Response.envelope; body; _} =
       let writer = H.Reqd.respond_with_streaming reqd envelope in
-      body
-      |> Lwt_stream.iter (H.Body.schedule_bigstring writer)
-      |> Lwt.map (fun _ -> H.Body.close_writer writer)
-      |> ignore
+      match body with
+      | Body.Single bigstring ->
+        H.Body.schedule_bigstring writer bigstring
+      | Body.Multi stream ->
+        stream
+        |> Lwt_stream.iter (schedule_chunk writer)
+        |> Lwt.map (fun _ -> H.Body.close_writer writer)
+        |> ignore
     in
     Lwt.on_success response send
   in

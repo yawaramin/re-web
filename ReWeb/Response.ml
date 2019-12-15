@@ -1,13 +1,13 @@
 module H = Httpaf
 
-type t = {envelope : H.Response.t; body : Bigstringaf.t Lwt_stream.t}
+type t = {envelope : H.Response.t; body : Body.t}
 
 let make ~status ~headers body = {
   envelope = H.Response.create ~headers status;
   body;
 }
 
-let text ?(status=`OK) ?(content_type="text/plain") body =
+let binary ?(status=`OK) ?(content_type="application/octet-stream") body =
   let len = String.length body in
   let headers = H.Headers.of_list [
     "content-type", content_type;
@@ -15,16 +15,15 @@ let text ?(status=`OK) ?(content_type="text/plain") body =
     "content-length", string_of_int len;
   ]
   in
-  let body = Lwt_stream.of_list
-    [Bigstringaf.of_string ~off:0 ~len body]
-  in
-  make ~status ~headers body
+  make ~status ~headers (Single (Bigstringaf.of_string ~off:0 ~len body))
 
-let html ?(status=`OK) = text ~status ~content_type:"text/html"
+let html ?(status=`OK) = binary ~status ~content_type:"text/html"
 
 let json ?(status=`OK) body = body
   |> Ezjsonm.to_string ~minify:true
-  |> text ~status ~content_type:"application/json"
+  |> binary ~status ~content_type:"application/json"
+
+let text ?(status=`OK) = binary ~status ~content_type:"text/plain"
 
 (*
 type headers = (string * string) list

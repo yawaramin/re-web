@@ -9,8 +9,8 @@ let getHeader = (name, request) =>
   switch (Request.header(name, request)) {
   | Some(value) =>
     value
-    |> Printf.sprintf({|<h1>GET /header/:name</h1>
-<p>%s: %s</p>|}, name)
+    |> Printf.sprintf({|<h1>GET /header/%s</h1>
+<p>%s</p>|}, name)
     |> Response.html
     |> Lwt.return
   | None => notFound(request)
@@ -18,12 +18,12 @@ let getHeader = (name, request) =>
 
 let echoBody = request =>
   request
-  |> Request.body
+  |> Request.with_body
   |> Request.context
   |> Response.make(
        ~status=`OK,
        ~headers=
-         ReWeb.Headers.of_list([
+         Headers.of_list([
            ("content-type", "application/octet-stream"),
            ("connection", "close"),
          ]),
