@@ -23,7 +23,7 @@ let echoBody = request =>
   |> Response.make(
        ~status=`OK,
        ~headers=
-         Httpaf.Headers.of_list([
+         ReWeb.Headers.of_list([
            ("content-type", "application/octet-stream"),
            ("connection", "close"),
          ]),

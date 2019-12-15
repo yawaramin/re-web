@@ -23,9 +23,10 @@ let serve ?(port=8080) server =
     let route = reqd |> H.Reqd.request |> parse_route in
     let response = reqd |> Request.make |> server route in
     let send {Response.envelope; body; _} =
-      let target = H.Reqd.respond_with_streaming reqd envelope in
+      let writer = H.Reqd.respond_with_streaming reqd envelope in
       body
-      |> Lwt_stream.iter (H.Body.schedule_bigstring target)
+      |> Lwt_stream.iter (H.Body.schedule_bigstring writer)
+      |> Lwt.map (fun _ -> H.Body.close_writer writer)
       |> ignore
     in
     Lwt.on_success response send
