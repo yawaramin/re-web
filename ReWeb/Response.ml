@@ -1,5 +1,6 @@
 module H = Httpaf
 
+type status = H.Status.t
 type t = {envelope : H.Response.t; body : Body.t}
 
 let make ~status ~headers body = {
