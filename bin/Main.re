@@ -16,6 +16,12 @@ let getHeader = (name, request) =>
   | None => notFound(request)
   };
 
+let getStatic = (fileName, _) =>
+  fileName
+  |> String.concat("/")
+  |> (++)("/")
+  |> Response.static(~content_type="text/plain");
+
 let echoBody = request =>
   request
   |> Request.with_body
@@ -34,6 +40,7 @@ let server =
   fun
   | (`GET, ["hello"]) => hello
   | (`GET, ["header", name]) => getHeader(name)
+  | (`GET, ["static", ...fileName]) => getStatic(fileName)
   | (`POST, ["body"]) => echoBody
   | _ => notFound;
 
