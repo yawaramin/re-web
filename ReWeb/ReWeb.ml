@@ -17,6 +17,9 @@ module Form = Form
 (** Decode web forms into specified types. Think of this like JSON
     decoding. *)
 
+module Manual = Manual
+(** ReWeb user's manual *)
+
 module Request = Request
 (** Read requests. *)
 
