@@ -1,10 +1,10 @@
 {
-  "name": "ReWeb",
+  "name": "re-web",
   "version": "0.1.0",
   "description": "ReasonML web framework",
   "license": "MIT",
   "esy": {
-    "build": "dune build -p #{self.name}",
+    "build": "dune build --only-packages #{self.name}",
     "NOTE": "Optional release Section. Customizes result of `esy release`",
     "release": {
       "bin": [

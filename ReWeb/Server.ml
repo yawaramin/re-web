@@ -21,7 +21,6 @@ let error_handler _client_addr ?(request) _error _start_resp =
 
 let serve ?(port=8080) server =
   let open Lwt_let in
-
   let request_handler _client_addr reqd =
     let route = reqd |> H.Reqd.request |> parse_route in
     let response = reqd |> Request.make |> server route in

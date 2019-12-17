@@ -23,27 +23,6 @@ val serve : ?port:int -> (unit, Httpaf_lwt_unix.Server.socket, unit Lwt.t) t -> 
     [()]. *)
 
 (*
-let () =
-  let open Server in
-
-  let api = function
-    | `GET, ["pets", id] -> Services.Pet.get id
-    | `POST, ["pet"] -> Services.Pet.make
-    | _ -> status `NotFound
-  in
-  let server = function
-    | meth, "api" :: path ->
-      api
-      |> scope (meth, path)
-      |> filter Filters.auth
-      |> filter Filters.json
-    | `POST, ["graphql"] -> Services.GraphQL.query
-    | _ -> status `NotFound
-  in
-  server
-  |> serve
-  |> Lwt_main.run)
-
 let reject_ua f continue req = match Request.header "user-agent" req with
   | Some ua when f ua ->
     Response.status ~msg:"Please upgrade your browser" `Unauthorized

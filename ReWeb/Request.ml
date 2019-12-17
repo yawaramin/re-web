@@ -1,6 +1,6 @@
 module H = Httpaf
 
-type ('ctx, 'fd, 'io) t = {ctx : 'ctx; reqd : ('fd, 'io) Httpaf.Reqd.t}
+type ('ctx, 'fd, 'io) t = {ctx : 'ctx; reqd : ('fd, 'io) H.Reqd.t}
 
 let make reqd = {ctx = (); reqd}
 

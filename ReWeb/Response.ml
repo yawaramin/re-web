@@ -33,14 +33,13 @@ let get_content_type file_name = match Filename.extension file_name with
   | "json" -> "application/json"
   | _ -> "application/octet-stream"
 
-let make_chunk off line =
-  let curr_off = !off in
+let make_chunk line =
+  let off = 0 in
   let len = String.length line + 1 in
-  off := curr_off + len;
   {
-    Body.off = curr_off;
+    Body.off;
     len;
-    bigstring = Bigstringaf.of_string ~off:0 ~len (line ^ "\n");
+    bigstring = Bigstringaf.of_string ~off ~len (line ^ "\n");
   }
 
 let static ?(status=`OK) ?content_type file_name =
@@ -50,8 +49,7 @@ let static ?(status=`OK) ?content_type file_name =
   in
   let+ channel = Lwt_io.(open_file ~perm:0o400 ~mode:Input file_name) in
   let lines = Lwt_io.read_lines channel in
-  let curr_off = ref 0 in
-  let body = Body.Multi (Lwt_stream.map (make_chunk curr_off) lines) in
+  let body = Body.Multi (Lwt_stream.map make_chunk lines) in
   make ~status ~headers:(get_headers content_type) body
 
 let text ?(status=`OK) = binary ~status ~content_type:"text/plain"
