@@ -5,5 +5,10 @@ val binary : ?status:status -> ?content_type:string -> string -> t
 val html : ?status:status -> string -> t
 val json : ?status:status -> Ezjsonm.t -> t
 val make : status:status -> headers:Httpaf.Headers.t -> Body.t -> t
+
 val static : ?status:status -> ?content_type:string -> string -> t Lwt.t
+(** [static ?status ?content_type file_name] responds with the contents
+    of [file_name] which must be an absolute path in the system, with
+    HTTP response code [status] and content-type header [content_type]. *)
+
 val text : ?status:status -> string -> t

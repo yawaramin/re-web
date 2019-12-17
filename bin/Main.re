@@ -24,8 +24,7 @@ let getStatic = (fileName, _) =>
 
 let echoBody = request =>
   request
-  |> Request.with_body
-  |> Request.context
+  |> Request.body
   |> Response.make(
        ~status=`OK,
        ~headers=
