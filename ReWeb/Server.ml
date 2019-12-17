@@ -20,16 +20,14 @@ let error_handler _client_addr ?(request) _error _start_resp =
   failwith "!"
 
 let serve ?(port=8080) server =
-  let open Lwt_let in
   let request_handler _client_addr reqd =
     let route = reqd |> H.Reqd.request |> parse_route in
     let response = reqd |> Request.make |> server route in
-    let send {Response.envelope; body; _} =
-      let writer = H.Reqd.respond_with_streaming reqd envelope in
-      match body with
+    let send {Response.envelope; body; _} = match body with
       | Body.Single bigstring ->
-        H.Body.schedule_bigstring writer bigstring
+        H.Reqd.respond_with_bigstring reqd envelope bigstring
       | Body.Multi stream ->
+        let writer = H.Reqd.respond_with_streaming reqd envelope in
         stream
         |> Lwt_stream.iter (schedule_chunk writer)
         |> Lwt.map (fun _ -> H.Body.close_writer writer)
@@ -42,6 +40,7 @@ let serve ?(port=8080) server =
     ~error_handler
   in
   let listen_addr = Unix.(ADDR_INET (inet_addr_loopback, port)) in
+  let open Lwt_let in
   let* lwt_server =
     Lwt_io.establish_server_with_client_socket listen_addr conn_handler
   in
