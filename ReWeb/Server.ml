@@ -2,9 +2,9 @@ module H = Httpaf
 
 type path = string list
 type route = H.Method.t * path
-type ('ctx, 'fd, 'io) service = ('ctx, 'fd, 'io) Request.t -> Response.t Lwt.t
-type ('ctx1, 'ctx2, 'fd, 'io) filter = ('ctx1, 'fd, 'io) service -> ('ctx2, 'fd, 'io) service
-type ('ctx, 'fd, 'io) t = route -> ('ctx, 'fd, 'io) service
+type 'ctx service = 'ctx Request.t -> Response.t Lwt.t
+type ('ctx1, 'ctx2) filter = 'ctx1 service -> 'ctx2 service
+type 'ctx t = route -> 'ctx service
 
 let scope = (|>)
 let filter f = f
