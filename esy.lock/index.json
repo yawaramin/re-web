@@ -1,5 +1,5 @@
 {
-  "checksum": "6a9bb812fa49dd9b00d6829c29f0e43f",
+  "checksum": "5c420aee7f0143563af8de67c30eb3a8",
   "root": "ReWeb@link-dev:./package.json",
   "node": {
     "refmterr@3.2.2@d41d8cd9": {
@@ -50,10 +50,9 @@
         "@reason-native/rely@3.1.0@d41d8cd9",
         "@reason-native/console@0.1.0@d41d8cd9",
         "@opam/mustache@opam:3.1.0@4f2d56ab",
-        "@opam/lwt-pipe@github:c-cube/lwt-pipe:lwt-pipe.opam#85da2e95@d41d8cd9",
         "@opam/lwt@opam:4.4.0@0357bb8b",
-        "@opam/httpaf-lwt-unix@opam:0.6.0@b9e8f538",
-        "@opam/httpaf@opam:0.6.0@cb2b3fb3",
+        "@opam/httpaf-lwt-unix@github:anmonteiro/httpaf:httpaf-lwt-unix.opam#90e7c87@d41d8cd9",
+        "@opam/httpaf@github:anmonteiro/httpaf:httpaf.opam#90e7c87@d41d8cd9",
         "@opam/ezjsonm-lwt@opam:1.1.0@d5063b1d",
         "@opam/ezjsonm@opam:1.1.0@467206a0",
         "@opam/dune@opam:1.11.4@a7ccb7ae", "@esy-ocaml/reason@3.5.2@d41d8cd9"
@@ -991,22 +990,6 @@
         "@opam/lwt@opam:4.4.0@0357bb8b", "@opam/dune@opam:1.11.4@a7ccb7ae"
       ]
     },
-    "@opam/lwt-pipe@github:c-cube/lwt-pipe:lwt-pipe.opam#85da2e95@d41d8cd9": {
-      "id":
-        "@opam/lwt-pipe@github:c-cube/lwt-pipe:lwt-pipe.opam#85da2e95@d41d8cd9",
-      "name": "@opam/lwt-pipe",
-      "version": "github:c-cube/lwt-pipe:lwt-pipe.opam#85da2e95",
-      "source": {
-        "type": "install",
-        "source": [ "github:c-cube/lwt-pipe:lwt-pipe.opam#85da2e95" ]
-      },
-      "overrides": [],
-      "dependencies": [
-        "@opam/lwt@opam:4.4.0@0357bb8b", "@opam/dune@opam:1.11.4@a7ccb7ae",
-        "@esy-ocaml/substs@0.0.1@d41d8cd9"
-      ],
-      "devDependencies": [ "@opam/lwt@opam:4.4.0@0357bb8b" ]
-    },
     "@opam/lwt@opam:4.4.0@0357bb8b": {
       "id": "@opam/lwt@opam:4.4.0@0357bb8b",
       "name": "@opam/lwt",
@@ -1156,51 +1139,60 @@
         "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:1.11.4@a7ccb7ae"
       ]
     },
-    "@opam/httpaf-lwt-unix@opam:0.6.0@b9e8f538": {
-      "id": "@opam/httpaf-lwt-unix@opam:0.6.0@b9e8f538",
+    "@opam/httpaf-lwt-unix@github:anmonteiro/httpaf:httpaf-lwt-unix.opam#90e7c87@d41d8cd9": {
+      "id":
+        "@opam/httpaf-lwt-unix@github:anmonteiro/httpaf:httpaf-lwt-unix.opam#90e7c87@d41d8cd9",
       "name": "@opam/httpaf-lwt-unix",
-      "version": "opam:0.6.0",
+      "version": "github:anmonteiro/httpaf:httpaf-lwt-unix.opam#90e7c87",
       "source": {
         "type": "install",
-        "source": [
-          "archive:https://opam.ocaml.org/cache/md5/0c/0c8a9660e6f3225718cbd0fa0a0feea3#md5:0c8a9660e6f3225718cbd0fa0a0feea3",
-          "archive:https://github.com/inhabitedtype/httpaf/archive/0.6.0.tar.gz#md5:0c8a9660e6f3225718cbd0fa0a0feea3"
-        ],
-        "opam": {
-          "name": "httpaf-lwt-unix",
-          "version": "0.6.0",
-          "path": "esy.lock/opam/httpaf-lwt-unix.0.6.0"
-        }
+        "source": [ "github:anmonteiro/httpaf:httpaf-lwt-unix.opam#90e7c87" ]
       },
       "overrides": [],
       "dependencies": [
         "ocaml@4.8.1000@d41d8cd9", "@opam/lwt@opam:4.4.0@0357bb8b",
-        "@opam/httpaf@opam:0.6.0@cb2b3fb3",
+        "@opam/httpaf-lwt@github:anmonteiro/httpaf:httpaf-lwt.opam#90e7c87@d41d8cd9",
+        "@opam/httpaf@github:anmonteiro/httpaf:httpaf.opam#90e7c87@d41d8cd9",
         "@opam/faraday-lwt-unix@opam:0.7.0@52a60108",
         "@opam/dune@opam:1.11.4@a7ccb7ae", "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
         "ocaml@4.8.1000@d41d8cd9", "@opam/lwt@opam:4.4.0@0357bb8b",
-        "@opam/httpaf@opam:0.6.0@cb2b3fb3",
+        "@opam/httpaf-lwt@github:anmonteiro/httpaf:httpaf-lwt.opam#90e7c87@d41d8cd9",
+        "@opam/httpaf@github:anmonteiro/httpaf:httpaf.opam#90e7c87@d41d8cd9",
         "@opam/faraday-lwt-unix@opam:0.7.0@52a60108",
         "@opam/dune@opam:1.11.4@a7ccb7ae"
       ]
     },
-    "@opam/httpaf@opam:0.6.0@cb2b3fb3": {
-      "id": "@opam/httpaf@opam:0.6.0@cb2b3fb3",
-      "name": "@opam/httpaf",
-      "version": "opam:0.6.0",
+    "@opam/httpaf-lwt@github:anmonteiro/httpaf:httpaf-lwt.opam#90e7c87@d41d8cd9": {
+      "id":
+        "@opam/httpaf-lwt@github:anmonteiro/httpaf:httpaf-lwt.opam#90e7c87@d41d8cd9",
+      "name": "@opam/httpaf-lwt",
+      "version": "github:anmonteiro/httpaf:httpaf-lwt.opam#90e7c87",
       "source": {
         "type": "install",
-        "source": [
-          "archive:https://opam.ocaml.org/cache/md5/0c/0c8a9660e6f3225718cbd0fa0a0feea3#md5:0c8a9660e6f3225718cbd0fa0a0feea3",
-          "archive:https://github.com/inhabitedtype/httpaf/archive/0.6.0.tar.gz#md5:0c8a9660e6f3225718cbd0fa0a0feea3"
-        ],
-        "opam": {
-          "name": "httpaf",
-          "version": "0.6.0",
-          "path": "esy.lock/opam/httpaf.0.6.0"
-        }
+        "source": [ "github:anmonteiro/httpaf:httpaf-lwt.opam#90e7c87" ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/lwt@opam:4.4.0@0357bb8b",
+        "@opam/httpaf@github:anmonteiro/httpaf:httpaf.opam#90e7c87@d41d8cd9",
+        "@opam/dune@opam:1.11.4@a7ccb7ae", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/lwt@opam:4.4.0@0357bb8b",
+        "@opam/httpaf@github:anmonteiro/httpaf:httpaf.opam#90e7c87@d41d8cd9",
+        "@opam/dune@opam:1.11.4@a7ccb7ae"
+      ]
+    },
+    "@opam/httpaf@github:anmonteiro/httpaf:httpaf.opam#90e7c87@d41d8cd9": {
+      "id":
+        "@opam/httpaf@github:anmonteiro/httpaf:httpaf.opam#90e7c87@d41d8cd9",
+      "name": "@opam/httpaf",
+      "version": "github:anmonteiro/httpaf:httpaf.opam#90e7c87",
+      "source": {
+        "type": "install",
+        "source": [ "github:anmonteiro/httpaf:httpaf.opam#90e7c87" ]
       },
       "overrides": [],
       "dependencies": [

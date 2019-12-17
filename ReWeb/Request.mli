@@ -1,15 +1,15 @@
-type 'ctx t = {ctx : 'ctx; reqd : Httpaf.Reqd.t}
+type ('ctx, 'fd, 'io) t = {ctx : 'ctx; reqd : ('fd, 'io) Httpaf.Reqd.t}
 
-val context : 'ctx t -> 'ctx
+val context : ('ctx, _, _) t -> 'ctx
 
-val header : string -> _ t -> string option
+val header : string -> (_, _, _) t -> string option
 (** [header name request] gets the last value corresponding to the given
     header, if present. *)
 
-val headers : string -> _ t -> string list
+val headers : string -> (_, _, _) t -> string list
 (** [headers name request] gets all the values corresponding to the given
     header. *)
 
-val make : Httpaf.Reqd.t -> unit t
+val make : ('fd, 'io) Httpaf.Reqd.t -> (unit, 'fd, 'io) t
 
-val with_body : unit t -> Body.t t
+val with_body : (unit, 'fd, 'io) t -> (Body.t, 'fd, 'io) t

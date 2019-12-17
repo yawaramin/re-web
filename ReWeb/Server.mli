@@ -10,14 +10,14 @@ type route = Httpaf.Method.t * path
     E.g., [GET /api/user/1] would be represented as
     [(`GET, ["api", "user", "1"])] *)
 
-type 'ctx service = 'ctx Request.t -> Response.t Lwt.t
-type ('ctx1, 'ctx2) filter = 'ctx1 service -> 'ctx2 service
-type 'ctx t = route -> 'ctx service
+type ('ctx, 'fd, 'io) service = ('ctx, 'fd, 'io) Request.t -> Response.t Lwt.t
+type ('ctx1, 'ctx2, 'fd, 'io) filter = ('ctx1, 'fd, 'io) service -> ('ctx2, 'fd, 'io) service
+type ('ctx, 'fd, 'io) t = route -> ('ctx, 'fd, 'io) service
 
-val scope : route -> 'ctx t -> 'ctx service
-val filter : ('ctx1, 'ctx2) filter -> ('ctx1, 'ctx2) filter
+val scope : route -> ('ctx, 'fd, 'io) t -> ('ctx, 'fd, 'io) service
+val filter : ('ctx1, 'ctx2, 'fd, 'io) filter -> ('ctx1, 'ctx2, 'fd, 'io) filter
 
-val serve : ?port:int -> unit t -> unit Lwt.t
+val serve : ?port:int -> (unit, Httpaf_lwt_unix.Server.socket, unit Lwt.t) t -> unit Lwt.t
 (** [serve ?port server] starts the top-level [server] listening on
     [port]. Top-level servers must have no context i.e. their context is
     [()]. *)
