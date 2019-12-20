@@ -1,7 +1,10 @@
 type ('ctx1, 'ctx2) t = 'ctx2 Server.service -> 'ctx1 Server.service
 (** A filter transforms a service, possibly changing its context type.
     Filters are just functions, so they can be composed using function
-    composition. *)
+    composition. Because of this design, the ['ctx2 service] actually
+    represents the {i next} service in the pipeline after the current
+    filter runs. This is a lot like Express middleware functions that
+    take a 'next' middleware as an argument. *)
 
 val body_json : (unit, < body : Ezjsonm.t >) t
 (** [body_json] is a filter that transforms a 'root' service (i.e. one

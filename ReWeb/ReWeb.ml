@@ -3,6 +3,9 @@
 
 module Body = Body
 
+module Filter = Filter
+(** Transform services. *)
+
 module Headers = Httpaf.Headers
 
 module Request = Request
