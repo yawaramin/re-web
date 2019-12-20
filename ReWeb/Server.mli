@@ -19,26 +19,3 @@ val serve : ?port:int -> unit t -> unit Lwt.t
 (** [serve ?port server] starts the top-level [server] listening on
     [port]. Top-level servers must have no context i.e. their context is
     [()]. *)
-
-(*
-let reject_ua f continue req = match Request.header "user-agent" req with
-  | Some ua when f ua ->
-    Response.status ~msg:"Please upgrade your browser" `Unauthorized
-  | _ -> continue req
-
-let index _req = Response.status ~msg:"Hello World" `OK
-let msie = Str.regex ".*MSIE.*"
-let contains_msie string = Str.string_match msie string 0
-
-let server = function
-  | `GET, [""] -> reject_ua contains_msie index
-  | _ -> Response.status `NotFound
-
-let () = server |> serve |> Lwt_main.run
-
-val auth : ('a, < userid : string; prev : 'a >) Filter.t
-  = 'a service -> < userid : string > service
-
-val json : ('a, < body : Ezjsonm.t; prev : 'a >) Filter.t
-  = 'a service -> < body : Ezjsonm.t; prev : 'a > service
-*)

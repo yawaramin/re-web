@@ -60,4 +60,17 @@ let server =
   | (`POST, ["body-bang"]) => exclaimBody
   | _ => notFound;
 
+let msie = Str.regexp(".*MSIE.*");
+
+let rejectExplorer = (next, request) =>
+  switch (Request.header("user-agent", request)) {
+  | Some(ua) when Str.string_match(msie, ua, 0) =>
+    "Please upgrade your browser"
+    |> Response.text(~status=`Unauthorized)
+    |> Lwt.return
+  | _ => next(request)
+  };
+
+let server = route => route |> server |> rejectExplorer;
+
 let () = server |> Server.serve |> Lwt_main.run;
