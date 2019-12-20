@@ -29,6 +29,16 @@ let basic_auth next request = match get_auth request with
     end
   | _ -> unauthorized
 
+let bearer_auth next request = match get_auth request with
+  | Some ("Bearer", token) ->
+    next {
+      request with Request.ctx = object
+        method bearer_token = token
+        method prev = request.ctx
+      end
+    }
+  | _ -> unauthorized
+
 let body_json next request =
   let open Lwt_let in
   let* body = Request.body_string request in

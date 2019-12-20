@@ -8,6 +8,8 @@ type ('ctx1, 'ctx2) t = 'ctx2 Server.service -> 'ctx1 Server.service
 
 val basic_auth : ('ctx1, < username : string; password : string; prev : 'ctx1 >) t
 
+val bearer_auth : ('ctx1, < bearer_token : string; prev : 'ctx1 >) t
+
 val body_json : (unit, < body : Ezjsonm.t >) t
 (** [body_json] is a filter that transforms a 'root' service (i.e. one
     with [unit] context) into a service with a context containing the
