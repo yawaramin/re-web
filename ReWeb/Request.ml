@@ -18,6 +18,20 @@ let body request =
   H.Body.schedule_read request_body ~on_eof ~on_read;
   Body.Multi stream
 
+let body_string ?(buf_size=Lwt_io.default_buffer_size ()) request =
+  let request_body = H.Reqd.request_body request.reqd in
+  let body, set_body = Lwt.wait () in
+  let buffer = Buffer.create buf_size in
+  let on_eof () =
+    buffer |> Buffer.contents |> Lwt.wakeup_later set_body
+  in
+  let rec on_read data ~off:_ ~len:_ =
+    data |> Bigstringaf.to_string |> Buffer.add_string buffer;
+    H.Body.schedule_read request_body ~on_eof ~on_read
+  in
+  H.Body.schedule_read request_body ~on_eof ~on_read;
+  body
+
 let context {ctx; _} = ctx
 
 let header name {reqd; _} =

@@ -5,6 +5,11 @@ type 'ctx t = {
 
 val body : unit t -> Body.t
 
+val body_string : ?buf_size:int -> unit t -> string Lwt.t
+(** [body_string ?buf_size request] returns the request body converted
+    into a string, internally using a buffer of size [buf_size] with a
+    default of Lwt's default buffer size. *)
+
 val context : 'ctx t -> 'ctx
 
 val header : string -> _ t -> string option

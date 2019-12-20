@@ -1,7 +1,18 @@
 open ReWeb;
 
 let notFound = _ =>
-  "<h1>Not Found</h1>" |> Response.html(~status=`Not_found) |> Lwt.return;
+  {|<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Not Found</title>
+  </head>
+  <body>
+    <h1>Not Found</h1>
+  </body>
+</html>|}
+  |> Response.html(~status=`Not_found)
+  |> Lwt.return;
 
 let hello = _ => "Hello, World!" |> Response.text |> Lwt.return;
 
@@ -35,12 +46,18 @@ let echoBody = request =>
      )
   |> Lwt.return;
 
+let exclaimBody = request =>
+  request
+  |> Request.body_string
+  |> Lwt.map(string => Response.text(string ++ "!"));
+
 let server =
   fun
   | (`GET, ["hello"]) => hello
   | (`GET, ["header", name]) => getHeader(name)
   | (`GET, ["static", ...fileName]) => getStatic(fileName)
   | (`POST, ["body"]) => echoBody
+  | (`POST, ["body-bang"]) => exclaimBody
   | _ => notFound;
 
 let () = server |> Server.serve |> Lwt_main.run;
