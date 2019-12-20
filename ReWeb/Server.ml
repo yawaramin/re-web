@@ -10,8 +10,8 @@ let scope = (|>)
 let parse_route {H.Request.meth; target; _} =
   meth, target |> String.split_on_char '/' |> List.tl
 
-let schedule_chunk writer {Body.off; len; bigstring} =
-  H.Body.schedule_bigstring writer ~off ~len bigstring
+let schedule_chunk writer {H.IOVec.off; len; buffer} =
+  H.Body.schedule_bigstring writer ~off ~len buffer
 
 let error_handler _client_addr ?(request) _error _start_resp =
   ignore request;

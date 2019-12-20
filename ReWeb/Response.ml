@@ -37,9 +37,9 @@ let make_chunk line =
   let off = 0 in
   let len = String.length line + 1 in
   {
-    Body.off;
+    H.IOVec.off;
     len;
-    bigstring = Bigstringaf.of_string ~off ~len (line ^ "\n");
+    buffer = Bigstringaf.of_string ~off ~len (line ^ "\n");
   }
 
 let static ?(status=`OK) ?content_type file_name =
