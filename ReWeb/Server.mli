@@ -11,11 +11,9 @@ type route = Httpaf.Method.t * path
     [(`GET, ["api", "user", "1"])] *)
 
 type 'ctx service = 'ctx Request.t -> Response.t Lwt.t
-type ('ctx1, 'ctx2) filter = 'ctx1 service -> 'ctx2 service
 type 'ctx t = route -> 'ctx service
 
 val scope : route -> 'ctx t -> 'ctx service
-val filter : ('ctx1, 'ctx2) filter -> ('ctx1, 'ctx2) filter
 
 val serve : ?port:int -> unit t -> unit Lwt.t
 (** [serve ?port server] starts the top-level [server] listening on
@@ -33,7 +31,7 @@ let msie = Str.regex ".*MSIE.*"
 let contains_msie string = Str.string_match msie string 0
 
 let server = function
-  | `GET, [""] -> filter reject_ua contains_msie index
+  | `GET, [""] -> reject_ua contains_msie index
   | _ -> Response.status `NotFound
 
 let () = server |> serve |> Lwt_main.run

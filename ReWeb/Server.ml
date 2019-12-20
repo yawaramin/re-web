@@ -3,11 +3,9 @@ module H = Httpaf
 type path = string list
 type route = H.Method.t * path
 type 'ctx service = 'ctx Request.t -> Response.t Lwt.t
-type ('ctx1, 'ctx2) filter = 'ctx1 service -> 'ctx2 service
 type 'ctx t = route -> 'ctx service
 
 let scope = (|>)
-let filter f = f
 
 let parse_route {H.Request.meth; target; _} =
   meth, target |> String.split_on_char '/' |> List.tl
