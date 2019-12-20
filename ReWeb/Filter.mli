@@ -6,6 +6,8 @@ type ('ctx1, 'ctx2) t = 'ctx2 Server.service -> 'ctx1 Server.service
     filter runs. This is a lot like Express middleware functions that
     take a 'next' middleware as an argument. *)
 
+val basic_auth : ('ctx1, < username : string; password : string; prev : 'ctx1 >) t
+
 val body_json : (unit, < body : Ezjsonm.t >) t
 (** [body_json] is a filter that transforms a 'root' service (i.e. one
     with [unit] context) into a service with a context containing the

@@ -51,6 +51,15 @@ let exclaimBody = request =>
   |> Request.body_string
   |> Lwt.map(string => Response.text(string ++ "!"));
 
+let auth = request => {
+  let context = Request.context(request);
+
+  Lwt.return(
+    if (context#username == "bob" && context#password == "secret")
+      Response.text("OK")
+    else Response.text(~status=`Unauthorized, "Error"));
+};
+
 let server =
   fun
   | (`GET, ["hello"]) => hello
@@ -58,6 +67,7 @@ let server =
   | (`GET, ["static", ...fileName]) => getStatic(fileName)
   | (`POST, ["body"]) => echoBody
   | (`POST, ["body-bang"]) => exclaimBody
+  | (`GET, ["auth"]) => Filter.basic_auth @@ auth
   | _ => notFound;
 
 let msie = Str.regexp(".*MSIE.*");
@@ -71,6 +81,6 @@ let rejectExplorer = (next, request) =>
   | _ => next(request)
   };
 
-let server = route => route |> server |> rejectExplorer;
-
+let server = route => rejectExplorer @@ server @@ route;
 let () = server |> Server.serve |> Lwt_main.run;
+

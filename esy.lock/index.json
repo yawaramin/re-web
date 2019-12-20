@@ -1,5 +1,5 @@
 {
-  "checksum": "5c420aee7f0143563af8de67c30eb3a8",
+  "checksum": "b269a35513913002a2f7358635c49fdc",
   "root": "ReWeb@link-dev:./package.json",
   "node": {
     "refmterr@3.2.2@d41d8cd9": {
@@ -55,7 +55,9 @@
         "@opam/httpaf@github:anmonteiro/httpaf:httpaf.opam#90e7c87@d41d8cd9",
         "@opam/ezjsonm-lwt@opam:1.1.0@d5063b1d",
         "@opam/ezjsonm@opam:1.1.0@467206a0",
-        "@opam/dune@opam:1.11.4@a7ccb7ae", "@esy-ocaml/reason@3.5.2@d41d8cd9"
+        "@opam/dune@opam:1.11.4@a7ccb7ae",
+        "@opam/base64@opam:3.2.0@6303aa3a",
+        "@esy-ocaml/reason@3.5.2@d41d8cd9"
       ],
       "devDependencies": [
         "ocaml@4.8.1000@d41d8cd9", "@opam/utop@opam:2.4.2@4656e89b",
@@ -1709,6 +1711,33 @@
       ],
       "devDependencies": [
         "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:1.11.4@a7ccb7ae"
+      ]
+    },
+    "@opam/base64@opam:3.2.0@6303aa3a": {
+      "id": "@opam/base64@opam:3.2.0@6303aa3a",
+      "name": "@opam/base64",
+      "version": "opam:3.2.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://opam.ocaml.org/cache/md5/8a/8ac1d6145277cee57d36611d1c420f05#md5:8ac1d6145277cee57d36611d1c420f05",
+          "archive:https://github.com/mirage/ocaml-base64/releases/download/v3.2.0/base64-v3.2.0.tbz#md5:8ac1d6145277cee57d36611d1c420f05"
+        ],
+        "opam": {
+          "name": "base64",
+          "version": "3.2.0",
+          "path": "esy.lock/opam/base64.3.2.0"
+        }
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:1.11.4@a7ccb7ae",
+        "@opam/base-bytes@opam:base@19d0c2ff",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:1.11.4@a7ccb7ae",
+        "@opam/base-bytes@opam:base@19d0c2ff"
       ]
     },
     "@opam/base-unix@opam:base@87d0b2eb": {
