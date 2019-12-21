@@ -7,8 +7,13 @@ type ('ctx1, 'ctx2) t = 'ctx2 Server.service -> 'ctx1 Server.service
     take a 'next' middleware as an argument. *)
 
 val basic_auth : ('ctx1, < username : string; password : string; prev : 'ctx1 >) t
+(** [basic_auth] decodes and stores the login credentials sent with the
+    [Authorization] header or returns a 401 Unauthorized error if there
+    is none. *)
 
 val bearer_auth : ('ctx1, < bearer_token : string; prev : 'ctx1 >) t
+(** [bearer_auth] stores the bearer token sent with the [Authorization]
+    header or returns a 401 Unauthorized error if there is none. *)
 
 val body_json : (unit, < body : Ezjsonm.t >) t
 (** [body_json] is a filter that transforms a 'root' service (i.e. one
