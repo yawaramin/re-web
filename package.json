@@ -6,11 +6,22 @@
   "esy": {
     "build": "dune build --only-packages #{self.name}",
     "NOTE": "Optional release Section. Customizes result of `esy release`",
-    "release": { "bin": [ "Main" ] },
-    "buildEnv": { "ODOC_SYNTAX": "ml" }
+    "release": {
+      "bin": [
+        "Main"
+      ]
+    },
+    "buildEnv": {
+      "ODOC_SYNTAX": "ml"
+    }
   },
-  "repository": { "url": "" },
-  "scripts": { "test": "esy x Main", "doc": "esy dune build @doc" },
+  "repository": {
+    "url": ""
+  },
+  "scripts": {
+    "test": "esy b dune exec bin/Main.exe",
+    "doc": "esy dune build @doc"
+  },
   "dependencies": {
     "@esy-ocaml/reason": ">= 3.4.0 < 3.6.0",
     "@opam/base64": ">= 3.2.0 < 4.0.0",
