@@ -5,8 +5,6 @@ type route = H.Method.t * path
 type 'ctx service = 'ctx Request.t -> Response.t Lwt.t
 type 'ctx t = route -> 'ctx service
 
-let scope = (|>)
-
 let parse_route {H.Request.meth; target; _} =
   meth, target |> String.split_on_char '/' |> List.tl
 

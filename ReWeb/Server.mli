@@ -13,8 +13,6 @@ type route = Httpaf.Method.t * path
 type 'ctx service = 'ctx Request.t -> Response.t Lwt.t
 type 'ctx t = route -> 'ctx service
 
-val scope : route -> 'ctx t -> 'ctx service
-
 val serve : ?port:int -> unit t -> unit Lwt.t
 (** [serve ?port server] starts the top-level [server] listening on
     [port]. Top-level servers must have no context i.e. their context is
