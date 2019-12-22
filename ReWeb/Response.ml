@@ -41,11 +41,10 @@ let make_chunk ?(lines=true) line =
 
 let render ?(status=`OK) ?(content_type="text/html") renderer =
   let stream, push_to_stream = Lwt_stream.create () in
-  let p string = push_to_stream (Some string) in
+  let p string = push_to_stream (Some (make_chunk ~lines:false string)) in
   renderer p;
   push_to_stream None;
-  let body = Body.Multi (Lwt_stream.map (make_chunk ~lines:false) stream) in
-  make ~status ~headers:(get_headers content_type) body
+  make ~status ~headers:(get_headers content_type) (Body.Multi stream)
 
 let static ?(status=`OK) ?content_type file_name =
   let open Lwt_let in

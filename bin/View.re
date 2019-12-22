@@ -8,16 +8,20 @@ let login = (~rememberMe, p) => {
   </head>
   <body>
     <form method="post">
-      <label for="username">Username: </label>
-      <input type="text" name="username" required>
-      <label for="password">Password: </label>
-      <input type="text" name="password" required>
-      <input type="checkbox" checked="|},
+      <p>
+        <label for="username">Username: </label>
+        <input type="text" name="username" required>
+      </p>
+      <p>
+        <label for="password">Password: </label>
+        <input type="password" name="password" required>
+      </p>
+      <p><input type="checkbox" checked="|},
   );
   p(string_of_bool(rememberMe));
   p(
-    {|"> Remember me</input>
-      <input type="submit" value="Login">
+    {|"> Remember me</input></p>
+      <p><input type="submit" value="Login"></p>
     </form>
   </body>
 </html>|},
