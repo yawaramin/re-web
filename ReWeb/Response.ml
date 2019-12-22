@@ -28,9 +28,21 @@ let json ?(status=`OK) body = body
   |> binary ~status ~content_type:"application/json"
 
 let get_content_type file_name = match Filename.extension file_name with
-  | "html" | "htm" -> "text/html"
-  | "text" | "txt" -> "text/plain"
-  | "json" -> "application/json"
+  | ".bmp" -> "image/bmp"
+  | ".css" -> "text/css"
+  | ".csv" -> "text/csv"
+  | ".gif" -> "image/gif"
+  | ".html" | ".htm" -> "text/html"
+  | ".ico" -> "image/x-icon"
+  | ".jpeg" | ".jpg" -> "image/jpeg"
+  | ".js" -> "text/javascript"
+  | ".json" -> "application/json"
+  | ".mp4" -> "video/mp4"
+  | ".png" -> "image/png"
+  | ".svg" -> "image/svg+xml"
+  | ".text" | ".txt" -> "text/plain"
+  | ".tiff" -> "image/tiff"
+  | ".webp" -> "image/webp"
   | _ -> "application/octet-stream"
 
 let make_chunk ?(lines=true) line =
