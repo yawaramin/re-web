@@ -27,6 +27,9 @@ let getHeader = (name, request) =>
   | None => notFound(request)
   };
 
+let getLogin = _ =>
+  View.login(~rememberMe=true) |> Response.render |> Lwt.return;
+
 let getStatic = (fileName, _) =>
   fileName
   |> String.concat("/")
@@ -69,6 +72,7 @@ let server =
   fun
   | (`GET, ["hello"]) => hello
   | (`GET, ["header", name]) => getHeader(name)
+  | (`GET, ["login"]) => getLogin
   | (`GET, ["static", ...fileName]) => getStatic(fileName)
   | (`POST, ["body"]) => echoBody
   | (`POST, ["body-bang"]) => exclaimBody

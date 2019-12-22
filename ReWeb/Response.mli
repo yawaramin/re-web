@@ -6,6 +6,20 @@ val html : ?status:status -> string -> t
 val json : ?status:status -> Ezjsonm.t -> t
 val make : status:status -> headers:Httpaf.Headers.t -> Body.t -> t
 
+val render :
+  ?status:status ->
+  ?content_type:string ->
+  ((string -> unit) -> unit) ->
+  t
+(** [render ?status ?content_type renderer] responds with a rendered body
+    as per the [renderer] function. The [renderer] is a function that
+    takes a 'printer' function ([string -> unit]) as a parameter and
+    'prints' (i.e. renders piecemeal) strings to it. These strings are
+    pushed out as they are rendered.
+
+    In other words, this implements a simple server-side 'templating'
+    system. *)
+
 val static : ?status:status -> ?content_type:string -> string -> t Lwt.t
 (** [static ?status ?content_type file_name] responds with the contents
     of [file_name] which must be an absolute path in the system, with
