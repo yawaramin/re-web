@@ -17,8 +17,10 @@ val render :
     'prints' (i.e. renders piecemeal) strings to it. These strings are
     pushed out as they are rendered.
 
-    In other words, this implements a simple server-side 'templating'
-    system. *)
+    The difference from [html], [binary], and the other functions is that
+    those hold the entire response in memory before sending it to the
+    client, while [render] holds only each piece of the response as it is
+    streamed out. *)
 
 val static : ?status:status -> ?content_type:string -> string -> t Lwt.t
 (** [static ?status ?content_type file_name] responds with the contents

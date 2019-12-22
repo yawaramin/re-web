@@ -1,10 +1,9 @@
 type ('ctx1, 'ctx2) t = 'ctx2 Server.service -> 'ctx1 Server.service
-(** A filter transforms a service, possibly changing its context type.
-    Filters are just functions, so they can be composed using function
-    composition. Because of this design, the ['ctx2 service] actually
-    represents the {i next} service in the pipeline after the current
-    filter runs. This is a lot like Express middleware functions that
-    take a 'next' middleware as an argument. *)
+(** A filter transforms a service. It can change the request (usually by
+    changing the request context) or the response (by actually running
+    the service and then modifying its response).
+
+    Filters can be composed using function composition. *)
 
 val basic_auth : ('ctx1, < username : string; password : string; prev : 'ctx1 >) t
 (** [basic_auth] decodes and stores the login credentials sent with the

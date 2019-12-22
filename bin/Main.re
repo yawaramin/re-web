@@ -68,18 +68,6 @@ let authServer =
   | (`GET, ["hello"]) => authHello
   | _ => notFound;
 
-let server =
-  fun
-  | (`GET, ["hello"]) => hello
-  | (`GET, ["header", name]) => getHeader(name)
-  | (`GET, ["login"]) => getLogin
-  | (`GET, ["static", ...fileName]) => getStatic(fileName)
-  | (`POST, ["body"]) => echoBody
-  | (`POST, ["body-bang"]) => exclaimBody
-  | (meth, ["auth", ...path]) =>
-    Filter.basic_auth @@ authServer @@ (meth, path)
-  | _ => notFound;
-
 let msie = Str.regexp(".*MSIE.*");
 
 let rejectExplorer = (next, request) =>
@@ -90,6 +78,19 @@ let rejectExplorer = (next, request) =>
     |> Lwt.return
   | _ => next(request)
   };
+
+let server =
+  fun
+  | (`GET, ["hello"]) => hello
+  | (`GET, ["header", name]) => getHeader(name)
+  | (`GET, ["login"]) => getLogin
+  // | (`POST, ["login"]) => Filter.form(User.form) @@ postLogin
+  | (`GET, ["static", ...fileName]) => getStatic(fileName)
+  | (`POST, ["body"]) => echoBody
+  | (`POST, ["body-bang"]) => exclaimBody
+  | (meth, ["auth", ...path]) =>
+    Filter.basic_auth @@ authServer @@ (meth, path)
+  | _ => notFound;
 
 let server = route => rejectExplorer @@ server @@ route;
 let () = server |> Server.serve |> Lwt_main.run;
