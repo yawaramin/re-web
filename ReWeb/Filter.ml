@@ -53,3 +53,14 @@ let body_string next request =
   let* body = Request.body_string request in
   next { request with Request.ctx = object method body = body end }
 
+let form typ next request =
+  match Request.header "content-type" request with
+  | Some "application/x-www-form-urlencoded" ->
+    let open Lwt_let in
+    let* body = Request.body_string request in
+    let obj = Form.decoder typ body in
+    next { request with Request.ctx = object method form = obj end }
+  | _ ->
+    "ReWeb.Filter.form: request content-type is not form"
+    |> Response.text ~status:`Bad_request
+    |> Lwt.return

@@ -6,6 +6,10 @@ module Body = Body
 module Filter = Filter
 (** Transform services. *)
 
+module Form = Form
+(** Decode web forms into specified types. Think of this like JSON
+    decoding. *)
+
 module Headers = Httpaf.Headers
 
 module Request = Request

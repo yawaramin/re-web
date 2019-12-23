@@ -22,3 +22,8 @@ val body_json : (unit, < body : Ezjsonm.t >) t
 val body_string : (unit, < body : string >) t
 (** [body_string] is a filter that transforms a 'root' service into a
     service whose context contains the request body as a single string. *)
+
+val form : ('ctor, 'ty) Form.t -> (unit, < form : ('ty, string) result >) t
+(** [form typ] is a filter that decodes a web form in the request body
+    and puts it inside the request for the next service. The decoding is
+    done as specific by the form definition [typ]. *)
