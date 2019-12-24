@@ -1,5 +1,5 @@
 type status = Httpaf.Status.t
-type t = {envelope : Httpaf.Response.t; body : Body.t}
+type t = { envelope : Httpaf.Response.t; body : Body.t }
 
 val binary : ?status:status -> ?content_type:string -> string -> t
 val html : ?status:status -> string -> t

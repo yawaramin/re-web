@@ -3,6 +3,8 @@
 
 module Body = Body
 
+module Client = Client
+
 module Filter = Filter
 (** Transform services. *)
 

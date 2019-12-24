@@ -35,10 +35,11 @@ let postLogin = request => {
 
   password
   |> Printf.sprintf(
-       "Logged in with username = %s, password = %s",
+       {|<h1>Logged in</h1>
+<p>with username = "%s", password = "%s"</p>|},
        username,
      )
-  |> Response.text
+  |> Response.html
   |> Lwt.return;
 };
 
@@ -65,6 +66,9 @@ let exclaimBody = request =>
   request
   |> Request.body_string
   |> Lwt.map(string => Response.text(string ++ "!"));
+
+let getTodo = (id, _) =>
+  Client.Once.get("https://jsonplaceholder.typicode.com/todos/" ++ id);
 
 let authHello = request => {
   let context = Request.context(request);
@@ -101,6 +105,7 @@ let server =
   | (`POST, ["body"]) => echoBody
   | (`POST, ["body-bang"]) => exclaimBody
   | (`POST, ["json"]) => Filter.body_json @@ hello
+  | (`GET, ["todos", id]) => getTodo(id)
   | (meth, ["auth", ...path]) =>
     Filter.basic_auth @@ authServer @@ (meth, path)
   | _ => notFound;
