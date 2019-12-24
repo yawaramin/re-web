@@ -1,13 +1,30 @@
 type 'a decoder = string -> ('a, string) result
-type 'a field = { name : string; decoder : 'a decoder }
 
-module Fields = struct
-  type (_, _) t =
-  | [] : ('a, 'a) t
-  | (::) : 'a field * ('b, 'c) t -> ('a -> 'b, 'c) t
+module Field = struct
+  type 'a t = { name : string; decoder : 'a decoder }
+
+  type (_, _) list =
+  | [] : ('a, 'a) list
+  | (::) : 'a t * ('b, 'c) list -> ('a -> 'b, 'c) list
+
+  let make name decoder = { name; decoder }
+
+  let bool name = make name @@ fun x ->
+    try Ok (bool_of_string x)
+    with _ -> Error ("ReWeb.Form.Field.bool: " ^ name)
+
+  let float name = make name @@ fun x ->
+    try Ok (float_of_string x)
+    with _ -> Error ("ReWeb.Form.Field.float: " ^ name)
+
+  let int name = make name @@ fun x ->
+    try Ok (int_of_string x)
+    with _ -> Error ("ReWeb.Form.Field.int: " ^ name)
+
+  let string name = make name @@ fun x -> Ok x
 end
 
-type ('ctor, 'ty) t = { fields : ('ctor, 'ty) Fields.t; ctor : 'ctor }
+type ('ctor, 'ty) t = { fields : ('ctor, 'ty) Field.list; ctor : 'ctor }
 
 let split_values kvp = match String.split_on_char '=' kvp with
   | [k; v] -> Some (k, v)
@@ -23,7 +40,7 @@ let rec decode :
   (string * string) list ->
   (ty, string) result =
   fun { fields; ctor } fields_assoc ->
-    let open Fields in
+    let open Field in
     match fields with
     | [] -> Ok ctor
     | field :: fields ->
@@ -43,6 +60,4 @@ let rec decode :
       end
 
 let decoder form string = string |> split_fields |> decode form
-
-let field name decoder = { name; decoder }
 let make fields ctor = { fields; ctor }

@@ -7,11 +7,10 @@ type t = {
 
 let id = x => Ok(x);
 
-open Form;
-
 let form =
-  make(
-    Fields.[field("username", id), field("password", id)],
-    (username, password) =>
-    {username, password}
+  Form.(
+    make(
+      Field.[string("username"), string("password")], (username, password) =>
+      {username, password}
+    )
   );
