@@ -6,7 +6,6 @@ module Field : sig
   type 'a t
   (** A form field is a field name and a decoder function for the field. *)
 
-
   type (_, _) list =
   | [] : ('a, 'a) list
   | (::) : 'a t * ('b, 'c) list -> ('a -> 'b, 'c) list (**)

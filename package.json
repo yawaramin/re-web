@@ -31,8 +31,7 @@
     "@opam/httpaf": "0.6.5",
     "@opam/httpaf-lwt-unix": "0.6.5",
     "@opam/lwt": "4.4.0",
-    "@opam/mustache": "3.1.0",
-    "@reason-native/console": "*",
+    "@opam/uri": ">= 3.1.0 < 4.0.0",
     "@reason-native/rely": "*"
   },
   "devDependencies": {

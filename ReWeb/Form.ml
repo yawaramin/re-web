@@ -26,18 +26,10 @@ end
 
 type ('ctor, 'ty) t = { fields : ('ctor, 'ty) Field.list; ctor : 'ctor }
 
-let split_values kvp = match String.split_on_char '=' kvp with
-  | [k; v] -> Some (k, v)
-  | _ -> None
-
-let split_fields string = string
-  |> String.split_on_char '&'
-  |> List.filter_map split_values
-
 let rec decode :
   type ctor ty.
   (ctor, ty) t ->
-  (string * string) list ->
+  (string * string list) list ->
   (ty, string) result =
   fun { fields; ctor } fields_assoc ->
     let open Field in
@@ -45,7 +37,7 @@ let rec decode :
     | [] -> Ok ctor
     | field :: fields ->
       begin match List.assoc field.name fields_assoc with
-      | value ->
+      | [value] ->
         begin match field.decoder value with
         | Ok value ->
           begin match ctor value with
@@ -55,9 +47,11 @@ let rec decode :
           end
         | Error string -> Error string
         end
+      | _ ->
+        Error ("ReWeb.Form.decoder: could not find single value for key " ^ field.name)
       | exception Not_found ->
         Error ("ReWeb.Form.decoder: could not find key " ^ field.name)
       end
 
-let decoder form string = string |> split_fields |> decode form
+let decoder form string = string |> Uri.query_of_encoded |> decode form
 let make fields ctor = { fields; ctor }

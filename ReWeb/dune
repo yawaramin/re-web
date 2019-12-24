@@ -2,4 +2,4 @@
   (name ReWeb)
   (public_name ReWeb)
   (flags (-w -40 -w +26))
-  (libraries base64 ezjsonm httpaf httpaf-lwt-unix lwt.unix mustache))
+  (libraries base64 ezjsonm httpaf httpaf-lwt-unix lwt.unix uri))

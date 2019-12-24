@@ -5,8 +5,6 @@ type t = {
   password: string,
 };
 
-let id = x => Ok(x);
-
 let form =
   Form.(
     make(
