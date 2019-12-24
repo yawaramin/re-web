@@ -19,7 +19,7 @@
     "url": ""
   },
   "scripts": {
-    "test": "esy b dune exec bin/Main.exe",
+    "test": "esy b dune exec bin/Main.bc",
     "doc": "esy dune build @doc"
   },
   "dependencies": {
