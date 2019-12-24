@@ -24,6 +24,12 @@ ReWeb's main concepts are:
   services must change requests correctly and in the right order, or the
   compiler will present type errors.
 
+Notice that all the main concepts here are just functions. They are all
+composeable using just function composition. Services can call other
+services. Filters can slot together by calling each other. Servers can
+delegate smaller scopes to other servers. See `bin/Main.re` for examples
+of all of these.
+
 ## Try
 
 You need Esy, you can install the beta using [npm](https://npmjs.com):
