@@ -56,6 +56,6 @@ let serve ?(port=8080) server =
   let* lwt_server =
     Lwt_io.establish_server_with_client_socket listen_addr conn_handler
   in
-  let* () = Lwt_io.printf "Server listening on port %d\n" port in
+  let* () = Lwt_io.printf "ReWeb.Server: listening on port %d\n" port in
   let forever, _ = Lwt.wait () in
   forever

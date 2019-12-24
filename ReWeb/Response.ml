@@ -51,10 +51,10 @@ let make_chunk ?(lines=true) line =
   let len, line = if lines then len + 1, line ^ "\n" else len, line in
   { H.IOVec.off; len; buffer = Bigstringaf.of_string ~off ~len line }
 
-let render ?(status=`OK) ?(content_type="text/html") renderer =
+let render ?(status=`OK) ?(content_type="text/html") view =
   let stream, push_to_stream = Lwt_stream.create () in
   let p string = push_to_stream (Some (make_chunk ~lines:false string)) in
-  renderer p;
+  view p;
   push_to_stream None;
   make ~status ~headers:(get_headers content_type) (Body.Multi stream)
 
