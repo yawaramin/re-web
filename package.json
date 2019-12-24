@@ -31,6 +31,7 @@
     "@opam/httpaf": "0.6.5",
     "@opam/httpaf-lwt-unix": "0.6.5",
     "@opam/lwt": "4.4.0",
+    "@opam/piaf": "0.1.0",
     "@opam/uri": ">= 3.1.0 < 4.0.0",
     "@reason-native/rely": "*"
   },
@@ -42,8 +43,18 @@
     "@opam/rtop": "*"
   },
   "resolutions": {
+    "@opam/conf-libssl": "esy-packages/esy-openssl#648930f",
     "@opam/httpaf": "anmonteiro/httpaf:httpaf.opam#90e7c87",
     "@opam/httpaf-lwt": "anmonteiro/httpaf:httpaf-lwt.opam#90e7c87",
-    "@opam/httpaf-lwt-unix": "anmonteiro/httpaf:httpaf-lwt-unix.opam#90e7c87"
+    "@opam/httpaf-lwt-unix": "anmonteiro/httpaf:httpaf-lwt-unix.opam#90e7c87",
+    "@opam/piaf": {
+      "source": "anmonteiro/piaf:piaf.opam#2f0591a",
+      "override": {
+        "dependencies": {
+          "@opam/ocaml-syntax-shims": null
+        }
+      }
+    },
+    "@opam/ssl": "savonet/ocaml-ssl:ssl.opam#fbffa9b"
   }
 }

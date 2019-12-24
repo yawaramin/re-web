@@ -1,7 +1,23 @@
 {
-  "checksum": "f9d500b1e4e204a3a38bac0f63a23c40",
+  "checksum": "704539dba80d0b4c647cf23913f3fdee",
   "root": "ReWeb@link-dev:./package.json",
   "node": {
+    "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#cca65f99674ed2d954d28788edeb8c57fada5ed0@d41d8cd9": {
+      "id":
+        "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#cca65f99674ed2d954d28788edeb8c57fada5ed0@d41d8cd9",
+      "name": "yarn-pkg-config",
+      "version":
+        "github:esy-ocaml/yarn-pkg-config#cca65f99674ed2d954d28788edeb8c57fada5ed0",
+      "source": {
+        "type": "install",
+        "source": [
+          "github:esy-ocaml/yarn-pkg-config#cca65f99674ed2d954d28788edeb8c57fada5ed0"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
     "refmterr@3.3.0@d41d8cd9": {
       "id": "refmterr@3.3.0@d41d8cd9",
       "name": "refmterr",
@@ -36,6 +52,22 @@
       "dependencies": [],
       "devDependencies": []
     },
+    "esy-help2man@github:esy-packages/esy-help2man#c8e6931d1dcf58a81bd801145a777fd3b115c443@d41d8cd9": {
+      "id":
+        "esy-help2man@github:esy-packages/esy-help2man#c8e6931d1dcf58a81bd801145a777fd3b115c443@d41d8cd9",
+      "name": "esy-help2man",
+      "version":
+        "github:esy-packages/esy-help2man#c8e6931d1dcf58a81bd801145a777fd3b115c443",
+      "source": {
+        "type": "install",
+        "source": [
+          "github:esy-packages/esy-help2man#c8e6931d1dcf58a81bd801145a777fd3b115c443"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
     "ReWeb@link-dev:./package.json": {
       "id": "ReWeb@link-dev:./package.json",
       "name": "ReWeb",
@@ -48,7 +80,9 @@
       "overrides": [],
       "dependencies": [
         "@reason-native/rely@3.1.0@d41d8cd9",
-        "@opam/uri@opam:3.1.0@d38ac0ae", "@opam/lwt@opam:4.4.0@0357bb8b",
+        "@opam/uri@opam:3.1.0@d38ac0ae",
+        "@opam/piaf@github:anmonteiro/piaf:piaf.opam#2f0591a@f1c00629",
+        "@opam/lwt@opam:4.4.0@0357bb8b",
         "@opam/httpaf-lwt-unix@github:anmonteiro/httpaf:httpaf-lwt-unix.opam#90e7c87@d41d8cd9",
         "@opam/httpaf@github:anmonteiro/httpaf:httpaf.opam#90e7c87@d41d8cd9",
         "@opam/ezjsonm-lwt@opam:1.1.0@d5063b1d",
@@ -397,6 +431,27 @@
         "@opam/base-bytes@opam:base@19d0c2ff"
       ]
     },
+    "@opam/ssl@github:savonet/ocaml-ssl:ssl.opam#fbffa9b@d41d8cd9": {
+      "id": "@opam/ssl@github:savonet/ocaml-ssl:ssl.opam#fbffa9b@d41d8cd9",
+      "name": "@opam/ssl",
+      "version": "github:savonet/ocaml-ssl:ssl.opam#fbffa9b",
+      "source": {
+        "type": "install",
+        "source": [ "github:savonet/ocaml-ssl:ssl.opam#fbffa9b" ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:1.11.4@a7ccb7ae",
+        "@opam/conf-libssl@archive:https://github.com/openssl/openssl/archive/OpenSSL_1_1_1d.tar.gz#sha1:df0ee4811c87c209ebadb4e6b203d1e560d00f9a@7918429c",
+        "@opam/base-unix@opam:base@87d0b2eb",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:1.11.4@a7ccb7ae",
+        "@opam/conf-libssl@archive:https://github.com/openssl/openssl/archive/OpenSSL_1_1_1d.tar.gz#sha1:df0ee4811c87c209ebadb4e6b203d1e560d00f9a@7918429c",
+        "@opam/base-unix@opam:base@87d0b2eb"
+      ]
+    },
     "@opam/sexplib0@opam:v0.13.0@3f54c2be": {
       "id": "@opam/sexplib0@opam:v0.13.0@3f54c2be",
       "name": "@opam/sexplib0",
@@ -633,6 +688,32 @@
         "ocaml@4.8.1000@d41d8cd9", "@opam/result@opam:1.4@dc720aef"
       ]
     },
+    "@opam/psq@opam:0.2.0@247756d4": {
+      "id": "@opam/psq@opam:0.2.0@247756d4",
+      "name": "@opam/psq",
+      "version": "opam:0.2.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://opam.ocaml.org/cache/md5/b9/b94fb15f8878172bf58446b7d0fb7c1e#md5:b94fb15f8878172bf58446b7d0fb7c1e",
+          "archive:https://github.com/pqwy/psq/releases/download/v0.2.0/psq-v0.2.0.tbz#md5:b94fb15f8878172bf58446b7d0fb7c1e"
+        ],
+        "opam": {
+          "name": "psq",
+          "version": "0.2.0",
+          "path": "esy.lock/opam/psq.0.2.0"
+        }
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/seq@opam:base@d8d7de1d",
+        "@opam/dune@opam:1.11.4@a7ccb7ae", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/seq@opam:base@d8d7de1d",
+        "@opam/dune@opam:1.11.4@a7ccb7ae"
+      ]
+    },
     "@opam/ppx_derivers@opam:1.2.1@ecf0aa45": {
       "id": "@opam/ppx_derivers@opam:1.2.1@ecf0aa45",
       "name": "@opam/ppx_derivers",
@@ -656,6 +737,43 @@
       ],
       "devDependencies": [
         "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:1.11.4@a7ccb7ae"
+      ]
+    },
+    "@opam/piaf@github:anmonteiro/piaf:piaf.opam#2f0591a@f1c00629": {
+      "id": "@opam/piaf@github:anmonteiro/piaf:piaf.opam#2f0591a@f1c00629",
+      "name": "@opam/piaf",
+      "version": "github:anmonteiro/piaf:piaf.opam#2f0591a",
+      "source": {
+        "type": "install",
+        "source": [ "github:anmonteiro/piaf:piaf.opam#2f0591a" ]
+      },
+      "overrides": [
+        { "dependencies": { "@opam/ocaml-syntax-shims": null } }
+      ],
+      "dependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/uri@opam:3.1.0@d38ac0ae",
+        "@opam/ssl@github:savonet/ocaml-ssl:ssl.opam#fbffa9b@d41d8cd9",
+        "@opam/lwt_ssl@opam:1.1.3@9d044ebe", "@opam/lwt@opam:4.4.0@0357bb8b",
+        "@opam/logs@opam:0.7.0@1d03143e",
+        "@opam/httpaf-lwt-unix@github:anmonteiro/httpaf:httpaf-lwt-unix.opam#90e7c87@d41d8cd9",
+        "@opam/httpaf@github:anmonteiro/httpaf:httpaf.opam#90e7c87@d41d8cd9",
+        "@opam/h2-lwt-unix@opam:0.5.0@afe9e192",
+        "@opam/h2@opam:0.5.0@426493c1", "@opam/dune@opam:1.11.4@a7ccb7ae",
+        "@opam/conf-libssl@archive:https://github.com/openssl/openssl/archive/OpenSSL_1_1_1d.tar.gz#sha1:df0ee4811c87c209ebadb4e6b203d1e560d00f9a@7918429c",
+        "@opam/bigstringaf@opam:0.6.0@971764fa",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/uri@opam:3.1.0@d38ac0ae",
+        "@opam/ssl@github:savonet/ocaml-ssl:ssl.opam#fbffa9b@d41d8cd9",
+        "@opam/lwt_ssl@opam:1.1.3@9d044ebe", "@opam/lwt@opam:4.4.0@0357bb8b",
+        "@opam/logs@opam:0.7.0@1d03143e",
+        "@opam/httpaf-lwt-unix@github:anmonteiro/httpaf:httpaf-lwt-unix.opam#90e7c87@d41d8cd9",
+        "@opam/httpaf@github:anmonteiro/httpaf:httpaf.opam#90e7c87@d41d8cd9",
+        "@opam/h2-lwt-unix@opam:0.5.0@afe9e192",
+        "@opam/h2@opam:0.5.0@426493c1", "@opam/dune@opam:1.11.4@a7ccb7ae",
+        "@opam/conf-libssl@archive:https://github.com/openssl/openssl/archive/OpenSSL_1_1_1d.tar.gz#sha1:df0ee4811c87c209ebadb4e6b203d1e560d00f9a@7918429c",
+        "@opam/bigstringaf@opam:0.6.0@971764fa"
       ]
     },
     "@opam/parsexp@opam:v0.13.0@5b4df040": {
@@ -964,6 +1082,37 @@
       ],
       "devDependencies": [ "ocaml@4.8.1000@d41d8cd9" ]
     },
+    "@opam/lwt_ssl@opam:1.1.3@9d044ebe": {
+      "id": "@opam/lwt_ssl@opam:1.1.3@9d044ebe",
+      "name": "@opam/lwt_ssl",
+      "version": "opam:1.1.3",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://opam.ocaml.org/cache/md5/b1/b18414b2ef71ededa07666dfc467f10a#md5:b18414b2ef71ededa07666dfc467f10a",
+          "archive:https://github.com/ocsigen/lwt_ssl/archive/1.1.3.tar.gz#md5:b18414b2ef71ededa07666dfc467f10a"
+        ],
+        "opam": {
+          "name": "lwt_ssl",
+          "version": "1.1.3",
+          "path": "esy.lock/opam/lwt_ssl.1.1.3"
+        }
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.8.1000@d41d8cd9",
+        "@opam/ssl@github:savonet/ocaml-ssl:ssl.opam#fbffa9b@d41d8cd9",
+        "@opam/lwt@opam:4.4.0@0357bb8b", "@opam/dune@opam:1.11.4@a7ccb7ae",
+        "@opam/base-unix@opam:base@87d0b2eb",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9",
+        "@opam/ssl@github:savonet/ocaml-ssl:ssl.opam#fbffa9b@d41d8cd9",
+        "@opam/lwt@opam:4.4.0@0357bb8b", "@opam/dune@opam:1.11.4@a7ccb7ae",
+        "@opam/base-unix@opam:base@87d0b2eb"
+      ]
+    },
     "@opam/lwt_react@opam:1.1.3@72987fcf": {
       "id": "@opam/lwt_react@opam:1.1.3@72987fcf",
       "name": "@opam/lwt_react",
@@ -1052,6 +1201,34 @@
         "@opam/dune-configurator@opam:1.0.0@4873acd8",
         "@opam/dune@opam:1.11.4@a7ccb7ae"
       ]
+    },
+    "@opam/logs@opam:0.7.0@1d03143e": {
+      "id": "@opam/logs@opam:0.7.0@1d03143e",
+      "name": "@opam/logs",
+      "version": "opam:0.7.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://opam.ocaml.org/cache/md5/2b/2bf021ca13331775e33cf34ab60246f7#md5:2bf021ca13331775e33cf34ab60246f7",
+          "archive:https://erratique.ch/software/logs/releases/logs-0.7.0.tbz#md5:2bf021ca13331775e33cf34ab60246f7"
+        ],
+        "opam": {
+          "name": "logs",
+          "version": "0.7.0",
+          "path": "esy.lock/opam/logs.0.7.0"
+        }
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/topkg@opam:1.0.1@a42c631e",
+        "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
+        "@opam/ocamlbuild@opam:0.14.0@6ac75d03",
+        "@opam/lwt@opam:4.4.0@0357bb8b",
+        "@opam/cmdliner@opam:1.0.4@93208aac",
+        "@opam/base-threads@opam:base@36803084",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [ "ocaml@4.8.1000@d41d8cd9" ]
     },
     "@opam/lambda-term@opam:2.0.2@119fb081": {
       "id": "@opam/lambda-term@opam:2.0.2@119fb081",
@@ -1176,7 +1353,8 @@
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.8.1000@d41d8cd9", "@opam/lwt@opam:4.4.0@0357bb8b",
+        "ocaml@4.8.1000@d41d8cd9", "@opam/lwt_ssl@opam:1.1.3@9d044ebe",
+        "@opam/lwt@opam:4.4.0@0357bb8b",
         "@opam/httpaf-lwt@github:anmonteiro/httpaf:httpaf-lwt.opam#90e7c87@d41d8cd9",
         "@opam/httpaf@github:anmonteiro/httpaf:httpaf.opam#90e7c87@d41d8cd9",
         "@opam/faraday-lwt-unix@opam:0.7.0@52a60108",
@@ -1237,6 +1415,35 @@
         "@opam/angstrom@opam:0.12.1@02015bad"
       ]
     },
+    "@opam/hpack@opam:0.2.0@9f3eae78": {
+      "id": "@opam/hpack@opam:0.2.0@9f3eae78",
+      "name": "@opam/hpack",
+      "version": "opam:0.2.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://opam.ocaml.org/cache/md5/c8/c883927ce8a9f3f7159ef7b20988f051#md5:c883927ce8a9f3f7159ef7b20988f051",
+          "archive:https://github.com/anmonteiro/ocaml-h2/releases/download/0.2.0/h2-0.2.0.tbz#md5:c883927ce8a9f3f7159ef7b20988f051"
+        ],
+        "opam": {
+          "name": "hpack",
+          "version": "0.2.0",
+          "path": "esy.lock/opam/hpack.0.2.0"
+        }
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/faraday@opam:0.7.0@6d4772f6",
+        "@opam/dune@opam:1.11.4@a7ccb7ae",
+        "@opam/angstrom@opam:0.12.1@02015bad",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/faraday@opam:0.7.0@6d4772f6",
+        "@opam/dune@opam:1.11.4@a7ccb7ae",
+        "@opam/angstrom@opam:0.12.1@02015bad"
+      ]
+    },
     "@opam/hex@opam:1.4.0@96b78cfa": {
       "id": "@opam/hex@opam:1.4.0@96b78cfa",
       "name": "@opam/hex",
@@ -1264,6 +1471,102 @@
         "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:1.11.4@a7ccb7ae",
         "@opam/cstruct@opam:5.1.1@e0b5aafd",
         "@opam/bigarray-compat@opam:1.0.0@1faefa97"
+      ]
+    },
+    "@opam/h2-lwt-unix@opam:0.5.0@afe9e192": {
+      "id": "@opam/h2-lwt-unix@opam:0.5.0@afe9e192",
+      "name": "@opam/h2-lwt-unix",
+      "version": "opam:0.5.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://opam.ocaml.org/cache/sha256/cc/cc7517d73b0b24425afcedd258c09d7ebb6c2c20075137cb6f6eb7b63c8e7ad3#sha256:cc7517d73b0b24425afcedd258c09d7ebb6c2c20075137cb6f6eb7b63c8e7ad3",
+          "archive:https://github.com/anmonteiro/ocaml-h2/releases/download/0.5.0/h2-0.5.0.tbz#sha256:cc7517d73b0b24425afcedd258c09d7ebb6c2c20075137cb6f6eb7b63c8e7ad3"
+        ],
+        "opam": {
+          "name": "h2-lwt-unix",
+          "version": "0.5.0",
+          "path": "esy.lock/opam/h2-lwt-unix.0.5.0"
+        }
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/lwt_ssl@opam:1.1.3@9d044ebe",
+        "@opam/lwt@opam:4.4.0@0357bb8b", "@opam/h2-lwt@opam:0.5.0@8265f868",
+        "@opam/faraday-lwt-unix@opam:0.7.0@52a60108",
+        "@opam/dune@opam:1.11.4@a7ccb7ae", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/lwt@opam:4.4.0@0357bb8b",
+        "@opam/h2-lwt@opam:0.5.0@8265f868",
+        "@opam/faraday-lwt-unix@opam:0.7.0@52a60108",
+        "@opam/dune@opam:1.11.4@a7ccb7ae"
+      ]
+    },
+    "@opam/h2-lwt@opam:0.5.0@8265f868": {
+      "id": "@opam/h2-lwt@opam:0.5.0@8265f868",
+      "name": "@opam/h2-lwt",
+      "version": "opam:0.5.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://opam.ocaml.org/cache/sha256/cc/cc7517d73b0b24425afcedd258c09d7ebb6c2c20075137cb6f6eb7b63c8e7ad3#sha256:cc7517d73b0b24425afcedd258c09d7ebb6c2c20075137cb6f6eb7b63c8e7ad3",
+          "archive:https://github.com/anmonteiro/ocaml-h2/releases/download/0.5.0/h2-0.5.0.tbz#sha256:cc7517d73b0b24425afcedd258c09d7ebb6c2c20075137cb6f6eb7b63c8e7ad3"
+        ],
+        "opam": {
+          "name": "h2-lwt",
+          "version": "0.5.0",
+          "path": "esy.lock/opam/h2-lwt.0.5.0"
+        }
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/lwt@opam:4.4.0@0357bb8b",
+        "@opam/h2@opam:0.5.0@426493c1", "@opam/dune@opam:1.11.4@a7ccb7ae",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/lwt@opam:4.4.0@0357bb8b",
+        "@opam/h2@opam:0.5.0@426493c1", "@opam/dune@opam:1.11.4@a7ccb7ae"
+      ]
+    },
+    "@opam/h2@opam:0.5.0@426493c1": {
+      "id": "@opam/h2@opam:0.5.0@426493c1",
+      "name": "@opam/h2",
+      "version": "opam:0.5.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://opam.ocaml.org/cache/sha256/cc/cc7517d73b0b24425afcedd258c09d7ebb6c2c20075137cb6f6eb7b63c8e7ad3#sha256:cc7517d73b0b24425afcedd258c09d7ebb6c2c20075137cb6f6eb7b63c8e7ad3",
+          "archive:https://github.com/anmonteiro/ocaml-h2/releases/download/0.5.0/h2-0.5.0.tbz#sha256:cc7517d73b0b24425afcedd258c09d7ebb6c2c20075137cb6f6eb7b63c8e7ad3"
+        ],
+        "opam": {
+          "name": "h2",
+          "version": "0.5.0",
+          "path": "esy.lock/opam/h2.0.5.0"
+        }
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/psq@opam:0.2.0@247756d4",
+        "@opam/httpaf@github:anmonteiro/httpaf:httpaf.opam#90e7c87@d41d8cd9",
+        "@opam/hpack@opam:0.2.0@9f3eae78",
+        "@opam/faraday@opam:0.7.0@6d4772f6",
+        "@opam/dune@opam:1.11.4@a7ccb7ae",
+        "@opam/bigstringaf@opam:0.6.0@971764fa",
+        "@opam/base64@opam:3.2.0@6303aa3a",
+        "@opam/angstrom@opam:0.12.1@02015bad",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/psq@opam:0.2.0@247756d4",
+        "@opam/httpaf@github:anmonteiro/httpaf:httpaf.opam#90e7c87@d41d8cd9",
+        "@opam/hpack@opam:0.2.0@9f3eae78",
+        "@opam/faraday@opam:0.7.0@6d4772f6",
+        "@opam/dune@opam:1.11.4@a7ccb7ae",
+        "@opam/bigstringaf@opam:0.6.0@971764fa",
+        "@opam/base64@opam:3.2.0@6303aa3a",
+        "@opam/angstrom@opam:0.12.1@02015bad"
       ]
     },
     "@opam/fpath@opam:0.7.2@45477b93": {
@@ -1566,6 +1869,31 @@
         "@opam/base-unix@opam:base@87d0b2eb"
       ]
     },
+    "@opam/conf-pkg-config@opam:1.1@67c69c0c": {
+      "id": "@opam/conf-pkg-config@opam:1.1@67c69c0c",
+      "name": "@opam/conf-pkg-config",
+      "version": "opam:1.1",
+      "source": {
+        "type": "install",
+        "source": [ "no-source:" ],
+        "opam": {
+          "name": "conf-pkg-config",
+          "version": "1.1",
+          "path": "esy.lock/opam/conf-pkg-config.1.1"
+        }
+      },
+      "overrides": [
+        {
+          "opamoverride":
+            "esy.lock/overrides/opam__s__conf_pkg_config_opam__c__1.1_opam_override"
+        }
+      ],
+      "dependencies": [
+        "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#cca65f99674ed2d954d28788edeb8c57fada5ed0@d41d8cd9",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
     "@opam/conf-m4@opam:1@3b2b148a": {
       "id": "@opam/conf-m4@opam:1@3b2b148a",
       "name": "@opam/conf-m4",
@@ -1581,6 +1909,40 @@
       },
       "overrides": [],
       "dependencies": [ "@esy-ocaml/substs@0.0.1@d41d8cd9" ],
+      "devDependencies": []
+    },
+    "@opam/conf-libssl@archive:https://github.com/openssl/openssl/archive/OpenSSL_1_1_1d.tar.gz#sha1:df0ee4811c87c209ebadb4e6b203d1e560d00f9a@7918429c": {
+      "id":
+        "@opam/conf-libssl@archive:https://github.com/openssl/openssl/archive/OpenSSL_1_1_1d.tar.gz#sha1:df0ee4811c87c209ebadb4e6b203d1e560d00f9a@7918429c",
+      "name": "@opam/conf-libssl",
+      "version":
+        "archive:https://github.com/openssl/openssl/archive/OpenSSL_1_1_1d.tar.gz#sha1:df0ee4811c87c209ebadb4e6b203d1e560d00f9a",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://github.com/openssl/openssl/archive/OpenSSL_1_1_1d.tar.gz#sha1:df0ee4811c87c209ebadb4e6b203d1e560d00f9a"
+        ]
+      },
+      "overrides": [ "esy.lock/overrides/7918429cb4d8b1cd9cc3615cac6e943b" ],
+      "dependencies": [
+        "@opam/conf-pkg-config@opam:1.1@67c69c0c",
+        "@opam/conf-autoconf@github:esy-packages/esy-autoconf:package.json#fb93edf@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
+    "@opam/conf-autoconf@github:esy-packages/esy-autoconf:package.json#fb93edf@d41d8cd9": {
+      "id":
+        "@opam/conf-autoconf@github:esy-packages/esy-autoconf:package.json#fb93edf@d41d8cd9",
+      "name": "@opam/conf-autoconf",
+      "version": "github:esy-packages/esy-autoconf:package.json#fb93edf",
+      "source": {
+        "type": "install",
+        "source": [ "github:esy-packages/esy-autoconf:package.json#fb93edf" ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "esy-help2man@github:esy-packages/esy-help2man#c8e6931d1dcf58a81bd801145a777fd3b115c443@d41d8cd9"
+      ],
       "devDependencies": []
     },
     "@opam/cmdliner@opam:1.0.4@93208aac": {
