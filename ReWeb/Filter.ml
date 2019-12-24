@@ -6,6 +6,10 @@ let get_auth request =
     | [typ; credentials] -> Some (typ, credentials)
     | _ -> None)
 
+let bad_request string = string
+  |> Response.text ~status:`Bad_request
+  |> Lwt.return
+
 let unauthorized = "Unauthorized"
   |> Response.text ~status:`Unauthorized
   |> Lwt.return
@@ -42,25 +46,29 @@ let bearer_auth next request = match get_auth request with
 let body_json next request =
   let open Lwt_let in
   let* body = Request.body_string request in
-  next {
-    request with Request.ctx = object
-      method body = Ezjsonm.from_string body
-    end;
-  }
+  match Ezjsonm.from_string body with
+  | body ->
+    next { request with Request.ctx = object method body = body end }
+  | exception Ezjsonm.Parse_error (_, string) ->
+    bad_request ("ReWeb.Filter.body_json: " ^ string)
+  | exception Assert_failure (_, _, _) ->
+    bad_request "ReWeb.Filter.body_json: not a JSON document"
 
 let body_string next request =
   let open Lwt_let in
   let* body = Request.body_string request in
   next { request with Request.ctx = object method body = body end }
 
-let form typ next request =
+let body_form typ next request =
   match Request.header "content-type" request with
   | Some "application/x-www-form-urlencoded" ->
     let open Lwt_let in
     let* body = Request.body_string request in
-    let obj = Form.decoder typ body in
-    next { request with Request.ctx = object method form = obj end }
+    begin match Form.decoder typ body with
+    | Ok obj ->
+      next { request with Request.ctx = object method form = obj end }
+    | Error string -> bad_request string
+    end
   | _ ->
-    "ReWeb.Filter.form: request content-type is not form"
-    |> Response.text ~status:`Bad_request
-    |> Lwt.return
+    bad_request "ReWeb.Filter.form: request content-type is not form"
+

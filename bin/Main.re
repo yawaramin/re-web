@@ -30,18 +30,17 @@ let getHeader = (name, request) =>
 let getLogin = _ =>
   View.login(~rememberMe=true) |> Response.render |> Lwt.return;
 
-let postLogin = request =>
-  switch (Request.context(request)#form) {
-  | Ok({User.username, password}) =>
-    password
-    |> Printf.sprintf(
-         "Logged in with username = %s, password = %s",
-         username,
-       )
-    |> Response.text
-    |> Lwt.return
-  | Error(string) => string |> Response.text(~status=`Bad_request) |> Lwt.return
-  };
+let postLogin = request => {
+  let {User.username, password} = Request.context(request)#form;
+
+  password
+  |> Printf.sprintf(
+       "Logged in with username = %s, password = %s",
+       username,
+     )
+  |> Response.text
+  |> Lwt.return;
+};
 
 let getStatic = (fileName, _) =>
   fileName
@@ -97,10 +96,11 @@ let server =
   | (`GET, ["hello"]) => hello
   | (`GET, ["header", name]) => getHeader(name)
   | (`GET, ["login"]) => getLogin
-  | (`POST, ["login"]) => Filter.form(User.form) @@ postLogin
+  | (`POST, ["login"]) => Filter.body_form(User.form) @@ postLogin
   | (`GET, ["static", ...fileName]) => getStatic(fileName)
   | (`POST, ["body"]) => echoBody
   | (`POST, ["body-bang"]) => exclaimBody
+  | (`POST, ["json"]) => Filter.body_json @@ hello
   | (meth, ["auth", ...path]) =>
     Filter.basic_auth @@ authServer @@ (meth, path)
   | _ => notFound;

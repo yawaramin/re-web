@@ -2,10 +2,9 @@ module H = Httpaf
 
 type 'ctx t = {
   ctx : 'ctx;
+  query : string;
   reqd : (Lwt_unix.file_descr, unit Lwt.t) H.Reqd.t;
 }
-
-let make reqd = {ctx = (); reqd}
 
 let body request =
   let request_body = H.Reqd.request_body request.reqd in
@@ -32,12 +31,16 @@ let body_string ?(buf_size=Lwt_io.default_buffer_size ()) request =
   H.Body.schedule_read request_body ~on_eof ~on_read;
   body
 
-let context {ctx; _} = ctx
+let context { ctx; _ } = ctx
 
-let header name {reqd; _} =
-  let {H.Request.headers; _} = H.Reqd.request reqd in
+let header name { reqd; _ } =
+  let { H.Request.headers; _ } = H.Reqd.request reqd in
   H.Headers.get headers name
 
-let headers name {reqd; _} =
-  let {H.Request.headers; _} = H.Reqd.request reqd in
+let headers name { reqd; _ } =
+  let { H.Request.headers; _ } = H.Reqd.request reqd in
   H.Headers.get_multi headers name
+
+let make query reqd = { ctx = (); query; reqd }
+let query { query; _ } = query
+

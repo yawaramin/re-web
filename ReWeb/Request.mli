@@ -4,6 +4,10 @@ type 'ctx t = {
       type so that filters can arbitrarily put named values of any type
       in the request-response pipeline. *)
 
+  query : string;
+  (** Either the query string (anything following the [?] in the path)
+      or empty string. *)
+
   reqd : (Lwt_unix.file_descr, unit Lwt.t) Httpaf.Reqd.t;
 }
 
@@ -25,7 +29,16 @@ val header : string -> _ t -> string option
     header, if present. *)
 
 val headers : string -> _ t -> string list
-(** [headers name request] gets all the values corresponding to the given
-    header. *)
+(** [headers name request] gets all the values corresponding to the
+    given header. *)
 
-val make : (Lwt_unix.file_descr, unit Lwt.t) Httpaf.Reqd.t -> unit t
+val make :
+  string ->
+  (Lwt_unix.file_descr, unit Lwt.t) Httpaf.Reqd.t ->
+  unit t
+(** [make query reqd] returns a new request containing the given [query]
+    and Httpaf [reqd]. *)
+
+val query : _ t -> string
+(** [query request] gets the query string of the [request]. *)
+

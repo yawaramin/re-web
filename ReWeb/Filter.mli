@@ -17,13 +17,17 @@ val bearer_auth : ('ctx1, < bearer_token : string; prev : 'ctx1 >) t
 val body_json : (unit, < body : Ezjsonm.t >) t
 (** [body_json] is a filter that transforms a 'root' service (i.e. one
     with [unit] context) into a service with a context containing the
-    request body, parsed as JSON. *)
+    request body. If the request body fails to parse as valid JSON, it
+    short-circuits and returns a 400 Bad Request. *)
 
 val body_string : (unit, < body : string >) t
 (** [body_string] is a filter that transforms a 'root' service into a
     service whose context contains the request body as a single string. *)
 
-val form : ('ctor, 'ty) Form.t -> (unit, < form : ('ty, string) result >) t
-(** [form typ] is a filter that decodes a web form in the request body
-    and puts it inside the request for the next service. The decoding is
-    done as specific by the form definition [typ]. *)
+val body_form : ('ctor, 'ty) Form.t -> (unit, < form : 'ty >) t
+(** [body_form typ] is a filter that decodes a web form in the request
+    body and puts it inside the request for the next service. The
+    decoding is done as specified by the form definition [typ]. If the
+    form fails to decode, it short-circuits and returns a 400 Bad
+    Request. *)
+

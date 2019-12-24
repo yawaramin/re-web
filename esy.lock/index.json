@@ -14,7 +14,7 @@
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.8.1000@d41d8cd9", "@reason-native/pastel@0.2.2@d41d8cd9",
+        "ocaml@4.8.1000@d41d8cd9", "@reason-native/pastel@0.2.3@d41d8cd9",
         "@reason-native/console@0.1.0@d41d8cd9",
         "@opam/re@opam:1.9.0@d4d5e13d", "@opam/dune@opam:1.11.4@a7ccb7ae",
         "@opam/atdgen@opam:2.0.0@46af0360",
@@ -78,21 +78,21 @@
       "overrides": [],
       "dependencies": [
         "refmterr@3.2.2@d41d8cd9", "ocaml@4.8.1000@d41d8cd9",
-        "@reason-native/pastel@0.2.2@d41d8cd9",
+        "@reason-native/pastel@0.2.3@d41d8cd9",
         "@reason-native/file-context-printer@0.0.3@d41d8cd9",
         "@opam/re@opam:1.9.0@d4d5e13d", "@opam/junit@opam:2.0.1@1b4d302c",
         "@opam/dune@opam:1.11.4@a7ccb7ae", "@esy-ocaml/reason@3.5.2@d41d8cd9"
       ],
       "devDependencies": []
     },
-    "@reason-native/pastel@0.2.2@d41d8cd9": {
-      "id": "@reason-native/pastel@0.2.2@d41d8cd9",
+    "@reason-native/pastel@0.2.3@d41d8cd9": {
+      "id": "@reason-native/pastel@0.2.3@d41d8cd9",
       "name": "@reason-native/pastel",
-      "version": "0.2.2",
+      "version": "0.2.3",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/@reason-native/pastel/-/pastel-0.2.2.tgz#sha1:a1f7fe266223aaf7915a71f5c8b9ee58e065c62a"
+          "archive:https://registry.npmjs.org/@reason-native/pastel/-/pastel-0.2.3.tgz#sha1:5c5d420c09874584ce15a38695c5dfd0f0ff5dfa"
         ]
       },
       "overrides": [],
@@ -114,7 +114,7 @@
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.8.1000@d41d8cd9", "@reason-native/pastel@0.2.2@d41d8cd9",
+        "ocaml@4.8.1000@d41d8cd9", "@reason-native/pastel@0.2.3@d41d8cd9",
         "@opam/re@opam:1.9.0@d4d5e13d", "@opam/dune@opam:1.11.4@a7ccb7ae",
         "@esy-ocaml/reason@3.5.2@d41d8cd9"
       ],
