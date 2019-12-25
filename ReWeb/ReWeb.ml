@@ -3,6 +3,9 @@
 
 module Body = Body
 
+module Client = Client
+(** Make web requests. *)
+
 module Filter = Filter
 (** Transform services. *)
 

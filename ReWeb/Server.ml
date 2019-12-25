@@ -15,33 +15,43 @@ let parse_route { H.Request.meth; target; _ } =
   | [path] -> meth, segment path, ""
   | _ -> failwith "ReWeb.Server: failed to parse route"
 
+let string_of_unix_addr = function
+  | Unix.ADDR_UNIX string -> string
+  | Unix.ADDR_INET (inet_addr, _) -> Unix.string_of_inet_addr inet_addr
+
 let schedule_chunk writer { H.IOVec.off; len; buffer } =
   H.Body.schedule_bigstring writer ~off ~len buffer
+
+let to_stream body = body
+  |> Piaf.Body.to_stream
+  |> Lwt_stream.map Body.make_chunk
 
 let error_handler _client_addr ?(request:_) _error _start_resp =
   failwith "!"
 
 let serve ?(port=8080) server =
   let request_handler client_addr reqd =
-    let send { Response.envelope; body; _ } =
-      let code = H.Status.to_code envelope.H.Response.status in
-      let addr = match client_addr with
-        | Unix.ADDR_UNIX string -> string
-        | Unix.ADDR_INET (inet_addr, _) ->
-          Unix.string_of_inet_addr inet_addr
-      in
-      Printf.printf " %d %s\n%!" code addr;
+    let send ?(log=true) { Response.envelope; body } =
+      if log then begin
+        let code = H.Status.to_code envelope.H.Response.status in
+        client_addr
+        |> string_of_unix_addr
+        |> Printf.printf " %d %s\n%!" code
+      end;
 
-      match body with
-      | Body.Single bigstring ->
-        H.Reqd.respond_with_bigstring reqd envelope bigstring
-      | Body.Multi stream ->
+      let send stream =
         let writer = H.Reqd.respond_with_streaming reqd envelope in
         let fully_written =
           Lwt_stream.iter (schedule_chunk writer) stream
         in
-        Lwt.on_success fully_written (fun _ ->
-          H.Body.close_writer writer)
+        Lwt.on_success fully_written @@ fun _ ->
+          H.Body.close_writer writer
+      in
+      match body with
+      | Body.Single bigstring ->
+        H.Reqd.respond_with_bigstring reqd envelope bigstring
+      | Body.Multi stream -> send stream
+      | Body.Piaf body -> body |> to_stream |> send
     in
     let meth, path, query = reqd |> H.Reqd.request |> parse_route in
     let response = reqd |> Request.make query |> server (meth, path) in

@@ -7,11 +7,11 @@ let get_auth request =
     | _ -> None)
 
 let bad_request string = string
-  |> Response.text ~status:`Bad_request
+  |> Response.of_text ~status:`Bad_request
   |> Lwt.return
 
 let unauthorized = "Unauthorized"
-  |> Response.text ~status:`Unauthorized
+  |> Response.of_text ~status:`Unauthorized
   |> Lwt.return
 
 let basic_auth next request = match get_auth request with
