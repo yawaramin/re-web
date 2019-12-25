@@ -3,6 +3,14 @@ module H = Httpaf
 type status = H.Status.t
 type t = { envelope : H.Response.t; body : Body.t }
 
+let body { body; _ } = body
+
+let header name { envelope = { H.Response.headers; _ }; _ } =
+  H.Headers.get headers name
+
+let headers name { envelope = { H.Response.headers; _ }; _ } =
+  H.Headers.get_multi headers name
+
 let make ~status ~headers body = {
   envelope = H.Response.create ~headers status;
   body;
@@ -69,4 +77,6 @@ let of_file ?(status=`OK) ?content_type file_name =
   make ~status ~headers:(get_headers content_type) body
 
 let of_text ?(status=`OK) = of_binary ~status ~content_type:"text/plain"
+
+let status { envelope = { H.Response.status; _ }; _ } = status
 
