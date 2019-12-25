@@ -2,11 +2,16 @@
 
 ReWeb is a web framework based on several foundations:
 
-- The amazing work of the people behind Httpaf, H2, and others
-- The core idea of 'Your server as a function' by Marius Eriksen which
-  was also the idea behind Twitter's Finagle web stack
-- Jasim Basheer's essay 'Rails on OCaml' which identifies the need for an
-  ergonomic, Rails-like web framework that still preserves the type
+- The amazing work of the people behind
+  [Httpaf](https://github.com/inhabitedtype/httpaf),
+  [H2](https://github.com/anmonteiro/ocaml-h2), [Esy](esy.sh/), and
+  others
+- The core idea of
+  ['Your server as a function'](https://monkey.org/~marius/funsrv.pdf)
+  by Marius Eriksen which was also the idea behind Twitter's Finagle web
+  stack
+- Jasim Basheer's essay 'Rails on OCaml' which identifies the need for
+  an ergonomic, Rails-like web framework that still preserves the type
   safety benefits of OCaml.
 
 ReWeb's main concepts are:
@@ -15,14 +20,14 @@ ReWeb's main concepts are:
   response (i.e. an asynchronous function).
 - Filters: a filter is a function that takes a service as input and
   returns a service as output. It can be inserted into the 'request
-  pipeline' and manipulate the request before the service finally handles
-  it.
+  pipeline' and manipulate the request before the service finally
+  handles it.
 - Server: a server is a function that takes a route (pair of HTTP method
   and path list) as input and returns a service as output.
-- Type-safe request pipeline: requests have a type parameter that reveals
-  their 'context' i.e. some data that's stored inside them. Filters and
-  services must change requests correctly and in the right order, or the
-  compiler will present type errors.
+- Type-safe request pipeline: requests have a type parameter that
+  reveals their 'context' i.e. some data that's stored inside them.
+  Filters and services must change requests correctly and in the right
+  order, or the compiler will present type errors.
 
 Notice that all the main concepts here are just functions. They are all
 composeable using just function composition. Services can call other
