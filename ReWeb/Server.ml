@@ -38,11 +38,13 @@ let error_handler _client_addr ?(request:_) _error _start_resp =
 
 let serve ?(port=8080) server =
   let request_handler client_addr reqd =
-    let rec send { Response.envelope; body } =
-      let code = H.Status.to_code envelope.H.Response.status in
-      client_addr
-      |> string_of_unix_addr
-      |> Printf.printf " %d %s\n%!" code;
+    let rec send ?(log=true) { Response.envelope; body } =
+      if log then begin
+        let code = H.Status.to_code envelope.H.Response.status in
+        client_addr
+        |> string_of_unix_addr
+        |> Printf.printf " %d %s\n%!" code
+      end;
 
       match body with
       | Body.Single bigstring ->
@@ -55,7 +57,7 @@ let serve ?(port=8080) server =
         Lwt.on_success fully_written (fun _ ->
           H.Body.close_writer writer)
       | Body.Piaf body ->
-        send { Response.envelope; body = to_multi body }
+        send ~log:false { Response.envelope; body = to_multi body }
     in
     let meth, path, query = reqd |> H.Reqd.request |> parse_route in
     let response = reqd |> Request.make query |> server (meth, path) in
