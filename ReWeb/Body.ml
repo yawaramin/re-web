@@ -21,7 +21,7 @@ let to_string = function
   | Piaf body -> Piaf.Body.to_string body
 
 let to_json body =
-  let open Lwt_let in
+  let open Let.Lwt in
   let+ body_string = to_string body in
   match Ezjsonm.from_string body_string with
   | body -> Ok body

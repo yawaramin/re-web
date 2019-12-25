@@ -62,7 +62,7 @@ let serve ?(port=8080) server =
     ~error_handler
   in
   let listen_addr = Unix.(ADDR_INET (inet_addr_loopback, port)) in
-  let open Lwt_let in
+  let open Let.Lwt in
   let* lwt_server =
     Lwt_io.establish_server_with_client_socket listen_addr conn_handler
   in

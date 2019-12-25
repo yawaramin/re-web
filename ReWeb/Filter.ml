@@ -44,7 +44,7 @@ let bearer_auth next request = match get_auth request with
   | _ -> unauthorized
 
 let body_json next request =
-  let open Lwt_let in
+  let open Let.Lwt in
   let* body = Request.body_string request in
   match Ezjsonm.from_string body with
   | body ->
@@ -55,14 +55,14 @@ let body_json next request =
     bad_request "ReWeb.Filter.body_json: not a JSON document"
 
 let body_string next request =
-  let open Lwt_let in
+  let open Let.Lwt in
   let* body = Request.body_string request in
   next { request with Request.ctx = object method body = body end }
 
 let body_form typ next request =
   match Request.header "content-type" request with
   | Some "application/x-www-form-urlencoded" ->
-    let open Lwt_let in
+    let open Let.Lwt in
     let* body = Request.body_string request in
     begin match Form.decoder typ body with
     | Ok obj ->

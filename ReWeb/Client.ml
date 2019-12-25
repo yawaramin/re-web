@@ -3,7 +3,7 @@ module H = Httpaf
 type headers = (string * string) list
 
 let convert_response result =
-  let open Result_let in
+  let open Let.Result in
   let+ { Piaf.Response.status; headers; version; _ }, body = result in
   let headers =
     headers |> Piaf.Headers.to_rev_list |> H.Headers.of_rev_list

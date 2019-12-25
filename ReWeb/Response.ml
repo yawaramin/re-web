@@ -68,7 +68,7 @@ let of_view ?(status=`OK) ?(content_type="text/html") view =
   make ~status ~headers:(get_headers content_type) (Body.Multi stream)
 
 let of_file ?(status=`OK) ?content_type file_name =
-  let open Lwt_let in
+  let open Let.Lwt in
   let content_type =
     Option.value content_type ~default:(get_content_type file_name)
   in
