@@ -67,8 +67,41 @@ let exclaimBody = request =>
   |> Request.body_string
   |> Lwt.map(string => Response.text(string ++ "!"));
 
-let getTodo = (id, _) =>
-  Client.Once.get("https://jsonplaceholder.typicode.com/todos/" ++ id);
+let internalServerError = string =>
+  string |> Response.text(~status=`Internal_server_error) |> Lwt.return;
+
+/** [getTodo(id, request)] gets the todo item with ID [id] from the JSON
+    Placeholder API, and extracts and returns only the title of the todo
+    item. */
+let getTodo = (id, _) => {
+  let%lwt response =
+    Client.Once.get("https://jsonplaceholder.typicode.com/todos/" ++ id);
+
+  switch (response) {
+  | Ok(response) =>
+    let%lwt json = Body.to_json(response.Response.body);
+
+    /* We are manually pattern-matching against the JSON body here.
+       In the future we'll use a JSON decoder shipped with ReWeb to do
+       that. */
+    switch (json) {
+    | Ok(`O(props)) =>
+      Lwt.return(
+        switch (List.assoc("title", props)) {
+        | `String(title) => Response.text(title)
+        | _
+        | exception Not_found =>
+          Response.text(
+            ~status=`Internal_server_error,
+            "JSON response malformed",
+          )
+        },
+      )
+    | _ => internalServerError("getTodo: malformed JSON response")
+    };
+  | Error(string) => internalServerError(string)
+  };
+};
 
 let authHello = request => {
   let context = Request.context(request);

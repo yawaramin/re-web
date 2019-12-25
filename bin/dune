@@ -1,4 +1,6 @@
 (executable
   (name Main)
   (public_name main)
-  (libraries ReWeb lwt str))
+  (libraries ReWeb lwt str)
+  (preprocess (pps lwt_ppx)))
+

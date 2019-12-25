@@ -32,6 +32,7 @@
     "@opam/httpaf": "0.6.5",
     "@opam/httpaf-lwt-unix": "0.6.5",
     "@opam/lwt": "4.4.0",
+    "@opam/lwt_ppx": ">= 1.2.1 < 2.0.0",
     "@opam/piaf": "0.1.0",
     "@opam/uri": ">= 3.1.0 < 4.0.0",
     "@reason-native/rely": "*"

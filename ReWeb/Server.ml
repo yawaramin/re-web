@@ -15,22 +15,34 @@ let parse_route { H.Request.meth; target; _ } =
   | [path] -> meth, segment path, ""
   | _ -> failwith "ReWeb.Server: failed to parse route"
 
+let string_of_unix_addr = function
+  | Unix.ADDR_UNIX string -> string
+  | Unix.ADDR_INET (inet_addr, _) -> Unix.string_of_inet_addr inet_addr
+
 let schedule_chunk writer { H.IOVec.off; len; buffer } =
   H.Body.schedule_bigstring writer ~off ~len buffer
+
+let to_multi body =
+  let stream = body
+    |> Piaf.Body.to_stream
+    |> Lwt_stream.map @@ fun bigstring -> {
+      H.IOVec.off = 0;
+      len = Bigstringaf.length bigstring;
+      buffer = bigstring;
+    }
+  in
+  Body.Multi stream
 
 let error_handler _client_addr ?(request:_) _error _start_resp =
   failwith "!"
 
 let serve ?(port=8080) server =
   let request_handler client_addr reqd =
-    let send { Response.envelope; body; _ } =
+    let rec send { Response.envelope; body } =
       let code = H.Status.to_code envelope.H.Response.status in
-      let addr = match client_addr with
-        | Unix.ADDR_UNIX string -> string
-        | Unix.ADDR_INET (inet_addr, _) ->
-          Unix.string_of_inet_addr inet_addr
-      in
-      Printf.printf " %d %s\n%!" code addr;
+      client_addr
+      |> string_of_unix_addr
+      |> Printf.printf " %d %s\n%!" code;
 
       match body with
       | Body.Single bigstring ->
@@ -42,6 +54,8 @@ let serve ?(port=8080) server =
         in
         Lwt.on_success fully_written (fun _ ->
           H.Body.close_writer writer)
+      | Body.Piaf body ->
+        send { Response.envelope; body = to_multi body }
     in
     let meth, path, query = reqd |> H.Reqd.request |> parse_route in
     let response = reqd |> Request.make query |> server (meth, path) in
