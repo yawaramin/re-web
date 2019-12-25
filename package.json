@@ -16,33 +16,31 @@
     }
   },
   "repository": {
-    "url": ""
+    "url": "https://github.com/yawaramin/re-web"
   },
   "scripts": {
+    "bin": "esy b dune exec bin/Main.bc",
     "check": "esy b dune build @check",
-    "doc": "esy dune build @doc",
-    "test": "esy b dune exec bin/Main.bc"
+    "doc": "esy dune build @doc"
   },
   "dependencies": {
     "@esy-ocaml/reason": ">= 3.4.0 < 3.6.0",
     "@opam/base64": ">= 3.2.0 < 4.0.0",
     "@opam/dune": "*",
     "@opam/ezjsonm": ">= 1.1.0 < 2.0.0",
-    "@opam/ezjsonm-lwt": ">= 1.1.0 < 2.0.0",
     "@opam/httpaf": "0.6.5",
     "@opam/httpaf-lwt-unix": "0.6.5",
     "@opam/lwt": "4.4.0",
     "@opam/lwt_ppx": ">= 1.2.1 < 2.0.0",
     "@opam/piaf": "0.1.0",
-    "@opam/uri": ">= 3.1.0 < 4.0.0",
-    "@reason-native/rely": "*"
+    "@opam/ppx_inline_test": "*",
+    "@opam/uri": ">= 3.1.0 < 4.0.0"
   },
   "devDependencies": {
     "@opam/merlin": "*",
     "ocaml": "~4.8.1000",
     "@opam/odoc": "*",
-    "@opam/utop": "*",
-    "@opam/rtop": "*"
+    "@opam/utop": "*"
   },
   "resolutions": {
     "@opam/conf-libssl": "esy-packages/esy-openssl#648930f",
@@ -50,7 +48,7 @@
     "@opam/httpaf-lwt": "anmonteiro/httpaf:httpaf-lwt.opam#90e7c87",
     "@opam/httpaf-lwt-unix": "anmonteiro/httpaf:httpaf-lwt-unix.opam#90e7c87",
     "@opam/piaf": {
-      "source": "anmonteiro/piaf:piaf.opam#2f0591a",
+      "source": "anmonteiro/piaf:piaf.opam#172fcce",
       "override": {
         "dependencies": {
           "@opam/ocaml-syntax-shims": null

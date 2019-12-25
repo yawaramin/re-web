@@ -60,7 +60,7 @@ again with the same simple `esy` command.
 
 Run the included example server:
 
-    $ esy test
+    $ esy bin
 
 Send some requests to it:
 

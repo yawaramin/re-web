@@ -11,11 +11,7 @@ let make_chunk ?len buffer =
   { H.IOVec.off = 0; len; buffer }
 
 let to_piaf = function
-  | Single bigstring ->
-    let len = Bigstringaf.length bigstring in
-    [make_chunk ~len bigstring]
-    |> Lwt_stream.of_list
-    |> Piaf.Body.of_stream ~length:(`Fixed (Int64.of_int len))
+  | Single bigstring -> Piaf.Body.of_bigstring bigstring
   | Multi stream -> Piaf.Body.of_stream stream
   | Piaf body -> body
 
