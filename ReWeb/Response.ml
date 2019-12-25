@@ -12,15 +12,16 @@ let headers name { envelope = { H.Response.headers; _ }; _ } =
   H.Headers.get_multi headers name
 
 let make ~status ~headers body = {
-  envelope = H.Response.create ~headers status;
+  envelope =
+    H.Response.create ~headers:(H.Headers.of_list headers) status;
   body;
 }
 
 let get_headers ?len content_type =
   let list = ["content-type", content_type; "connection", "close"] in
-  H.Headers.of_list (match len with
-    | Some len -> ("content-length", string_of_int len) :: list
-    | None -> list)
+  match len with
+  | Some len -> ("content-length", string_of_int len) :: list
+  | None -> list
 
 let of_binary ?(status=`OK) ?(content_type="application/octet-stream") body =
   let len = String.length body in

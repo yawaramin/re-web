@@ -54,11 +54,10 @@ let echoBody = request =>
   |> Request.body
   |> Response.make(
        ~status=`OK,
-       ~headers=
-         Headers.of_list([
-           ("content-type", "application/octet-stream"),
-           ("connection", "close"),
-         ]),
+       ~headers=[
+         ("content-type", "application/octet-stream"),
+         ("connection", "close"),
+       ],
      )
   |> Lwt.return;
 

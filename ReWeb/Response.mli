@@ -14,7 +14,7 @@ val headers : string -> t -> string list
 val of_binary : ?status:status -> ?content_type:string -> string -> t
 val of_html : ?status:status -> string -> t
 val of_json : ?status:status -> Ezjsonm.t -> t
-val make : status:status -> headers:Httpaf.Headers.t -> Body.t -> t
+val make : status:status -> headers:(string * string) list -> Body.t -> t
 
 val of_view :
   ?status:status ->
