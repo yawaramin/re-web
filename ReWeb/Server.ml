@@ -24,11 +24,7 @@ let schedule_chunk writer { H.IOVec.off; len; buffer } =
 
 let to_stream body = body
   |> Piaf.Body.to_stream
-  |> Lwt_stream.map @@ fun buffer -> {
-    H.IOVec.off = 0;
-    len = Bigstringaf.length buffer;
-    buffer = buffer;
-  }
+  |> Lwt_stream.map Body.make_chunk
 
 let error_handler _client_addr ?(request:_) _error _start_resp =
   failwith "!"
