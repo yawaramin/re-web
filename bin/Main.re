@@ -11,10 +11,10 @@ let notFound = _ =>
     <h1>Not Found</h1>
   </body>
 </html>|}
-  |> Response.html(~status=`Not_found)
+  |> Response.of_html(~status=`Not_found)
   |> Lwt.return;
 
-let hello = _ => "Hello, World!" |> Response.text |> Lwt.return;
+let hello = _ => "Hello, World!" |> Response.of_text |> Lwt.return;
 
 let getHeader = (name, request) =>
   switch (Request.header(name, request)) {
@@ -22,13 +22,13 @@ let getHeader = (name, request) =>
     value
     |> Printf.sprintf({|<h1>GET /header/%s</h1>
 <p>%s</p>|}, name)
-    |> Response.html
+    |> Response.of_html
     |> Lwt.return
   | None => notFound(request)
   };
 
 let getLogin = _ =>
-  View.login(~rememberMe=true) |> Response.render |> Lwt.return;
+  View.login(~rememberMe=true) |> Response.of_view |> Lwt.return;
 
 let postLogin = request => {
   let {User.username, password} = Request.context(request)#form;
@@ -39,7 +39,7 @@ let postLogin = request => {
 <p>with username = "%s", password = "%s"</p>|},
        username,
      )
-  |> Response.html
+  |> Response.of_html
   |> Lwt.return;
 };
 
@@ -47,7 +47,7 @@ let getStatic = (fileName, _) =>
   fileName
   |> String.concat("/")
   |> (++)("/")
-  |> Response.static(~content_type="text/plain");
+  |> Response.of_file(~content_type="text/plain");
 
 let echoBody = request =>
   request
@@ -65,10 +65,10 @@ let echoBody = request =>
 let exclaimBody = request =>
   request
   |> Request.body_string
-  |> Lwt.map(string => Response.text(string ++ "!"));
+  |> Lwt.map(string => Response.of_text(string ++ "!"));
 
 let internalServerError = string =>
-  string |> Response.text(~status=`Internal_server_error) |> Lwt.return;
+  string |> Response.of_text(~status=`Internal_server_error) |> Lwt.return;
 
 /** [getTodo(id, request)] gets the todo item with ID [id] from the JSON
     Placeholder API, and extracts and returns only the title of the todo
@@ -88,10 +88,10 @@ let getTodo = (id, _) => {
     | Ok(`O(props)) =>
       Lwt.return(
         switch (List.assoc("title", props)) {
-        | `String(title) => Response.text(title)
+        | `String(title) => Response.of_text(title)
         | _
         | exception Not_found =>
-          Response.text(
+          Response.of_text(
             ~status=`Internal_server_error,
             "JSON response malformed",
           )
@@ -108,7 +108,7 @@ let authHello = request => {
 
   context#password
   |> Printf.sprintf("Username = %s\nPassword = %s", context#username)
-  |> Response.text
+  |> Response.of_text
   |> Lwt.return;
 };
 
@@ -123,7 +123,7 @@ let rejectExplorer = (next, request) =>
   switch (Request.header("user-agent", request)) {
   | Some(ua) when Str.string_match(msie, ua, 0) =>
     "Please upgrade your browser"
-    |> Response.text(~status=`Unauthorized)
+    |> Response.of_text(~status=`Unauthorized)
     |> Lwt.return
   | _ => next(request)
   };
