@@ -75,7 +75,7 @@ let internalServerError = string =>
     [curl -i localhost:8080/todos/1] and checking the headers. */
 let getTodo = (id, _) => {
   let%lwt response =
-    Client.Once.get("https://jsonplaceholder.typicode.com/todos/" ++ id);
+    Client.New.get("https://jsonplaceholder.typicode.com/todos/" ++ id);
 
   switch (response) {
   | Ok(response) => Lwt.return(response)
