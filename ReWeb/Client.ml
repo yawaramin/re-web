@@ -1,5 +1,7 @@
 module H = Httpaf
 
+type headers = (string * string) list
+
 let convert_response result =
   let open Result_let in
   let+ { Piaf.Response.status; headers; version; _ }, body = result in
@@ -15,12 +17,27 @@ let convert_response result =
 module New = struct
   module Client = Piaf.Client.Oneshot
 
+  type request_body =
+    ?config:Piaf.Config.t ->
+    ?headers:(string * string) list ->
+    ?body:Body.t ->
+    string ->
+    (Response.t, string) Lwt_result.t
+
+  type request_nobody =
+    ?config:Piaf.Config.t ->
+    ?headers:(string * string) list ->
+    string ->
+    (Response.t, string) Lwt_result.t
+
   let request_nobody ?config ?headers meth url = url
     |> Uri.of_string
     |> meth ?config ?headers
     |> Lwt.map convert_response
 
-  let request_body ?config ?headers ?body meth url = url
+  let request_body ?config ?headers ?body meth url =
+    let body = Option.map Body.to_piaf body in
+    url
     |> Uri.of_string
     |> meth ?config ?headers ?body
     |> Lwt.map convert_response
@@ -34,16 +51,20 @@ module New = struct
   let head ?config ?headers url =
     request_nobody ?config ?headers Client.head url
 
-  let patch ?config ?headers url =
-    request_body ?config ?headers Client.patch url
+  let patch ?config ?headers ?body url =
+    request_body ?config ?headers ?body Client.patch url
 
-  let post ?config ?headers url =
-    request_body ?config ?headers Client.post url
+  let post ?config ?headers ?body url =
+    request_body ?config ?headers ?body Client.post url
 
-  let put ?config ?headers url =
-    request_body ?config ?headers Client.put url
+  let put ?config ?headers ?body url =
+    request_body ?config ?headers ?body Client.put url
 
   let request ?config ?headers ?body ~meth url =
-    url |> Uri.of_string |> Client.request ?config ?headers ?body ~meth
+    let body = Option.map Body.to_piaf body in
+    url
+    |> Uri.of_string
+    |> Client.request ?config ?headers ?body ~meth
+    |> Lwt.map convert_response
 end
 
