@@ -67,17 +67,29 @@ let of_view ?(status=`OK) ?(content_type="text/html") view =
   push_to_stream None;
   make ~status ~headers:(get_headers content_type) (Body.Multi stream)
 
-let of_file ?(status=`OK) ?content_type file_name =
-  let open Let.Lwt in
-  let content_type =
-    Option.value content_type ~default:(get_content_type file_name)
-  in
-  let+ channel = Lwt_io.(open_file ~perm:0o400 ~mode:Input file_name) in
-  let lines = Lwt_io.read_lines channel in
-  let body = Body.Multi (Lwt_stream.map make_chunk lines) in
-  make ~status ~headers:(get_headers content_type) body
-
 let of_text ?(status=`OK) = of_binary ~status ~content_type:"text/plain"
+
+let of_file ?(status=`OK) ?content_type file_name =
+  let f () =
+    let content_type =
+      Option.value content_type ~default:(get_content_type file_name)
+    in
+    let open Let.Lwt in
+    let* file_descr =
+      Lwt_unix.openfile file_name Unix.[O_RDONLY; O_NONBLOCK] 0o400
+    in
+    let fd = Lwt_unix.unix_file_descr file_descr in
+    (* TODO: not sure what [shared] means here, need to find out *)
+    let bigstring = Lwt_bytes.map_file ~fd ~shared:false () in
+    let+ () = Lwt_unix.close file_descr in
+    let body = Body.Single bigstring in
+    make ~status ~headers:(get_headers content_type) body
+  in
+  Lwt.catch f @@ function
+    | Unix.Unix_error (Unix.ENOENT, _, _) ->
+      let msg = "ReWeb.Response.of_file: file not found: " ^ file_name in
+      msg |> of_text ~status:`Not_found |> Lwt.return
+    | exn -> raise exn
 
 let status { envelope = { H.Response.status; _ }; _ } = status
 

@@ -37,8 +37,15 @@ val of_view :
 
 val of_file : ?status:status -> ?content_type:string -> string -> t Lwt.t
 (** [of_file ?status ?content_type file_name] responds with the contents
-    of [file_name] which must be an absolute path in the system, with
-    HTTP response code [status] and content-type header [content_type]. *)
+    of [file_name] which must be an absolute path in the filesystem,
+    with HTTP response code [status] and content-type header
+    [content_type].
+
+    If the file is not found, responds with a 404 Not Found status and
+    an appropriate message.
+
+    Warning: this function maps the entire file into memory. Don't use
+    it for files larger than memory. *)
 
 val of_text : ?status:status -> string -> t
 
