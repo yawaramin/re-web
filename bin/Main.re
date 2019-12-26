@@ -1,5 +1,13 @@
+/* This is an example that shows the various features of ReWeb for
+   creating web servers. You can skip to the bottom of the file to see
+   the router, and work your way back up if you want. */
+
+/* [ReWeb] contains just a handful of modules so there's very little
+   chance of a conflict. */
 open ReWeb;
 
+/** [notFound(request)] is a service that responds with a formatted HTML
+    404 Not Found message. */
 let notFound = _ =>
   {|<!doctype html>
 <html>
@@ -14,8 +22,12 @@ let notFound = _ =>
   |> Response.of_html(~status=`Not_found)
   |> Lwt.return;
 
+/** [hello(request)] is a service that just responds with a hello-world
+    message. */
 let hello = _ => "Hello, World!" |> Response.of_text |> Lwt.return;
 
+/** [getHeader(name, request)] is a service that returns the contents of
+    the [request] header named [name]. */
 let getHeader = (name, request) =>
   switch (Request.header(name, request)) {
   | Some(value) =>
@@ -27,9 +39,17 @@ let getHeader = (name, request) =>
   | None => notFound(request)
   };
 
+/** [getLogin(request)] is a service that renders a view. Open the file
+    [View.re] to see what the [login] view looks like. */
 let getLogin = _ =>
   View.login(~rememberMe=true) |> Response.of_view |> Lwt.return;
 
+/** [postLogin(request)] is a service that handles the [POST /login]
+    endpoint. It's statically guaranteed access to the request body as a
+    decoded, strongly-typed form, because a form decoder filter was
+    added before the service in the router.
+
+    It returns the credentials in the response body. */
 let postLogin = request => {
   let {User.username, password} = Request.context(request)#form;
 
@@ -43,12 +63,16 @@ let postLogin = request => {
   |> Lwt.return;
 };
 
+/** [getStatic(fileName, request)] is a service that returns the
+    contents of [fileName] (if found). */
 let getStatic = (fileName, _) =>
   fileName
   |> String.concat("/")
   |> (++)("/")
   |> Response.of_file(~content_type="text/plain");
 
+/** [echoBody(request)] is a service that directly echoes the [request]
+    body back to the client, without touching it at all. */
 let echoBody = request =>
   request
   |> Request.body
@@ -61,11 +85,14 @@ let echoBody = request =>
      )
   |> Lwt.return;
 
+/** [exclaimBody(request)] is a service that echoes the [request] body
+    but with an exclamation mark added to the end. */
 let exclaimBody = request =>
   request
   |> Request.body_string
   |> Lwt.map(string => Response.of_text(string ++ "!"));
 
+// Helper function (not a service as it doesn't take a request)
 let internalServerError = message =>
   `Internal_server_error |> Response.of_status(~message) |> Lwt.return;
 
@@ -105,6 +132,9 @@ let getTodoTitle = (id, request) => {
   };
 };
 
+/** [authHello(request)] is a service that handles [GET /auth/hello].
+    It's statically guaranteed to access the credentials in the request
+    context (because the filter was applied in the top-level server). */
 let authHello = request => {
   let context = Request.context(request);
 
@@ -114,6 +144,7 @@ let authHello = request => {
   |> Lwt.return;
 };
 
+// Server for /auth/... endpoints, enforcing basic auth (see below)
 let authServer =
   fun
   | (`GET, ["hello"]) => authHello
@@ -121,6 +152,7 @@ let authServer =
 
 let msie = Str.regexp(".*MSIE.*");
 
+// Filter that rejects requests from MSIE
 let rejectExplorer = (next, request) =>
   switch (Request.header("user-agent", request)) {
   | Some(ua) when Str.string_match(msie, ua, 0) =>
@@ -130,21 +162,33 @@ let rejectExplorer = (next, request) =>
   | _ => next(request)
   };
 
+/* The top-level server (which is also a router simply by using pattern-
+   matching syntax) */
 let server =
   fun
   | (`GET, ["hello"]) => hello
   | (`GET, ["header", name]) => getHeader(name)
   | (`GET, ["login"]) => getLogin
+  /* Applies a filter to the [POST /login] endoint to decode a form in
+     the request body to a strongly-typed value. Returns 400 Bad Request
+     if form decoding fails. Open the file [User.re] to see how the form
+     is defined. */
   | (`POST, ["login"]) => Filter.body_form(User.form) @@ postLogin
   | (`GET, ["static", ...fileName]) => getStatic(fileName)
   | (`POST, ["body"]) => echoBody
   | (`POST, ["body-bang"]) => exclaimBody
+  /* Applies a filter to the [POST /json] endpoint to parse the request
+     body as JSON. Returns 400 Bad Request if JSON parsing fails. */
   | (`POST, ["json"]) => Filter.body_json @@ hello
   | (`GET, ["todos", id]) => getTodo(id)
   | (`GET, ["todos", "titles", id]) => getTodoTitle(id)
+  // Route to a 'nested' server, and also apply a filter to this scope
   | (meth, ["auth", ...path]) =>
     Filter.basic_auth @@ authServer @@ (meth, path)
   | _ => notFound;
 
+// Apply a top-level filter to the entire server
 let server = route => rejectExplorer @@ server @@ route;
+
+// Run the server
 let () = server |> Server.serve |> Lwt_main.run;
