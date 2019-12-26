@@ -89,7 +89,10 @@ let of_file ?(status=`OK) ?content_type file_name =
     | Unix.Unix_error (Unix.ENOENT, _, _) ->
       let msg = "ReWeb.Response.of_file: file not found: " ^ file_name in
       msg |> of_text ~status:`Not_found |> Lwt.return
-    | exn -> raise exn
+    | _ ->
+      "Internal server error"
+      |> of_text ~status:`Internal_server_error
+      |> Lwt.return
 
 let status { envelope = { H.Response.status; _ }; _ } = status
 
