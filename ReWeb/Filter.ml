@@ -70,3 +70,9 @@ let body_form typ next request =
   | _ ->
     bad_request "ReWeb.Filter.form: request content-type is not form"
 
+let query_form typ next request =
+  match Form.decoder typ request.Request.query with
+  | Ok obj ->
+    next { request with Request.ctx = object method query = obj end }
+  | Error string -> bad_request string
+

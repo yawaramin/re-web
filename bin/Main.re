@@ -44,15 +44,8 @@ let getHeader = (name, request) =>
 let getLogin = _ =>
   View.login(~rememberMe=true) |> Response.of_view |> Lwt.return;
 
-/** [postLogin(request)] is a service that handles the [POST /login]
-    endpoint. It's statically guaranteed access to the request body as a
-    decoded, strongly-typed form, because a form decoder filter was
-    added before the service in the router.
-
-    It returns the credentials in the response body. */
-let postLogin = request => {
-  let {User.username, password} = Request.context(request)#form;
-
+// Helper to respond with credentials in response body.
+let respondCredentials = (username, password) =>
   password
   |> Printf.sprintf(
        {|<h1>Logged in</h1>
@@ -61,6 +54,25 @@ let postLogin = request => {
      )
   |> Response.of_html
   |> Lwt.return;
+
+/** [postLogin(request)] is a service that handles the [POST /login]
+    endpoint. It's statically guaranteed access to the request body as a
+    decoded, strongly-typed form, because a form decoder filter was
+    added before the service in the router.
+
+    It returns the credentials in the response body. */
+let postLogin = request => {
+  let {User.username, password} = Request.context(request)#form;
+  respondCredentials(username, password);
+};
+
+/** [getLoginQuery(request)] is a service that handles the
+    [GET /login-query] endpoint. It's statically guaranteed access to
+    the decoded, strongly-typed request query, because a query decoder
+    filter was added before the service in the router. */
+let getLoginQuery = request => {
+  let {User.username, password} = Request.context(request)#query;
+  respondCredentials(username, password);
 };
 
 /** [getStatic(fileName, request)] is a service that returns the
@@ -163,7 +175,9 @@ let rejectExplorer = (next, request) =>
   };
 
 /* The top-level server (which is also a router simply by using pattern-
-   matching syntax) */
+   matching syntax). In the filter examples below which use [@@] you can
+   think of it as 'and' or 'then', i.e. 'first apply this filter then
+   send the request to the service'. */
 let server =
   fun
   | (`GET, ["hello"]) => hello
@@ -174,6 +188,11 @@ let server =
      if form decoding fails. Open the file [User.re] to see how the form
      is defined. */
   | (`POST, ["login"]) => Filter.body_form(User.form) @@ postLogin
+  /* Applies a filter to the [GET /login-query] endpoint to decode the
+     request query to the same form as above. For demo purposes only,
+     obviously we won't be sending login credentials in the query in
+     real code :-) */
+  | (`GET, ["login-query"]) => Filter.query_form(User.form) @@ getLoginQuery
   | (`GET, ["static", ...fileName]) => getStatic(fileName)
   | (`POST, ["body"]) => echoBody
   | (`POST, ["body-bang"]) => exclaimBody

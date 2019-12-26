@@ -31,3 +31,9 @@ val body_form : ('ctor, 'ty) Form.t -> (unit, < form : 'ty >) t
     form fails to decode, it short-circuits and returns a 400 Bad
     Request. *)
 
+val query_form : ('ctor, 'ty) Form.t -> (_, < query : 'ty >) t
+(** [query_form typ] is a filter that decodes the request query (the
+    part after the [?] in the endpoint) into a value of type ['ty] and
+    stores it in the request context for the next service. The decoding
+    and failure works in the same way as for [body_form]. *)
+
