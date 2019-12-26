@@ -1,10 +1,15 @@
 module H = Httpaf
 
+type chunk = Bigstringaf.t H.IOVec.t
+
 type t =
 | Single of Bigstringaf.t
-| Multi of Bigstringaf.t H.IOVec.t Lwt_stream.t
-| Piaf of Piaf.Body.t (**)
-(** Request or response body. *)
+| Multi of chunk Lwt_stream.t
+| Piaf of Piaf.Body.t
+
+let of_bigstring bigstring = Piaf (Piaf.Body.of_bigstring bigstring)
+let of_stream stream = Piaf (Piaf.Body.of_stream stream)
+let of_string string = Piaf (Piaf.Body.of_string string)
 
 let make_chunk ?len buffer =
   let len = Option.value len ~default:(Bigstringaf.length buffer) in

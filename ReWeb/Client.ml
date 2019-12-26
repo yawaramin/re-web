@@ -1,5 +1,20 @@
 module H = Httpaf
 
+type config = Piaf.Config.t = {
+  follow_redirects : bool;
+  max_redirects : int;
+  allow_insecure : bool;
+  max_http_version : Piaf.Versions.HTTP.t;
+  h2c_upgrade : bool;
+  http2_prior_knowledge : bool;
+  cacert : string option;
+  capath : string option;
+  min_tls_version : Piaf.Versions.TLS.t;
+  max_tls_version : Piaf.Versions.TLS.t;
+  tcp_nodelay : bool;
+  connect_timeout : float;
+}
+
 type headers = (string * string) list
 
 let convert_response result =
@@ -18,14 +33,14 @@ module New = struct
   module Client = Piaf.Client.Oneshot
 
   type request_body =
-    ?config:Piaf.Config.t ->
+    ?config:config ->
     ?headers:(string * string) list ->
     ?body:Body.t ->
     string ->
     (Response.t, string) Lwt_result.t
 
   type request_nobody =
-    ?config:Piaf.Config.t ->
+    ?config:config ->
     ?headers:(string * string) list ->
     string ->
     (Response.t, string) Lwt_result.t

@@ -1,7 +1,9 @@
-(** ReWeb - an ergonomic web framework. Based on the design proposed in
-    {{: https://gist.github.com/yawaramin/f0a24f1b01b193dd6d251e5e43be65e9}} *)
+(** ReWeb - an ergonomic web framework. Start by looking at
+    {!module:Server} for an overview of the framework. See [bin/Main.re]
+    for an example server. *)
 
 module Body = Body
+(** Handle request and response bodies. *)
 
 module Client = Client
 (** Make web requests. *)
@@ -12,8 +14,6 @@ module Filter = Filter
 module Form = Form
 (** Decode web forms into specified types. Think of this like JSON
     decoding. *)
-
-module Headers = Httpaf.Headers
 
 module Request = Request
 (** Read requests. *)
