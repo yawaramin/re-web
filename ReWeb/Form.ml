@@ -9,19 +9,24 @@ module Field = struct
 
   let make name decoder = { name; decoder }
 
-  let bool name = make name @@ fun x ->
-    try Ok (bool_of_string x)
+  let bool name = make name @@ fun string ->
+    try Ok (bool_of_string string)
     with _ -> Error ("ReWeb.Form.Field.bool: " ^ name)
 
-  let float name = make name @@ fun x ->
-    try Ok (float_of_string x)
+  let ensure pred { name; decoder } = make name @@ fun string ->
+    let open Let.Result in
+    let* a = decoder string in
+    if pred a then Ok a else Error ("ReWeb.Form.Field.ensure: " ^ name)
+
+  let float name = make name @@ fun string ->
+    try Ok (float_of_string string)
     with _ -> Error ("ReWeb.Form.Field.float: " ^ name)
 
-  let int name = make name @@ fun x ->
-    try Ok (int_of_string x)
+  let int name = make name @@ fun string ->
+    try Ok (int_of_string string)
     with _ -> Error ("ReWeb.Form.Field.int: " ^ name)
 
-  let string name = make name @@ fun x -> Ok x
+  let string name = make name @@ fun string -> Ok string
 end
 
 type ('ctor, 'ty) t = { fields : ('ctor, 'ty) Field.list; ctor : 'ctor }

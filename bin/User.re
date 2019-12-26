@@ -8,7 +8,12 @@ type t = {
 let form =
   Form.(
     make(
-      Field.[string("username"), string("password")], (username, password) =>
+      Field.[
+        string("username"),
+        // Form validation will fail if the password is 'password'
+        ensure((!=)("password"), string("password")),
+      ],
+      (username, password) =>
       {username, password}
     )
   );
