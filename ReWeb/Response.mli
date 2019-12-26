@@ -14,10 +14,35 @@ val headers : string -> t -> string list
 (** [headers name request] gets all the values corresponding to the
     given header. *)
 
+val make : status:status -> headers:(string * string) list -> Body.t -> t
 val of_binary : ?status:status -> ?content_type:string -> string -> t
+
+val of_file : ?status:status -> ?content_type:string -> string -> t Lwt.t
+(** [of_file ?status ?content_type file_name] responds with the contents
+    of [file_name] which must be an absolute path in the filesystem,
+    with HTTP response code [status] and content-type header
+    [content_type].
+
+    If the file is not found, responds with a 404 Not Found status and
+    an appropriate message.
+
+    Warning: this function maps the entire file into memory. Don't use
+    it for files larger than memory. *)
+
 val of_html : ?status:status -> string -> t
 val of_json : ?status:status -> Ezjsonm.t -> t
-val make : status:status -> headers:(string * string) list -> Body.t -> t
+
+val of_status :
+  ?content_type:[`text | `html] ->
+  ?message:string ->
+  status ->
+  t
+(** [of_status ?content_type ?message status] responds with a standard
+    boilerplate response message based on the [content_type] and
+    [status]. [content_type] defaults to [`text]. The boilerplate
+    message can be overridden by [message] if present. *)
+
+val of_text : ?status:status -> string -> t
 
 val of_view :
   ?status:status ->
@@ -34,20 +59,6 @@ val of_view :
     is that those hold the entire response in memory before sending it
     to the client, while [of_view] holds only each piece of the response
     as it is streamed out. *)
-
-val of_file : ?status:status -> ?content_type:string -> string -> t Lwt.t
-(** [of_file ?status ?content_type file_name] responds with the contents
-    of [file_name] which must be an absolute path in the filesystem,
-    with HTTP response code [status] and content-type header
-    [content_type].
-
-    If the file is not found, responds with a 404 Not Found status and
-    an appropriate message.
-
-    Warning: this function maps the entire file into memory. Don't use
-    it for files larger than memory. *)
-
-val of_text : ?status:status -> string -> t
 
 val status : t -> status
 

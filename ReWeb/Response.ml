@@ -60,14 +60,25 @@ let make_chunk ?(lines=true) line =
   let len, line = if lines then len + 1, line ^ "\n" else len, line in
   { H.IOVec.off; len; buffer = Bigstringaf.of_string ~off ~len line }
 
+let of_text ?(status=`OK) = of_binary ~status ~content_type:"text/plain"
+
+let of_status ?(content_type=`text) ?message status =
+  let header = H.Status.to_string status in
+  match content_type with
+  | `text ->
+    let body = Option.fold ~none:"" ~some:((^) "\n\n") message in
+    of_text ~status ("# " ^ header ^ body)
+  | `html ->
+    let some message = "<p>" ^ message ^ "</p>" in
+    let body = Option.fold ~none:"" ~some message in
+    of_html ~status ("<h1>" ^ header ^ "</h1>" ^ body)
+
 let of_view ?(status=`OK) ?(content_type="text/html") view =
   let stream, push_to_stream = Lwt_stream.create () in
   let p string = push_to_stream (Some (make_chunk ~lines:false string)) in
   view p;
   push_to_stream None;
   make ~status ~headers:(get_headers content_type) (Body.Multi stream)
-
-let of_text ?(status=`OK) = of_binary ~status ~content_type:"text/plain"
 
 let of_file ?(status=`OK) ?content_type file_name =
   let f () =
@@ -85,14 +96,14 @@ let of_file ?(status=`OK) ?content_type file_name =
     let body = Body.Single bigstring in
     make ~status ~headers:(get_headers content_type) body
   in
-  Lwt.catch f @@ function
-    | Unix.Unix_error (Unix.ENOENT, _, _) ->
-      let msg = "ReWeb.Response.of_file: file not found: " ^ file_name in
-      msg |> of_text ~status:`Not_found |> Lwt.return
-    | _ ->
-      "Internal server error"
-      |> of_text ~status:`Internal_server_error
-      |> Lwt.return
+  Lwt.catch f @@ fun exn ->
+    Lwt.return @@ match exn with
+      | Unix.Unix_error (Unix.ENOENT, _, _) ->
+        let message =
+          "ReWeb.Response.of_file: file not found: " ^ file_name
+        in
+        of_status ~message `Not_found
+      | _ -> of_status `Internal_server_error
 
 let status { envelope = { H.Response.status; _ }; _ } = status
 

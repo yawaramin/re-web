@@ -6,13 +6,11 @@ let get_auth request =
     | [typ; credentials] -> Some (typ, credentials)
     | _ -> None)
 
-let bad_request string = string
-  |> Response.of_text ~status:`Bad_request
+let bad_request message = `Bad_request
+  |> Response.of_status ~message
   |> Lwt.return
 
-let unauthorized = "Unauthorized"
-  |> Response.of_text ~status:`Unauthorized
-  |> Lwt.return
+let unauthorized = `Unauthorized |> Response.of_status |> Lwt.return
 
 let basic_auth next request = match get_auth request with
   | Some ("Basic", credentials) ->

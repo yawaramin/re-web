@@ -66,8 +66,8 @@ let exclaimBody = request =>
   |> Request.body_string
   |> Lwt.map(string => Response.of_text(string ++ "!"));
 
-let internalServerError = string =>
-  string |> Response.of_text(~status=`Internal_server_error) |> Lwt.return;
+let internalServerError = message =>
+  `Internal_server_error |> Response.of_status(~message) |> Lwt.return;
 
 /** [getTodo(id, request)] gets the todo item with ID [id] from the JSON
     Placeholder API and returns the response {i exactly,} including all
@@ -124,8 +124,8 @@ let msie = Str.regexp(".*MSIE.*");
 let rejectExplorer = (next, request) =>
   switch (Request.header("user-agent", request)) {
   | Some(ua) when Str.string_match(msie, ua, 0) =>
-    "Please upgrade your browser"
-    |> Response.of_text(~status=`Unauthorized)
+    `Unauthorized
+    |> Response.of_status(~message="Please upgrade your browser")
     |> Lwt.return
   | _ => next(request)
   };
