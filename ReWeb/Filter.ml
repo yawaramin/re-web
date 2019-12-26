@@ -1,10 +1,11 @@
 type ('ctx1, 'ctx2) t = 'ctx2 Server.service -> 'ctx1 Server.service
 
 let get_auth request =
-  Option.bind (Request.header "Authorization" request) (fun value ->
-    match String.split_on_char ' ' value with
-    | [typ; credentials] -> Some (typ, credentials)
-    | _ -> None)
+  let open Let.Option in
+  let* value = Request.header "Authorization" request in
+  match String.split_on_char ' ' value with
+  | [typ; credentials] -> Some (typ, credentials)
+  | _ -> None
 
 let bad_request message = `Bad_request
   |> Response.of_status ~message
