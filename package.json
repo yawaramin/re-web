@@ -21,7 +21,8 @@
   "scripts": {
     "bin": "esy b dune exec bin/Main.bc",
     "check": "esy b dune build @check",
-    "doc": "esy dune build @doc"
+    "doc": "esy dune build @doc",
+    "test": "esy b dune runtest"
   },
   "dependencies": {
     "@esy-ocaml/reason": ">= 3.4.0 < 3.6.0",

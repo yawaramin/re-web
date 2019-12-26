@@ -79,6 +79,10 @@ Shell into environment:
 
     $ esy shell
 
+Run the test suite with:
+
+    $ esy test
+
 ## Warning
 
 ReWeb is experimental and not for production use! I am still ironing out
