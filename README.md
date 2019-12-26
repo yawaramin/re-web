@@ -58,7 +58,12 @@ again with the same simple `esy` command.
 
     $ esy
 
-Run the included example server:
+## Example
+
+Check out the example server in the `bin/` directory. The `Main.re` file
+there is extensively commented with explanations.
+
+Run the example server:
 
     $ esy bin
 

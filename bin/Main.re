@@ -177,7 +177,8 @@ let rejectExplorer = (next, request) =>
 /* The top-level server (which is also a router simply by using pattern-
    matching syntax). In the filter examples below which use [@@] you can
    think of it as 'and' or 'then', i.e. 'first apply this filter then
-   send the request to the service'. */
+   send the request to the service'. Actually [@@] is a generic operator
+   provided by the standard library: [f(x, y) == f(x) @@ y]. */
 let server =
   fun
   | (`GET, ["hello"]) => hello
