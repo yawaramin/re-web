@@ -54,12 +54,6 @@ let get_content_type file_name = match Filename.extension file_name with
   | ".webp" -> "image/webp"
   | _ -> "application/octet-stream"
 
-let make_chunk ?(lines=true) line =
-  let off = 0 in
-  let len = String.length line in
-  let len, line = if lines then len + 1, line ^ "\n" else len, line in
-  { H.IOVec.off; len; buffer = Bigstringaf.of_string ~off ~len line }
-
 let of_text ?(status=`OK) = of_binary ~status ~content_type:"text/plain"
 
 let of_status ?(content_type=`text) ?message status =
@@ -73,9 +67,14 @@ let of_status ?(content_type=`text) ?message status =
     let body = Option.fold ~none:"" ~some message in
     of_html ~status ("<h1>" ^ header ^ "</h1>" ^ body)
 
+let make_chunk line =
+  let off = 0 in
+  let len = String.length line in
+  { H.IOVec.off; len; buffer = Bigstringaf.of_string ~off ~len line }
+
 let of_view ?(status=`OK) ?(content_type="text/html") view =
   let stream, push_to_stream = Lwt_stream.create () in
-  let p string = push_to_stream (Some (make_chunk ~lines:false string)) in
+  let p string = push_to_stream (Some (make_chunk string)) in
   view p;
   push_to_stream None;
   make ~status ~headers:(get_headers content_type) (Body.Multi stream)
