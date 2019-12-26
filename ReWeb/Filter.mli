@@ -1,3 +1,12 @@
+(** The filters here that don't read the request body additionally
+    preserve whatever context was already in the request before the
+    current filter ran. They do this by putting the previous context in
+    a [prev] method in the new context object. This is just a convention
+    but a useful one.
+
+    The filters which read the body don't do this because they only work
+    with request which have no context (i.e., context of type [unit]). *)
+
 type ('ctx1, 'ctx2) t = 'ctx2 Server.service -> 'ctx1 Server.service
 (** A filter transforms a service. It can change the request (usually by
     changing the request context) or the response (by actually running
@@ -31,7 +40,7 @@ val body_form : ('ctor, 'ty) Form.t -> (unit, < form : 'ty >) t
     form fails to decode, it short-circuits and returns a 400 Bad
     Request. *)
 
-val query_form : ('ctor, 'ty) Form.t -> (_, < query : 'ty >) t
+val query_form : ('ctor, 'ty) Form.t -> ('ctx1, < query : 'ty; prev : 'ctx1 >) t
 (** [query_form typ] is a filter that decodes the request query (the
     part after the [?] in the endpoint) into a value of type ['ty] and
     stores it in the request context for the next service. The decoding

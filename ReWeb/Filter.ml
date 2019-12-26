@@ -73,6 +73,11 @@ let body_form typ next request =
 let query_form typ next request =
   match Form.decoder typ request.Request.query with
   | Ok obj ->
-    next { request with Request.ctx = object method query = obj end }
+    next {
+      request with Request.ctx = object
+        method query = obj
+        method prev = request.ctx
+      end
+    }
   | Error string -> bad_request string
 
