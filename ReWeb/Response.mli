@@ -4,18 +4,15 @@
     therefore a chance of duplication which you will have to watch out
     for. *)
 
-type cookies = (string * string) list
-(** A cookie [Set-Cookie: id=1] is encoded as: [[("id", "1")]]. *)
-
 type headers = (string * string) list
-(** a header [X-Client-Id: 1] is encoded as: [[("x-client-id", "1")]]. *)
+(** a header [X-Client-Id: 1] is represented as: [[("x-client-id", "1")]]. *)
 
 type status = Httpaf.Status.t
 type t = { envelope : Httpaf.Response.t; body : Body.t }
 
 val body : t -> Body.t
 
-val cookies : t -> cookies
+val cookies : t -> Cookies.t
 
 val header : string -> t -> string option
 (** [header name request] gets the last value corresponding to the given
@@ -31,7 +28,7 @@ val of_binary :
   ?status:status ->
   ?content_type:string ->
   ?headers:headers ->
-  ?cookies:cookies ->
+  ?cookies:Cookies.t ->
   string ->
   t
 
@@ -39,7 +36,7 @@ val of_file :
   ?status:status ->
   ?content_type:string ->
   ?headers:headers ->
-  ?cookies:cookies ->
+  ?cookies:Cookies.t ->
   string ->
   t Lwt.t
 (** [of_file ?status ?content_type ?headers ?cookies file_name] responds
@@ -56,21 +53,21 @@ val of_file :
 val of_html :
   ?status:status ->
   ?headers:headers ->
-  ?cookies:cookies ->
+  ?cookies:Cookies.t ->
   string ->
   t
 
 val of_json :
   ?status:status ->
   ?headers:headers ->
-  ?cookies:cookies ->
+  ?cookies:Cookies.t ->
   Ezjsonm.t ->
   t
 
 val of_status :
   ?content_type:[`text | `html] ->
   ?headers:headers ->
-  ?cookies:cookies ->
+  ?cookies:Cookies.t ->
   ?message:string ->
   status ->
   t
@@ -82,7 +79,7 @@ val of_status :
 val of_text :
   ?status:status ->
   ?headers:headers ->
-  ?cookies:cookies ->
+  ?cookies:Cookies.t ->
   string ->
   t
 
@@ -90,7 +87,7 @@ val of_view :
   ?status:status ->
   ?content_type:string ->
   ?headers:headers ->
-  ?cookies:cookies ->
+  ?cookies:Cookies.t ->
   ((string -> unit) -> unit) ->
   t
 (** [of_view ?status ?content_type ?headers ?cookies view] responds with

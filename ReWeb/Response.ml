@@ -7,18 +7,9 @@ type t = { envelope : H.Response.t; body : Body.t }
 
 let body { body; _ } = body
 
-let header_to_cookie value = match String.split_on_char '=' value with
-  | [name; value] -> Some (name, value)
-  | _ -> None
-
 let cookies { envelope = { H.Response.headers; _ }; _ } = "set-cookie"
   |> H.Headers.get_multi headers
-  |> List.map header_to_cookie
-  |> List.filter Option.is_some
-  |> List.map @@ function
-    | Some cookie -> cookie
-    | None ->
-      failwith "This case should not be reached because Nones are filtered out beforehand"
+  |> Cookies.of_headers
 
 let header name { envelope = { H.Response.headers; _ }; _ } =
   H.Headers.get headers name

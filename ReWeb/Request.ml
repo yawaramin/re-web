@@ -41,6 +41,10 @@ let headers name { reqd; _ } =
   let { H.Request.headers; _ } = H.Reqd.request reqd in
   H.Headers.get_multi headers name
 
+let cookies request = request
+  |> headers "cookie"
+  |> Cookies.of_headers
+
 let make query reqd = { ctx = (); query; reqd }
 let query { query; _ } = query
 

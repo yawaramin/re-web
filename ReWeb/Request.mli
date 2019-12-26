@@ -24,6 +24,8 @@ val body_string : ?buf_size:int -> unit t -> string Lwt.t
 
 val context : 'ctx t -> 'ctx
 
+val cookies : _ t -> Cookies.t
+
 val header : string -> _ t -> string option
 (** [header name request] gets the last value corresponding to the given
     header, if present. *)
