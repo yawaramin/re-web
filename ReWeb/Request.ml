@@ -11,11 +11,11 @@ let body request =
   let stream, push_to_stream = Lwt_stream.create () in
   let on_eof () = push_to_stream None in
   let rec on_read buffer ~off ~len =
-    push_to_stream (Some {H.IOVec.off; len; buffer});
+    push_to_stream (Some { H.IOVec.off; len; buffer });
     H.Body.schedule_read request_body ~on_eof ~on_read
   in
   H.Body.schedule_read request_body ~on_eof ~on_read;
-  Body.Multi stream
+  Body.of_stream stream
 
 let body_string ?(buf_size=Lwt_io.default_buffer_size ()) request =
   let request_body = H.Reqd.request_body request.reqd in

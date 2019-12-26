@@ -24,11 +24,10 @@ let get_headers ?len content_type =
   | None -> list
 
 let of_binary ?(status=`OK) ?(content_type="application/octet-stream") body =
-  let len = String.length body in
   make
     ~status
-    ~headers:(get_headers ~len content_type)
-    (Single (Bigstringaf.of_string ~off:0 ~len body))
+    ~headers:(get_headers ~len:(String.length body) content_type)
+    (Body.of_string body)
 
 let of_html ?(status=`OK) = of_binary ~status ~content_type:"text/html"
 
@@ -77,7 +76,10 @@ let of_view ?(status=`OK) ?(content_type="text/html") view =
   let p string = push_to_stream (Some (make_chunk string)) in
   view p;
   push_to_stream None;
-  make ~status ~headers:(get_headers content_type) (Body.Multi stream)
+
+  stream
+  |> Body.of_stream
+  |> make ~status ~headers:(get_headers content_type)
 
 let of_file ?(status=`OK) ?content_type file_name =
   let f () =
@@ -92,7 +94,7 @@ let of_file ?(status=`OK) ?content_type file_name =
     (* TODO: not sure what [shared] means here, need to find out *)
     let bigstring = Lwt_bytes.map_file ~fd ~shared:false () in
     let+ () = Lwt_unix.close file_descr in
-    let body = Body.Single bigstring in
+    let body = Body.of_bigstring bigstring in
     make ~status ~headers:(get_headers content_type) body
   in
   Lwt.catch f @@ fun exn ->

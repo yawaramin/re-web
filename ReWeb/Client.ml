@@ -26,7 +26,7 @@ let convert_response result =
   let status = status |> Piaf.Status.to_code |> H.Status.of_code in
   let envelope = H.Response.create ~version ~headers status in {
     Response.envelope;
-    body = Body.Piaf body;
+    body = Body.of_piaf body;
   }
 
 module New = struct

@@ -48,10 +48,12 @@ let serve ?(port=8080) server =
           H.Body.close_writer writer
       in
       match body with
-      | Body.Single bigstring ->
+      | Body.Bigstring bigstring ->
         H.Reqd.respond_with_bigstring reqd envelope bigstring
-      | Body.Multi stream -> send stream
+      | Body.Chunks stream -> send stream
       | Body.Piaf body -> body |> to_stream |> send
+      | Body.String string ->
+        H.Reqd.respond_with_string reqd envelope string
     in
     let meth, path, query = reqd |> H.Reqd.request |> parse_route in
     let response = reqd |> Request.make query |> server (meth, path) in
