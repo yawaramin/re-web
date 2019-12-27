@@ -87,8 +87,8 @@ val of_file :
     If the file is not found, responds with a 404 Not Found status and
     an appropriate message.
 
-    Warning: this function maps the entire file into memory. Don't use
-    it for files larger than memory. *)
+    {i Warning} this function maps the entire file into memory. Don't
+    use it for files larger than memory. *)
 
 val of_html :
   ?status:status ->

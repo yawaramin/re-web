@@ -7,9 +7,9 @@
     {[request => promise of response]}
 
     Like other libraries inspired by this style, ReWeb aims to model the
-    web's request-response paradigm with types that represent the request,
-    the response, and the asynchronous nature of the response (hence
-    'promise of response').
+    web's request-response paradigm with types that represent the
+    request, the response, and the asynchronous nature of the response
+    (hence 'promise of response').
 
     Concretely, we call the [request => promise of response] type a
     {i service}, and a pairing of HTTP method (e.g. [`GET]) and path
@@ -23,8 +23,8 @@
       let server = _route => helloService;
       let () = Lwt_main.run(Server.serve(server));]}
 
-    [Lwt.return] returns a fulfilled promise containing its argument, and
-    [Lwt_main.run] starts Lwt's main event loop which runs promises.
+    [Lwt.return] returns a fulfilled promise containing its argument,
+    and [Lwt_main.run] starts Lwt's main event loop which runs promises.
 
     You can match routes more precisely:
 
@@ -39,3 +39,4 @@
     endpoint, and a 404 response at any other endpoint.
 
     See {!module:ReWeb.Server} for more details on servers. *)
+
