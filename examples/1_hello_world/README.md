@@ -12,7 +12,7 @@ esy ex1
 
 ## The `|>` operator
 
-Note that the pipe-last operator (`|>`) simply passes the result of the left expression to the function on the right (as the last argument).
+The pipe-last operator (`|>`) simply passes the result of the left expression to the function on the right (as the last argument).
 
 That means that this:
 
@@ -25,3 +25,9 @@ Is equivalent to this:
 ```reason
 let hello = _ => Lwt.return(Response.of_text("Hello, World!"));
 ```
+
+## `Lwt`
+
+[Lwt](https://github.com/ocsigen/lwt) is a library that facilitates asynchronous programming in Reason, and operates similar in nature to promises in [Javascript](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise).
+
+`Lwt.return` wraps the passed-in argument in a promise, and satisfies the return type required for each route-handling service.
