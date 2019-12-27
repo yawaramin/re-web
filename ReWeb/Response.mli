@@ -64,6 +64,12 @@ val of_json :
   Ezjsonm.t ->
   t
 
+val of_redirect : ?content_type:string -> ?body:string -> string -> t
+(** [of_redirect ?content_type ?body location] responds with an HTTP
+    redirect response to the new [location], with an optional
+    [content_type] (defaulting to [text/plain]) and [body] (defaulting
+    to an empty body). *)
+
 val of_status :
   ?content_type:[`text | `html] ->
   ?headers:headers ->

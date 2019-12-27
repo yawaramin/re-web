@@ -14,3 +14,9 @@ let%test "of_binary - merge headers and cookies" =
   | Some "1", Some "y=2" -> true
   | _ -> false
 
+let%test "of_redirect - build redirect response" =
+  let response = of_redirect "/hello" in
+  match header "location" response, status response with
+  | Some "/hello", `Moved_permanently -> true
+  | _ -> false
+

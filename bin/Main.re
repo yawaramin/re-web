@@ -205,6 +205,11 @@ let server =
   // Route to a 'nested' server, and also apply a filter to this scope
   | (meth, ["auth", ...path]) =>
     Filter.basic_auth @@ authServer @@ (meth, path)
+  /* Example of putting the service directly in the router, usually we
+     avoid this because we'd like to keep the router small and readable. */
+  | (`GET, ["redirect"]) => (
+      _ => "/hello" |> Response.of_redirect |> Lwt.return
+    )
   | _ => notFound;
 
 // Apply a top-level filter to the entire server

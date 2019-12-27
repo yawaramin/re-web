@@ -89,6 +89,11 @@ let of_status ?(content_type=`text) ?headers ?cookies ?message status =
     let body = Option.fold ~none:"" ~some message in
     of_html ~status ?headers ?cookies ("<h1>" ^ header ^ "</h1>" ^ body)
 
+let of_redirect ?(content_type="text/plain") ?(body="") location = make
+  ~status:`Moved_permanently
+  ~headers:["location", location; "content-type", content_type]
+  (Body.of_string body)
+
 let make_chunk line =
   let off = 0 in
   let len = String.length line in
