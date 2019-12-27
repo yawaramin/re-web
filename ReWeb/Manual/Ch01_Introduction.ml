@@ -64,7 +64,7 @@
         let%lwt inventory = getInventory(productId);
         let%lwt price = getPrice(productId);
 
-        mergeInventoryPrice(inventory, price);
+        Lwt.return(mergeInventoryPrice(inventory, price));
       };]}
 
     ...is like JavaScript's
@@ -77,5 +77,5 @@
       };]}
 
     Note that you don't have to mark Reason functions as [async]--the
-    typechecker infers that automatically from the return type. *)
+    typechecker infers that automatically from the function return type. *)
 
