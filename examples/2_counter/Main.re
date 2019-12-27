@@ -4,7 +4,7 @@ open ReWeb;
 let count = ref(0);
 
 /* Grab the value from count and send it as a text response */
-let getCount = _ => string_of_int(count^) |> Response.of_text |> Lwt.return;
+let getCount = _ => count^ |> string_of_int |> Response.of_text |> Lwt.return;
 
 /* Increment the count and then respond with a status of OK */
 let increment = _ => {
