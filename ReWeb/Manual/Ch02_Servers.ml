@@ -5,21 +5,21 @@
 
     {1 Defining a server}
 
-    The simplest possible server is probably:
+    One of the simplest possible servers:
 
     {[let server = _route => _request =>
-        ReWeb.Response.of_text("Hello, World!");]}
+        Lwt.return(ReWeb.Response.of_text("Hello, World!"));]}
 
     Because of Reason's auto-curried function syntax, this will normally
     be written:
 
     {[let server = (_route, _request) =>
-        ReWeb.Response.of_text("Hello, World");]}
+        "Hello, World!" |> ReWeb.Response.of_text |> Lwt.return;]}
 
     A server is not run immediately when it is created (because it is a
     function). Recall from above that the final output of the server is
     a {i promise} of a response. In other words, servers are completely
-    asynchronous from the top-down. However when the server is supplied
+    asynchronous from the top down. However when the server is supplied
     both a route and a request, it will run. This is done by the
     [Server.serve] function:
 
@@ -75,14 +75,15 @@
     [["docs", ""]].
 
     When pattern-matching, all the normal rules of pattern matching in
-    OCaml/ReasonML apply: as-patterns, or-patterns, and so on. Hence
-    route matching is quite flexible.
+    OCaml/ReasonML apply: matching literals, capturing parts or all of
+    the matched pattern in bindings, as-patterns, or-patterns, and so
+    on. Hence route matching is quite flexible.
 
     {1 Scoping routes}
 
     Because servers are just functions, you can define more than one and
     call 'child' servers from 'parent' servers. The response returned
-    from the child server is then return from the parent. One very
+    from the child server is then returned from the parent. One very
     useful consequence of this is that you can scope child servers to
     specific route scopes. E.g.:
 
@@ -96,7 +97,8 @@
 
     {i Note} [@@] is a convenience operator for applying an argument (in
     this case the pair [(meth, path)]) to a function (in this case
-    [apiServer]).
+    [apiServer]). We will use it to 'chain' together filters, servers,
+    and services.
 
     Here the main [server] is delegating all requests to [/api/...]
     endpoints to the [apiServer], by passing it the request method and
@@ -105,6 +107,6 @@
     split up the path segment list into a head and a tail, check that
     the head is [api], and pass the tail forward.
 
-    This technique is especially useful when combined with filters,
-    which we will cover in a future chapter. *)
+    This technique is especially useful with filters, which we will
+    cover in a future chapter. *)
 
