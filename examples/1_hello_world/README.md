@@ -7,7 +7,7 @@ This is an example of the simplest server you can write with ReWeb.
 To run this example, run the `ex1` script (located in `package.json`) from the terminal:
 
 ```shell
-esy ex1
+esy run-example examples/1_hello_world/Main.bc
 ```
 
 ## The `|>` operator
