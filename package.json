@@ -20,6 +20,7 @@
   },
   "scripts": {
     "bin": "esy b dune exec bin/Main.bc",
+    "run-example": "esy b dune exec",
     "check": "esy b dune build @check",
     "doc": "esy dune build @doc",
     "test": "esy b dune runtest"

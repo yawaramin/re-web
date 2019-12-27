@@ -1,0 +1,6 @@
+(executable
+  (name Main)
+  (public_name 1_hello_world)
+  (package ReWeb)
+  (libraries ReWeb lwt str)
+  (preprocess (pps lwt_ppx)))
