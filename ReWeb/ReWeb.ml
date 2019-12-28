@@ -8,6 +8,8 @@ module Body = Body
 module Client = Client
 (** Make web requests. *)
 
+module Cookies = Cookies
+
 module Filter = Filter
 (** Transform services. *)
 

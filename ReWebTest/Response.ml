@@ -1,5 +1,46 @@
 open ReWeb.Response
 
+let%test "add_header - replace" =
+  let name = "x" in
+  let response = ""
+    |> of_binary ~headers:[name, "1"]
+    |> add_header ~name ~value:"2"
+    |> header name
+  in
+  match response with
+  | Some "2" -> true
+  | _ -> false
+
+let%test "add_header - no replace" =
+  let name = "x" in
+  let response = ""
+    |> of_binary ~headers:[name, "1"]
+    |> add_header ~replace:false ~name ~value:"2"
+    |> header name
+  in
+  match response with
+  | Some "1" -> true
+  | _ -> false
+
+let%test "add_headers" =
+  let name = "x" in
+  let response = ""
+    |> of_binary ~headers:[name, "1"]
+    |> add_headers ["x", "2"; "y", "3"]
+  in
+  match header name response, header "y" response with
+  | Some "2", Some "3" -> true
+  | _ -> false
+
+let%test "add_headers_multi" =
+  let name = "x" in
+  let values = ""
+    |> of_binary
+    |> add_headers_multi [name, ["1"; "2"]]
+    |> headers name
+  in
+  values = ["1"; "2"]
+
 let%test "of_binary - merge content-type into headers" =
   let response =
     of_binary ~content_type:"text/plain" ~headers:["x", "1"] ""

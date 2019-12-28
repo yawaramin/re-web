@@ -1,9 +1,26 @@
 module H = Httpaf
 
-type cookies = (string * string) list
 type headers = (string * string) list
 type status = H.Status.t
 type t = { envelope : H.Response.t; body : Body.t }
+
+let set_headers headers response = {
+  response with envelope = { response.envelope with headers }
+}
+
+let add_header ?(replace=true) ~name ~value response =
+  let add =
+    if replace then H.Headers.add else H.Headers.add_unless_exists
+  in
+  set_headers (add response.envelope.headers name value) response
+
+let add_headers headers response = set_headers
+  (H.Headers.add_list response.envelope.headers headers)
+  response
+
+let add_headers_multi headers_multi response = set_headers
+  (H.Headers.add_multi response.envelope.headers headers_multi)
+  response
 
 let body { body; _ } = body
 

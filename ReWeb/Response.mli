@@ -10,6 +10,21 @@ type headers = (string * string) list
 type status = Httpaf.Status.t
 type t = { envelope : Httpaf.Response.t; body : Body.t }
 
+val add_header : ?replace:bool -> name:string -> value:string -> t -> t
+(** [add_header ?replace ~name ~value response] returns a response with
+    a header [name] with value [value] added to the original [response].
+    If [response] already contains the header [name], then its value is
+    replaced only if [replace] is [true], which is the default. *)
+
+val add_headers : headers -> t -> t
+(** [add_headers headers response] returns a response with the [headers]
+    added to the end of the original [response]'s header list. *)
+
+val add_headers_multi : (string * string list) list -> t -> t
+(** [add_headers_multi headers_multi response] returns a response with
+    [headers_multi] added to the end of the original [response]'s header
+    list. *)
+
 val body : t -> Body.t
 
 val cookies : t -> Cookies.t
