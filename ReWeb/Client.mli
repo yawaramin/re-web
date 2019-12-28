@@ -18,27 +18,27 @@ type config = Piaf.Config.t = {
 type headers = (string * string) list
 
 module New : sig
-  type request_body =
+  type 'resp request_body =
     ?config:config ->
     ?headers:headers ->
     ?body:Body.t ->
     string ->
-    (Response.t, string) Lwt_result.t
+    ([> Response.http] as 'resp, string) Lwt_result.t
   (** The type of request functions which send a request body. *)
 
-  type request_nobody =
+  type 'resp request_nobody =
     ?config:config ->
     ?headers:headers ->
     string ->
-    (Response.t, string) Lwt_result.t
+    ([> Response.http] as 'resp, string) Lwt_result.t
   (** The type of request functions which don't send a request body. *)
 
-  val delete : request_body
-  val get : request_nobody
-  val head : request_nobody
-  val patch : request_body
-  val post : request_body
-  val put : request_body
+  val delete : [> Response.http] request_body
+  val get : [> Response.http] request_nobody
+  val head : [> Response.http] request_nobody
+  val patch : [> Response.http] request_body
+  val post : [> Response.http] request_body
+  val put : [> Response.http] request_body
 
   val request :
     ?config:config->
@@ -46,7 +46,7 @@ module New : sig
     ?body:Body.t ->
     meth:Piaf.Method.t ->
     string ->
-    (Response.t, string) Lwt_result.t
+    ([> Response.http], string) Lwt_result.t
   (** Make a request not covered by the above functions. *)
 end
 (** Make requests with a one-shot i.e. stateless client. *)

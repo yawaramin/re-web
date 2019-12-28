@@ -1,5 +1,5 @@
 {
-  "checksum": "2ba17bc35b27b2a8b751955fbe49cfa1",
+  "checksum": "7b907b700e6080c3b7cca4d9f7d4a933",
   "root": "ReWeb@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#cca65f99674ed2d954d28788edeb8c57fada5ed0@d41d8cd9": {
@@ -59,6 +59,8 @@
       },
       "overrides": [],
       "dependencies": [
+        "@opam/websocketaf-lwt-unix@github:anmonteiro/websocketaf:websocketaf-lwt-unix.opam#42673bd@9570a337",
+        "@opam/websocketaf@github:anmonteiro/websocketaf:websocketaf.opam#42673bd@d41d8cd9",
         "@opam/uri@opam:3.1.0@d38ac0ae",
         "@opam/ppx_inline_test@opam:v0.13.0@d920653b",
         "@opam/piaf@github:anmonteiro/piaf:piaf.opam#172fcce@f1c00629",
@@ -134,6 +136,103 @@
       "devDependencies": [
         "ocaml@4.8.1000@d41d8cd9", "@opam/easy-format@opam:1.3.2@0484b3c4",
         "@opam/dune@opam:1.11.4@a7ccb7ae", "@opam/biniou@opam:1.2.1@d7570399"
+      ]
+    },
+    "@opam/websocketaf-lwt-unix@github:anmonteiro/websocketaf:websocketaf-lwt-unix.opam#42673bd@9570a337": {
+      "id":
+        "@opam/websocketaf-lwt-unix@github:anmonteiro/websocketaf:websocketaf-lwt-unix.opam#42673bd@9570a337",
+      "name": "@opam/websocketaf-lwt-unix",
+      "version":
+        "github:anmonteiro/websocketaf:websocketaf-lwt-unix.opam#42673bd",
+      "source": {
+        "type": "install",
+        "source": [
+          "github:anmonteiro/websocketaf:websocketaf-lwt-unix.opam#42673bd"
+        ]
+      },
+      "overrides": [
+        {
+          "dependencies": {
+            "@opam/websocketaf-lwt":
+              "anmonteiro/websocketaf:websocketaf-lwt.opam#42673bd"
+          }
+        }
+      ],
+      "dependencies": [
+        "ocaml@4.8.1000@d41d8cd9",
+        "@opam/websocketaf-lwt@github:anmonteiro/websocketaf:websocketaf-lwt.opam#42673bd@d41d8cd9",
+        "@opam/websocketaf@github:anmonteiro/websocketaf:websocketaf.opam#42673bd@d41d8cd9",
+        "@opam/lwt@opam:4.4.0@0357bb8b",
+        "@opam/faraday-lwt-unix@opam:0.7.0@52a60108",
+        "@opam/dune@opam:1.11.4@a7ccb7ae", "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9",
+        "@opam/websocketaf@github:anmonteiro/websocketaf:websocketaf.opam#42673bd@d41d8cd9",
+        "@opam/lwt@opam:4.4.0@0357bb8b",
+        "@opam/faraday-lwt-unix@opam:0.7.0@52a60108"
+      ]
+    },
+    "@opam/websocketaf-lwt@github:anmonteiro/websocketaf:websocketaf-lwt.opam#42673bd@d41d8cd9": {
+      "id":
+        "@opam/websocketaf-lwt@github:anmonteiro/websocketaf:websocketaf-lwt.opam#42673bd@d41d8cd9",
+      "name": "@opam/websocketaf-lwt",
+      "version": "github:anmonteiro/websocketaf:websocketaf-lwt.opam#42673bd",
+      "source": {
+        "type": "install",
+        "source": [
+          "github:anmonteiro/websocketaf:websocketaf-lwt.opam#42673bd"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.8.1000@d41d8cd9",
+        "@opam/websocketaf@github:anmonteiro/websocketaf:websocketaf.opam#42673bd@d41d8cd9",
+        "@opam/lwt@opam:4.4.0@0357bb8b",
+        "@opam/faraday-lwt-unix@opam:0.7.0@52a60108",
+        "@opam/dune@opam:1.11.4@a7ccb7ae",
+        "@opam/digestif@opam:0.8.0@ec3563c0",
+        "@opam/base64@opam:3.2.0@6303aa3a",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9",
+        "@opam/websocketaf@github:anmonteiro/websocketaf:websocketaf.opam#42673bd@d41d8cd9",
+        "@opam/lwt@opam:4.4.0@0357bb8b",
+        "@opam/faraday-lwt-unix@opam:0.7.0@52a60108",
+        "@opam/digestif@opam:0.8.0@ec3563c0",
+        "@opam/base64@opam:3.2.0@6303aa3a"
+      ]
+    },
+    "@opam/websocketaf@github:anmonteiro/websocketaf:websocketaf.opam#42673bd@d41d8cd9": {
+      "id":
+        "@opam/websocketaf@github:anmonteiro/websocketaf:websocketaf.opam#42673bd@d41d8cd9",
+      "name": "@opam/websocketaf",
+      "version": "github:anmonteiro/websocketaf:websocketaf.opam#42673bd",
+      "source": {
+        "type": "install",
+        "source": [
+          "github:anmonteiro/websocketaf:websocketaf.opam#42673bd"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/result@opam:1.4@dc720aef",
+        "@opam/httpaf@github:anmonteiro/httpaf:httpaf.opam#90e7c87@d41d8cd9",
+        "@opam/faraday@opam:0.7.0@6d4772f6",
+        "@opam/dune@opam:1.11.4@a7ccb7ae",
+        "@opam/bigstringaf@opam:0.6.0@971764fa",
+        "@opam/base64@opam:3.2.0@6303aa3a",
+        "@opam/angstrom@opam:0.12.1@02015bad",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/result@opam:1.4@dc720aef",
+        "@opam/httpaf@github:anmonteiro/httpaf:httpaf.opam#90e7c87@d41d8cd9",
+        "@opam/faraday@opam:0.7.0@6d4772f6",
+        "@opam/bigstringaf@opam:0.6.0@971764fa",
+        "@opam/base64@opam:3.2.0@6303aa3a",
+        "@opam/angstrom@opam:0.12.1@02015bad"
       ]
     },
     "@opam/uutf@opam:1.0.2@4440868f": {
@@ -335,6 +434,31 @@
       "devDependencies": [
         "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:1.11.4@a7ccb7ae",
         "@opam/base-bytes@opam:base@19d0c2ff"
+      ]
+    },
+    "@opam/stdlib-shims@opam:0.1.0@d957c903": {
+      "id": "@opam/stdlib-shims@opam:0.1.0@d957c903",
+      "name": "@opam/stdlib-shims",
+      "version": "opam:0.1.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://opam.ocaml.org/cache/md5/12/12b5704eed70c6bff5ac39a16db1425d#md5:12b5704eed70c6bff5ac39a16db1425d",
+          "archive:https://github.com/ocaml/stdlib-shims/releases/download/0.1.0/stdlib-shims-0.1.0.tbz#md5:12b5704eed70c6bff5ac39a16db1425d"
+        ],
+        "opam": {
+          "name": "stdlib-shims",
+          "version": "0.1.0",
+          "path": "esy.lock/opam/stdlib-shims.0.1.0"
+        }
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:1.11.4@a7ccb7ae",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:1.11.4@a7ccb7ae"
       ]
     },
     "@opam/stdio@opam:v0.13.0@eb59d879": {
@@ -1679,6 +1803,33 @@
         "@opam/dune@opam:1.11.4@a7ccb7ae"
       ]
     },
+    "@opam/eqaf@opam:0.5@ffdce56a": {
+      "id": "@opam/eqaf@opam:0.5@ffdce56a",
+      "name": "@opam/eqaf",
+      "version": "opam:0.5",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://opam.ocaml.org/cache/sha256/58/58ef81c110ee44669b1951df669cdc1f60ca34f0063cf0ae8b87568111af73f2#sha256:58ef81c110ee44669b1951df669cdc1f60ca34f0063cf0ae8b87568111af73f2",
+          "archive:https://github.com/mirage/eqaf/releases/download/v0.5/eqaf-v0.5.tbz#sha256:58ef81c110ee44669b1951df669cdc1f60ca34f0063cf0ae8b87568111af73f2"
+        ],
+        "opam": {
+          "name": "eqaf",
+          "version": "0.5",
+          "path": "esy.lock/opam/eqaf.0.5"
+        }
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:1.11.4@a7ccb7ae",
+        "@opam/cstruct@opam:5.1.1@e0b5aafd",
+        "@opam/bigarray-compat@opam:1.0.0@1faefa97",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:1.11.4@a7ccb7ae"
+      ]
+    },
     "@opam/easy-format@opam:1.3.2@0484b3c4": {
       "id": "@opam/easy-format@opam:1.3.2@0484b3c4",
       "name": "@opam/easy-format",
@@ -1748,6 +1899,37 @@
       "devDependencies": [
         "ocaml@4.8.1000@d41d8cd9", "@opam/base-unix@opam:base@87d0b2eb",
         "@opam/base-threads@opam:base@36803084"
+      ]
+    },
+    "@opam/digestif@opam:0.8.0@ec3563c0": {
+      "id": "@opam/digestif@opam:0.8.0@ec3563c0",
+      "name": "@opam/digestif",
+      "version": "opam:0.8.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://opam.ocaml.org/cache/sha256/9e/9e35599404f1cbbb74beeaefc38e1fbf333e0ca84437b4256527f1889ffde425#sha256:9e35599404f1cbbb74beeaefc38e1fbf333e0ca84437b4256527f1889ffde425",
+          "archive:https://github.com/mirage/digestif/releases/download/v0.8.0/digestif-v0.8.0.tbz#sha256:9e35599404f1cbbb74beeaefc38e1fbf333e0ca84437b4256527f1889ffde425"
+        ],
+        "opam": {
+          "name": "digestif",
+          "version": "0.8.0",
+          "path": "esy.lock/opam/digestif.0.8.0"
+        }
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/stdlib-shims@opam:0.1.0@d957c903",
+        "@opam/eqaf@opam:0.5@ffdce56a", "@opam/dune@opam:1.11.4@a7ccb7ae",
+        "@opam/bigarray-compat@opam:1.0.0@1faefa97",
+        "@opam/base-bytes@opam:base@19d0c2ff",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/stdlib-shims@opam:0.1.0@d957c903",
+        "@opam/eqaf@opam:0.5@ffdce56a", "@opam/dune@opam:1.11.4@a7ccb7ae",
+        "@opam/bigarray-compat@opam:1.0.0@1faefa97",
+        "@opam/base-bytes@opam:base@19d0c2ff"
       ]
     },
     "@opam/cstruct@opam:5.1.1@e0b5aafd": {

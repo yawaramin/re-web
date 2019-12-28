@@ -156,6 +156,41 @@ let authHello = request => {
   |> Lwt.return;
 };
 
+/** [getEchoWS(request)] is a service that handles a WebSocket
+    connection. It just echoes any strings that the client sends, unless
+    the string is [close], in which case it closes the connection. */
+let getEchoWS = _ => {
+  // Set up a handler function
+  let rec handler = (pull, push) => {
+    /* Use the provided [pull] function to asynchronously get a message.
+       Note that this is under your control, you decide when to get the
+       next message. */
+    let%lwt message = pull();
+    let message = Option.map(String.trim, message);
+
+    switch (message) {
+    | Some("close") =>
+      // Close the connection by pushing [None]
+      None |> push |> Lwt.return
+    | Some(_) =>
+      // Echo the message back by pushing it
+      push(message);
+
+      /* Call self recursively. This is needed to keep the handler
+         running--otherwise it will exit and close the WS connection.
+         If you've ever seen how an Erlang actor works, this is the
+         same idea. */
+      handler(pull, push);
+    // If we didn't get a message, keep running
+    | None => handler(pull, push)
+    };
+  };
+
+  /* Make and return a response like usual, but this time instead of
+     HTTP info (status, headers, body) return the WS handler. */
+  handler |> Response.of_websocket |> Lwt.return;
+};
+
 // Server for /auth/... endpoints, enforcing basic auth (see below)
 let authServer =
   fun
@@ -210,6 +245,8 @@ let server =
   | (`GET, ["redirect"]) => (
       _ => "/hello" |> Response.of_redirect |> Lwt.return
     )
+  // Example of serving a WebSocket
+  | (`GET, ["ws"]) => getEchoWS
   | _ => notFound;
 
 // Apply a top-level filter to the entire server

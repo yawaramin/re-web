@@ -1,4 +1,6 @@
-type ('ctx1, 'ctx2) t = 'ctx2 Server.service -> 'ctx1 Server.service
+type ('ctx1, 'ctx2, 'resp) t =
+  ('ctx2, 'resp) Server.service ->
+  ('ctx1, 'resp) Server.service
 
 let get_auth request =
   let open Let.Option in

@@ -36,7 +36,9 @@
     "@opam/lwt_ppx": ">= 1.2.1 < 2.0.0",
     "@opam/piaf": "0.1.0",
     "@opam/ppx_inline_test": "*",
-    "@opam/uri": ">= 3.1.0 < 4.0.0"
+    "@opam/uri": ">= 3.1.0 < 4.0.0",
+    "@opam/websocketaf": "0.1.0",
+    "@opam/websocketaf-lwt-unix": "0.1.0"
   },
   "devDependencies": {
     "@opam/merlin": "*",
@@ -57,6 +59,16 @@
         }
       }
     },
-    "@opam/ssl": "savonet/ocaml-ssl:ssl.opam#fbffa9b"
+    "@opam/ssl": "savonet/ocaml-ssl:ssl.opam#fbffa9b",
+    "@opam/websocketaf": "anmonteiro/websocketaf:websocketaf.opam#42673bd",
+    "@opam/websocketaf-lwt-unix": {
+      "source": "anmonteiro/websocketaf:websocketaf-lwt-unix.opam#42673bd",
+      "override": {
+        "dependencies": {
+          "@opam/websocketaf-lwt": "anmonteiro/websocketaf:websocketaf-lwt.opam#42673bd"
+        }
+      }
+    }
   }
 }
+

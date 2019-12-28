@@ -1,40 +1,45 @@
 module H = Httpaf
 
 type headers = (string * string) list
-type status = H.Status.t
-type t = { envelope : H.Response.t; body : Body.t }
+type status = Httpaf.Status.t
+type resp = { envelope : Httpaf.Response.t; body : Body.t }
+type http = [`HTTP of resp]
+type pull = unit -> string option Lwt.t
+type push = string option -> unit
+type handler = pull -> push -> unit Lwt.t
+type websocket = [`WebSocket of Httpaf.Headers.t option * handler]
+type 'resp t = [> http | websocket] as 'resp
 
-let set_headers headers response = {
-  response with envelope = { response.envelope with headers }
-}
+let set_headers headers resp =
+  `HTTP { resp with envelope = { resp.envelope with headers } }
 
-let add_header ?(replace=true) ~name ~value response =
+let add_header ?(replace=true) ~name ~value (`HTTP resp) =
   let add =
     if replace then H.Headers.add else H.Headers.add_unless_exists
   in
-  set_headers (add response.envelope.headers name value) response
+  set_headers (add resp.envelope.headers name value) resp
 
-let add_headers headers response = set_headers
-  (H.Headers.add_list response.envelope.headers headers)
-  response
+let add_headers headers (`HTTP resp) =
+  set_headers (H.Headers.add_list resp.envelope.headers headers) resp
 
-let add_headers_multi headers_multi response = set_headers
-  (H.Headers.add_multi response.envelope.headers headers_multi)
-  response
+let add_headers_multi headers_multi (`HTTP resp) = set_headers
+  (H.Headers.add_multi resp.envelope.headers headers_multi)
+  resp
 
-let body { body; _ } = body
+let body (`HTTP { body; _ }) = body
 
-let cookies { envelope = { H.Response.headers; _ }; _ } = "set-cookie"
+let cookies (`HTTP { envelope = { H.Response.headers; _ }; _ }) =
+  "set-cookie"
   |> H.Headers.get_multi headers
   |> Cookies.of_headers
 
-let header name { envelope = { H.Response.headers; _ }; _ } =
+let header name (`HTTP { envelope = { H.Response.headers; _ }; _ }) =
   H.Headers.get headers name
 
-let headers name { envelope = { H.Response.headers; _ }; _ } =
+let headers name (`HTTP { envelope = { H.Response.headers; _ }; _ }) =
   H.Headers.get_multi headers name
 
-let make ~status ~headers body = {
+let make ~status ~headers body = `HTTP {
   envelope =
     H.Response.create ~headers:(H.Headers.of_list headers) status;
   body;
@@ -152,5 +157,9 @@ let of_file ?(status=`OK) ?content_type ?headers ?cookies file_name =
         of_status ~message `Not_found
       | _ -> of_status `Internal_server_error
 
-let status { envelope = { H.Response.status; _ }; _ } = status
+let of_websocket ?headers handler =
+  let headers = Option.map H.Headers.of_list headers in
+  `WebSocket (headers, handler)
+
+let status (`HTTP { envelope = { H.Response.status; _ }; _ }) = status
 
