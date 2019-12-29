@@ -44,17 +44,6 @@ let getHeader = (name, request) =>
 let getLogin = _ =>
   View.login(~rememberMe=true) |> Response.of_view |> Lwt.return;
 
-// Helper to respond with credentials in response body.
-let respondCredentials = (username, password) =>
-  password
-  |> Printf.sprintf(
-       {|<h1>Logged in</h1>
-<p>with username = "%s", password = "%s"</p>|},
-       username,
-     )
-  |> Response.of_html
-  |> Lwt.return;
-
 /** [postLogin(request)] is a service that handles the [POST /login]
     endpoint. It's statically guaranteed access to the request body as a
     decoded, strongly-typed form, because a form decoder filter was
@@ -63,7 +52,7 @@ let respondCredentials = (username, password) =>
     It returns the credentials in the response body. */
 let postLogin = request => {
   let {User.username, password} = Request.context(request)#form;
-  respondCredentials(username, password);
+  View.loggedIn(~username, ~password) |> Response.of_view |> Lwt.return;
 };
 
 /** [getLoginQuery(request)] is a service that handles the
@@ -72,7 +61,7 @@ let postLogin = request => {
     filter was added before the service in the router. */
 let getLoginQuery = request => {
   let {User.username, password} = Request.context(request)#query;
-  respondCredentials(username, password);
+  View.loggedIn(~username, ~password) |> Response.of_view |> Lwt.return;
 };
 
 /** [getStatic(fileName, request)] is a service that returns the
