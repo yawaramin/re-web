@@ -152,7 +152,7 @@ let getEchoWS = _ => {
   // Set up a handler function, with the ability to pass in some state
   let rec handler = (~greet=false, pull, push) => {
     if (greet) {
-      push(Some("Welcome to getEchoWS!\n"));
+      push("Welcome to getEchoWS!\n");
     };
 
     /* Use the provided [pull] function to asynchronously get a message.
@@ -163,11 +163,11 @@ let getEchoWS = _ => {
 
     switch (message) {
     | Some("close") =>
-      // Close the connection by pushing [None]
-      None |> push |> Lwt.return
-    | Some(_) =>
+      // Close the connection by just returning an empty promise
+      Lwt.return_unit
+    | Some(string) =>
       // Echo the message back by pushing it
-      push(message);
+      push(string);
 
       /* Call self recursively. This is needed to keep the handler
          running--otherwise it will exit and close the WS connection.

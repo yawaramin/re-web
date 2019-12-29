@@ -51,13 +51,11 @@ let websocket_handler handler resolver _ wsd =
     | `Other _ -> ()
   in
   let pull () = Lwt_stream.get incoming in
-  let push = function
-    | Some string ->
-      let off = 0 in
-      let len = String.length string in
-      let bigstring = Bigstringaf.of_string ~off ~len string in
-      Wsd.schedule wsd bigstring ~kind:`Text ~off ~len
-    | None -> eof ()
+  let push string =
+    let off = 0 in
+    let len = String.length string in
+    let bigstring = Bigstringaf.of_string ~off ~len string in
+    Wsd.schedule wsd bigstring ~kind:`Text ~off ~len
   in
   Lwt.on_success (handler pull push) resolve;
 

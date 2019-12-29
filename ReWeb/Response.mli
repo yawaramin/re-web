@@ -12,7 +12,7 @@ type status = Httpaf.Status.t
 type http = [`HTTP of Httpaf.Response.t * Body.t]
 
 type pull = unit -> string option Lwt.t
-type push = string option -> unit
+type push = string -> unit
 type handler = pull -> push -> unit Lwt.t
 type websocket = [`WebSocket of Httpaf.Headers.t option * handler]
 
@@ -155,14 +155,16 @@ val of_websocket : ?headers:headers -> handler -> [> websocket]
     the client when opening the WS.
 
     [handler pull push] is an asynchronous callback that manages the WS
-    from the server side.
+    from the server side. The WS will shut down from the server side as
+    soon as [handler] exits, so if you want to keep it open you need to
+    make it call itself recursively. Because the call will be tail-
+    recursive, OCaml's tail-call elimination takes care of stack memory
+    use.
 
     [pull ()] asynchronously gets the next message from the WS if there
     is any.
 
-    [push response] pushes the string [content] of [response] to the WS
-    client if it is [Some content]; otherwise if it is [None] it closes
-    the WS from the server side.
+    [push response] pushes the string [response] to the WS client.
 
     {i Note} OCaml strings are un-encoded byte arrays, so it's up to you
     as the WebSocket handler writer to encode/decode them as necessary. *)

@@ -6,3 +6,5 @@ _release
 *.byte
 *.native
 *.install
+.DS_Store
+
