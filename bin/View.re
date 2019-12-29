@@ -9,17 +9,20 @@ let html = (title, body, p) => {
   title(p);
   p({|</title>
   </head>
-  <body>|});
+  <body>
+|});
   body(p);
-  p({|</body>
+  p({|
+  </body>
 </html>|});
 };
 
 let login = (~rememberMe) => {
-  let title = p => p("Login");
+  let title = p => p("Log in");
   let body = p => {
     p(
-      {|<form method="post">
+      {|    <h1>Log in</h1>
+    <form method="post">
       <p>
         <label for="username">Username: </label>
         <input type="text" name="username" required>
@@ -44,11 +47,11 @@ let login = (~rememberMe) => {
 let loggedIn = (~username, ~password) => {
   let title = p => p("Logged in");
   let body = p => {
-    p({|<h1>Logged in</h1>
-<p>Username: "|});
+    p({|    <h1>Logged in</h1>
+    <p>Username: "|});
     p(username);
     p({|"</p>
-<p>Password: "|});
+    <p>Password: "|});
     p(password);
     p({|"</p>|});
   };
