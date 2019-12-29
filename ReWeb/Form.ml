@@ -59,4 +59,11 @@ let rec decode :
       end
 
 let decoder form string = string |> Uri.query_of_encoded |> decode form
+
+let encode fields value = value
+  |> fields
+  |> List.map (fun (k, v) -> k, [v])
+  |> Uri.encoded_of_query
+
 let make fields ctor = { fields; ctor }
+

@@ -14,8 +14,7 @@ module Filter = Filter
 (** Transform services. *)
 
 module Form = Form
-(** Decode web forms into specified types. Think of this like JSON
-    decoding. *)
+(** Encode and decode web forms to/from specified types. *)
 
 module Manual = Manual
 (** ReWeb user's manual *)

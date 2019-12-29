@@ -1,5 +1,6 @@
 (** Use {!make} (see below) to create a www form that can be decoded to
-    custom types using the form validation rules defined in fields. *)
+    custom types using the form validation rules defined in fields. Use
+    {!encode} to encode a value as a form. *)
 
 type 'a decoder = string -> ('a, string) result
 (** A decoder is a function that takes an encoded value and returns a
@@ -44,6 +45,11 @@ type ('ctor, 'ty) t
 val decoder : ('ctor, 'ty) t -> 'ty decoder
 (** [decoder form] takes a form definition (see above) and returns a
     decoder from that form to a type ['ty]. *)
+
+val encode : ('ty -> (string * string) list) -> 'ty -> string
+(** [encode fields value] is a query-encoded string form. It calls
+    [fields value] to get the representation of [value] as a list of
+    key-value string pairs. *)
 
 val make : ('ctor, 'ty) Field.list -> 'ctor -> ('ctor, 'ty) t
 (** [make fields ctor] allows creating a form that can be used to decode
