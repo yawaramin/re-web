@@ -26,20 +26,20 @@ val add_header :
   name:string ->
   value:string ->
   [< http | websocket] ->
-  'resp t
+  _ t
 (** [add_header ?replace ~name ~value response] returns a response with
     a header [name] with value [value] added to the original [response].
     If [response] already contains the header [name], then its value is
     replaced only if [replace] is [true], which is the default. *)
 
-val add_headers : headers -> [< http | websocket] -> 'resp t
+val add_headers : headers -> [< http | websocket] -> _ t
 (** [add_headers headers response] returns a response with the [headers]
     added to the end of the original [response]'s header list. *)
 
 val add_headers_multi :
   (string * string list) list ->
   [< http | websocket] ->
-  'resp t
+  _ t
 (** [add_headers_multi headers_multi response] returns a response with
     [headers_multi] added to the end of the original [response]'s header
     list. *)

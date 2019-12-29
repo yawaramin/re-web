@@ -16,12 +16,12 @@ type ('ctx1, 'ctx2, 'resp) t =
 
     Filters can be composed using function composition. *)
 
-val basic_auth : ('ctx1, < username : string; password : string; prev : 'ctx1 >, [> Response.http]) t
+val basic_auth : ('ctx1, < username : string; password : string; prev : 'ctx1 >, _ Response.t) t
 (** [basic_auth] decodes and stores the login credentials sent with the
     [Authorization] header or returns a 401 Unauthorized error if there
     is none. *)
 
-val bearer_auth : ('ctx1, < bearer_token : string; prev : 'ctx1 >, [> Response.http]) t
+val bearer_auth : ('ctx1, < bearer_token : string; prev : 'ctx1 >, _ Response.t) t
 (** [bearer_auth] stores the bearer token sent with the [Authorization]
     header or returns a 401 Unauthorized error if there is none. *)
 
@@ -42,7 +42,7 @@ val body_form : ('ctor, 'ty) Form.t -> (unit, < form : 'ty >, [> Response.http])
     form fails to decode, it short-circuits and returns a 400 Bad
     Request. *)
 
-val query_form : ('ctor, 'ty) Form.t -> ('ctx1, < query : 'ty; prev : 'ctx1 >, [> Response.http]) t
+val query_form : ('ctor, 'ty) Form.t -> ('ctx1, < query : 'ty; prev : 'ctx1 >, _ Response.t) t
 (** [query_form typ] is a filter that decodes the request query (the
     part after the [?] in the endpoint) into a value of type ['ty] and
     stores it in the request context for the next service. The decoding
