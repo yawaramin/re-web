@@ -9,9 +9,7 @@ type headers = (string * string) list
     [[("x-client-id", "1")]]. *)
 
 type status = Httpaf.Status.t
-
-type resp = { envelope : Httpaf.Response.t; body : Body.t }
-type http = [`HTTP of resp]
+type http = [`HTTP of Httpaf.Response.t * Body.t]
 
 type pull = unit -> string option Lwt.t
 type push = string option -> unit
@@ -19,42 +17,42 @@ type handler = pull -> push -> unit Lwt.t
 type websocket = [`WebSocket of Httpaf.Headers.t option * handler]
 
 type 'resp t = [> http | websocket] as 'resp
-(** Response type, can be an HTTP or a WebSocket response. Most of the
-    functions below work solely with HTTP responses, this is enforced at
-    the type level. *)
+(** Response type, can be an HTTP or a WebSocket response. Many of the
+    functions below work with either HTTP or WebSocket responses, and
+    some with only one or the other. This is enforced at the type level. *)
 
 val add_header :
   ?replace:bool ->
   name:string ->
   value:string ->
-  [< http] ->
-  [> http]
+  [< http | websocket] ->
+  'resp t
 (** [add_header ?replace ~name ~value response] returns a response with
     a header [name] with value [value] added to the original [response].
     If [response] already contains the header [name], then its value is
     replaced only if [replace] is [true], which is the default. *)
 
-val add_headers : headers -> [< http] -> [> http]
+val add_headers : headers -> [< http | websocket] -> 'resp t
 (** [add_headers headers response] returns a response with the [headers]
     added to the end of the original [response]'s header list. *)
 
 val add_headers_multi :
   (string * string list) list ->
-  [< http] ->
-  [> http]
+  [< http | websocket] ->
+  'resp t
 (** [add_headers_multi headers_multi response] returns a response with
     [headers_multi] added to the end of the original [response]'s header
     list. *)
 
 val body : [< http] -> Body.t
 
-val cookies : [< http] -> Cookies.t
+val cookies : [< http | websocket] -> Cookies.t
 
-val header : string -> [< http] -> string option
+val header : string -> [< http | websocket] -> string option
 (** [header name request] gets the last value corresponding to the given
     header, if present. *)
 
-val headers : string -> [< http] -> string list
+val headers : string -> [< http | websocket] -> string list
 (** [headers name request] gets all the values corresponding to the
     given header. *)
 

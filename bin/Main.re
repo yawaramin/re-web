@@ -160,8 +160,12 @@ let authHello = request => {
     connection. It just echoes any strings that the client sends, unless
     the string is [close], in which case it closes the connection. */
 let getEchoWS = _ => {
-  // Set up a handler function
-  let rec handler = (pull, push) => {
+  // Set up a handler function, with the ability to pass in some state
+  let rec handler = (~greet=false, pull, push) => {
+    if (greet) {
+      push(Some("Welcome to getEchoWS!\n"));
+    };
+
     /* Use the provided [pull] function to asynchronously get a message.
        Note that this is under your control, you decide when to get the
        next message. */
@@ -187,8 +191,11 @@ let getEchoWS = _ => {
   };
 
   /* Make and return a response like usual, but this time instead of
-     HTTP info (status, headers, body) return the WS handler. */
-  handler |> Response.of_websocket |> Lwt.return;
+     HTTP info (status, headers, body) return the WS handler. Note that
+     a handler can be passed in some extra state ([~greet=true]) at the
+     beginning, and update the state internally when it calls itself
+     recursively! */
+  handler(~greet=true) |> Response.of_websocket |> Lwt.return;
 };
 
 // Server for /auth/... endpoints, enforcing basic auth (see below)

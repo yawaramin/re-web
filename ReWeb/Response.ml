@@ -2,48 +2,51 @@ module H = Httpaf
 
 type headers = (string * string) list
 type status = Httpaf.Status.t
-type resp = { envelope : Httpaf.Response.t; body : Body.t }
-type http = [`HTTP of resp]
+type http = [`HTTP of Httpaf.Response.t * Body.t]
 type pull = unit -> string option Lwt.t
 type push = string option -> unit
 type handler = pull -> push -> unit Lwt.t
 type websocket = [`WebSocket of Httpaf.Headers.t option * handler]
 type 'resp t = [> http | websocket] as 'resp
 
-let set_headers headers resp =
-  `HTTP { resp with envelope = { resp.envelope with headers } }
+let get_headers = function
+  | `HTTP ({ H.Response.headers; _ }, _) -> headers
+  | `WebSocket (headers, _) ->
+    Option.value headers ~default:(H.Headers.empty)
 
-let add_header ?(replace=true) ~name ~value (`HTTP resp) =
+let set_headers headers = function
+  | `HTTP (resp, body) ->
+    `HTTP ({ resp with H.Response.headers }, body)
+  | `WebSocket (_, handler) ->
+    `WebSocket (Some headers, handler)
+
+let add_header ?(replace=true) ~name ~value response =
   let add =
     if replace then H.Headers.add else H.Headers.add_unless_exists
   in
-  set_headers (add resp.envelope.headers name value) resp
+  set_headers (add (get_headers response) name value) response
 
-let add_headers headers (`HTTP resp) =
-  set_headers (H.Headers.add_list resp.envelope.headers headers) resp
+let add_headers headers response = set_headers
+  (H.Headers.add_list (get_headers response) headers)
+  response
 
-let add_headers_multi headers_multi (`HTTP resp) = set_headers
-  (H.Headers.add_multi resp.envelope.headers headers_multi)
-  resp
+let add_headers_multi headers_multi response = set_headers
+  (H.Headers.add_multi (get_headers response) headers_multi)
+  response
 
-let body (`HTTP { body; _ }) = body
+let body (`HTTP (_, body)) = body
 
-let cookies (`HTTP { envelope = { H.Response.headers; _ }; _ }) =
-  "set-cookie"
-  |> H.Headers.get_multi headers
+let cookies response = "set-cookie"
+  |> H.Headers.get_multi (get_headers response)
   |> Cookies.of_headers
 
-let header name (`HTTP { envelope = { H.Response.headers; _ }; _ }) =
-  H.Headers.get headers name
+let header name response = H.Headers.get (get_headers response) name
 
-let headers name (`HTTP { envelope = { H.Response.headers; _ }; _ }) =
-  H.Headers.get_multi headers name
+let headers name response =
+  H.Headers.get_multi (get_headers response) name
 
-let make ~status ~headers body = `HTTP {
-  envelope =
-    H.Response.create ~headers:(H.Headers.of_list headers) status;
-  body;
-}
+let make ~status ~headers body =
+  `HTTP (H.Response.create ~headers:(H.Headers.of_list headers) status, body)
 
 let cookie_to_header (name, value) = "set-cookie", name ^ "=" ^ value
 
@@ -161,5 +164,5 @@ let of_websocket ?headers handler =
   let headers = Option.map H.Headers.of_list headers in
   `WebSocket (headers, handler)
 
-let status (`HTTP { envelope = { H.Response.status; _ }; _ }) = status
+let status (`HTTP ({ H.Response.status; _ }, _ )) = status
 

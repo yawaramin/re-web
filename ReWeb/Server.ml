@@ -104,14 +104,14 @@ let error_handler _ ?request:_ error handle =
 let serve ?(port=8080) server =
   let request_handler client_addr reqd =
     let send = function
-      | `HTTP { Response.envelope; body } ->
-        let code = H.Status.to_code envelope.H.Response.status in
+      | `HTTP (resp, body) ->
+        let code = H.Status.to_code resp.H.Response.status in
         client_addr
         |> string_of_unix_addr
         |> Printf.printf " %d %s\n%!" code;
 
         let send stream =
-          let writer = H.Reqd.respond_with_streaming reqd envelope in
+          let writer = H.Reqd.respond_with_streaming reqd resp in
           let fully_written =
             Lwt_stream.iter (schedule_chunk writer) stream
           in
@@ -120,11 +120,11 @@ let serve ?(port=8080) server =
         in
         begin match body with
         | Body.Bigstring bigstring ->
-          H.Reqd.respond_with_bigstring reqd envelope bigstring
+          H.Reqd.respond_with_bigstring reqd resp bigstring
         | Body.Chunks stream -> send stream
         | Body.Piaf body -> body |> to_stream |> send
         | Body.String string ->
-          H.Reqd.respond_with_string reqd envelope string
+          H.Reqd.respond_with_string reqd resp string
         end
       | `WebSocket (headers, handler) ->
         print_string " ";
