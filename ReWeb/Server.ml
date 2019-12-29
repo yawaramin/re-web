@@ -28,8 +28,15 @@ let to_stream body = body
   |> Lwt_stream.map Body.make_chunk
 
 let websocket_handler handler resolver _ wsd =
+  let resolve () =
+    try Lwt.wakeup_later resolver (Ok ())
+    with _ -> ()
+  in
   let incoming, queue_incoming = Lwt_stream.create () in
-  let eof () = Wsd.close wsd in
+  let eof () =
+    Wsd.close wsd;
+    resolve ()
+  in
   let frame ~opcode ~is_fin:_ bigstring ~off ~len = match opcode with
     | `Continuation
     | `Text
@@ -52,9 +59,7 @@ let websocket_handler handler resolver _ wsd =
       Wsd.schedule wsd bigstring ~kind:`Text ~off ~len
     | None -> eof ()
   in
-  Lwt.on_success (handler pull push) begin fun () ->
-    Lwt.wakeup_later resolver (Ok ())
-  end;
+  Lwt.on_success (handler pull push) resolve;
 
   { Websocketaf.Server_connection.frame; eof }
 
@@ -71,20 +76,18 @@ let error_handler wsd (`Exn exn) =
   Wsd.close wsd
 
 let websocket_upgrader ?headers reqd client_addr handler =
-  let result =
-    let promise, resolver = Lwt.wait () in
-    let open Let.Lwt in
-    let* _ = client_addr
-      |> Websocketaf_lwt_unix.Server.create_upgraded_connection_handler
-        ~error_handler
-        ~websocket_handler:(websocket_handler handler resolver)
-      |> Websocketaf_lwt_unix.Server.respond_with_upgrade ?headers reqd
-    in
-    promise
+  let promise, resolver = Lwt.wait () in
+  let upgrade_result = client_addr
+    |> Websocketaf_lwt_unix.Server.create_upgraded_connection_handler
+      ~error_handler
+      ~websocket_handler:(websocket_handler handler resolver)
+    |> Websocketaf_lwt_unix.Server.respond_with_upgrade ?headers reqd
   in
-  Lwt.on_success result @@ fun result ->
+  Lwt.on_success promise @@ fun result ->
     print_endline @@ match result with
-      | Ok () -> "ReWeb.Server: WebSocket shutting down"
+      | Ok () ->
+        Lwt.cancel upgrade_result;
+        "ReWeb.Server: WebSocket shutting down"
       | Error string -> string
 
 let error_handler _ ?request:_ error handle =
