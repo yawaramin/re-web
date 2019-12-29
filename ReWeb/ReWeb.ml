@@ -16,9 +16,6 @@ module Filter = Filter
 module Form = Form
 (** Encode and decode web forms to/from specified types. *)
 
-module Manual = Manual
-(** ReWeb user's manual *)
-
 module Request = Request
 (** Read requests. *)
 
