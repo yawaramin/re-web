@@ -44,6 +44,46 @@
 
     See {!module:ReWeb.Server} for more details on servers.
 
+    {1 Filters}
+
+    The final important top-level concept to understand is {i filters},
+    which are service transformer functions. Filters are functions of
+    type (roughly):
+
+    {[service => service]}
+
+    Filters are essentially like middleware in ExpressJS and other web
+    frameworks; they plug in to the request pipeline and change requests
+    or responses in certain ways. You can imagine it like a data flow:
+
+    {[client =>
+      request =>
+      [filter1 => ... => filterN =>]
+      service =>
+      response]}
+
+    As you can tell, zero or more filters can be plugged into the
+    pipeline before the service. By the time the service runs, the
+    filters that ran before it might have performed authentication using
+    the request's HTTP [Authorization] header, read the request body,
+    safely decoded it from a web form into a strongly-typed value, and
+    put the value in the request's 'context' (we will cover that in a
+    later chapter). If any of those filters failed, typically they would
+    short-circuit the pipeline and respond with a 400 Bad Request, 403
+    Forbidden, or other appropriate response status.
+
+    One of the key benefits of ReWeb filters is that they are type-safe.
+    Specifically this means that their 'input context' and 'output
+    context' types are exposed at the type level, and only filters and
+    services which have compatible input context/output context types
+    can plug together. Those that don't, will result in a compile error.
+
+    So concretely this means that a service that tries to get the auth
+    token and the decoded form body from the request context, will only
+    compile if the filters which do those jobs were actually plugged in
+    to the request pipeline before it. This will be explored in the
+    chapter on filters.
+
     {1 Promises (Lwt)}
 
     The ReWeb stack is completely asychronous and runs using a promise

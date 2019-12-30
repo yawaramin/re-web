@@ -27,7 +27,11 @@
     appropriately set the context type--i.e. by putting either the body
     directly, or some data derived from the body, in the context.
 
-    The filters that ReWeb ships with, all respect this rule.
+    The filters that ReWeb ships with, all respect this rule. However,
+    it is possible to write filters which don't. So there is a
+    possibility of double-reading the body and getting a runtime error.
+    Using and building upon the filters in {!ReWeb.Filter} should
+    minimize this.
 
     {1 Request bodies}
 

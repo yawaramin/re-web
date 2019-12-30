@@ -79,6 +79,17 @@
     the matched pattern in bindings, as-patterns, or-patterns, and so
     on. Hence route matching is quite flexible.
 
+    Pattern-matched routes also offer two other big advantages:
+
+    - The compiler warns you if you forget to {i exhaustively} handle
+      routes, i.e. if you don't include a catch-all path at the bottom
+      of the router
+    - The compiler warns you if you handle the same route twice
+
+    These features are quite difficult to get with other systems. We get
+    them for 'free' with OCaml/Reason's compiler and the simple routing
+    system used in ReWeb.
+
     {1 Scoping routes}
 
     Because servers are just functions, you can define more than one and

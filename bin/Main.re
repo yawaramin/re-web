@@ -163,7 +163,9 @@ let getEchoWS = _ => {
 
     switch (message) {
     | Some("close") =>
-      // Close the connection by just returning an empty promise
+      /* Close the connection by just returning a 'unit' promise. This
+         is a convenience value that's like saying [Promise.resolve()]
+         (i.e. resolve with an empty value) in JavaScript. */
       Lwt.return_unit
     | Some(string) =>
       // Echo the message back by pushing it
