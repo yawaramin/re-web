@@ -44,21 +44,28 @@ let bearer_auth next request = match get_auth request with
     }
   | _ -> unauthorized
 
+let set_body body request =
+  { request with Request.ctx = object method body = body end }
+
 let body_json next request =
   let open Let.Lwt in
   let* body = Request.body_string request in
   match Ezjsonm.from_string body with
-  | body ->
-    next { request with Request.ctx = object method body = body end }
+  | body -> request |> set_body body |> next
   | exception Ezjsonm.Parse_error (_, string) ->
     bad_request ("ReWeb.Filter.body_json: " ^ string)
   | exception Assert_failure (_, _, _) ->
     bad_request "ReWeb.Filter.body_json: not a JSON document"
 
+let body_json_decode decoder next request =
+  match decoder (Request.context request)#body with
+  | Ok body -> request |> set_body body |> next
+  | Error exn -> exn |> Printexc.to_string |> bad_request
+
 let body_string next request =
   let open Let.Lwt in
   let* body = Request.body_string request in
-  next { request with Request.ctx = object method body = body end }
+  request |> set_body body |> next
 
 let body_form typ next request =
   match Request.header "content-type" request with

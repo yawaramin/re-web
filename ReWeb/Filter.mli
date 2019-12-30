@@ -31,6 +31,15 @@ val body_json : (unit, < body : Ezjsonm.t >, [> Response.http]) t
     request body. If the request body fails to parse as valid JSON, it
     short-circuits and returns a 400 Bad Request. *)
 
+val body_json_decode :
+  (Ezjsonm.t -> ('ty, exn) result) ->
+  (< body : Ezjsonm.t >, < body : 'ty >, [> Response.http]) t
+(** [body_json_decode decoder] is a filter that transforms a service
+    with a parsed JSON structure in its context, to a service with a
+    decoded value of type ['ty] in its context. If the request body
+    fails to decode with [decoder], the filter short-circuits and
+    returns a 400 Bad Request. *)
+
 val body_string : (unit, < body : string >, [> Response.http]) t
 (** [body_string] is a filter that transforms a 'root' service into a
     service whose context contains the request body as a single string. *)
