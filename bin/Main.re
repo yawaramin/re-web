@@ -157,8 +157,9 @@ let getEchoWS = _ => {
 
     /* Use the provided [pull] function to asynchronously get a message.
        Note that this is under your control, you decide when to get the
-       next message. */
-    let%lwt message = pull();
+       next message. Have to pass in an explicit timeout in seconds to
+       all pulls. */
+    let%lwt message = pull(2.);
     let message = Option.map(String.trim, message);
 
     switch (message) {
@@ -245,6 +246,9 @@ let server =
     )
   // Example of serving a WebSocket
   | (`GET, ["ws"]) => getEchoWS
+  /* This is a really cool WS: it queries the {i same} ReWeb server it's
+     running in to get data! */
+  | (`GET, ["ticks"]) => GetTicks.service
   | _ => notFound;
 
 // Apply a top-level filter to the entire server

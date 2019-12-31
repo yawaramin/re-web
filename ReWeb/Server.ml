@@ -50,12 +50,16 @@ let websocket_handler handler resolver _ wsd =
     | `Pong
     | `Other _ -> ()
   in
-  let pull () = Lwt_stream.get incoming in
+  let pull timeout_s = Lwt.pick [
+    Lwt_stream.get incoming;
+    timeout_s |> Lwt_unix.sleep |> Lwt.map @@ fun () -> None;
+  ]
+  in
   let push string =
     let off = 0 in
     let len = String.length string in
     let bigstring = Bigstringaf.of_string ~off ~len string in
-    Wsd.schedule wsd bigstring ~kind:`Text ~off ~len
+    Wsd.schedule wsd bigstring ~kind:`Binary ~off ~len
   in
   Lwt.on_success (handler pull push) resolve;
 
@@ -85,7 +89,9 @@ let websocket_upgrader ?headers reqd client_addr handler =
     print_endline @@ match result with
       | Ok () ->
         Lwt.cancel upgrade_result;
-        "ReWeb.Server: WebSocket shutting down"
+        client_addr
+        |> string_of_unix_addr
+        |> ((^) "ReWeb.Server: WebSocket closed ")
       | Error string -> string
 
 let error_handler _ ?request:_ error handle =

@@ -10,11 +10,11 @@ type headers = (string * string) list
 
 type status = Httpaf.Status.t
 type http = [`HTTP of Httpaf.Response.t * Body.t]
-
-type pull = unit -> string option Lwt.t
+type pull = float -> string option Lwt.t
 type push = string -> unit
 type handler = pull -> push -> unit Lwt.t
 type websocket = [`WebSocket of Httpaf.Headers.t option * handler]
+(** See {!of_websocket} for an explanation of these types. *)
 
 type 'resp t = [> http | websocket] as 'resp
 (** Response type, can be an HTTP or a WebSocket response. Many of the
@@ -161,13 +161,18 @@ val of_websocket : ?headers:headers -> handler -> [> websocket]
     recursive, OCaml's tail-call elimination takes care of stack memory
     use.
 
-    [pull ()] asynchronously gets the next message from the WS if there
-    is any.
+    [pull timeout_s] asynchronously gets the next message from the WS if
+    there is any, with a timeout in seconds of [timeout_s]. If it
+    doesn't time out it returns [Some string], otherwise [None].
 
     [push response] pushes the string [response] to the WS client.
 
-    {i Note} OCaml strings are un-encoded byte arrays, so it's up to you
-    as the WebSocket handler writer to encode/decode them as necessary. *)
+    {i Note} OCaml strings are un-encoded byte arrays, and ReWeb treats
+    all incoming and outgoing WebSocket data as such--even if the client
+    is sending UTF-8 encoded text format (see
+    {{: https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API/Writing_WebSocket_servers#Format}}).
+    It's up to you as the WebSocket handler writer to encode/decode them
+    as necessary. *)
 
 val status : [< http] -> status
 
