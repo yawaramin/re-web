@@ -209,7 +209,7 @@
     'close' and if so closes the connection. Otherwise it echoes the
     message and keeps going.
 
-    {2 Passing state to handlers}
+    {2 Handlers with internal state}
 
     Since a handler just has to return a function that looks like
     [(pull, push) => Lwt.t(unit)] (roughly), you can actually create
@@ -221,7 +221,7 @@
         if (doTimes == 0) {
           Lwt.return_unit;
         } else {
-          lwt%lwt message = pull(2.);
+          let%lwt message = pull(2.);
           push(message);
           handler(~doTimes=pred(doTimes), pull, push);
         };
@@ -229,9 +229,9 @@
       let ws = Response.of_websocket(handler(~doTimes=5));]}
 
     In this example we just echo incoming messages but only 5 times,
-    after which we close the connection. Notice how the handler changes
-    its own state by using the recursive call to pass in a different
-    value of [doTimes]. [pred] is a built-in standard library function;
-    it returns the 'predecessor' (i.e. one less) of the integer passed
-    to it. *)
+    after which we close the connection. Notice how the handler
+    maintains its own internal state by using the recursive call to pass
+    in a different value of [doTimes]. [pred] is a built-in standard
+    library function; it returns the 'predecessor' (i.e. one less) of
+    the integer passed to it. *)
 
