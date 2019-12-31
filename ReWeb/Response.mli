@@ -10,9 +10,11 @@ type headers = (string * string) list
 
 type status = Httpaf.Status.t
 type http = [`HTTP of Httpaf.Response.t * Body.t]
+
 type pull = float -> string option Lwt.t
 type push = string -> unit
 type handler = pull -> push -> unit Lwt.t
+
 type websocket = [`WebSocket of Httpaf.Headers.t option * handler]
 (** See {!of_websocket} for an explanation of these types. *)
 
@@ -56,12 +58,6 @@ val headers : string -> [< http | websocket] -> string list
 (** [headers name request] gets all the values corresponding to the
     given header. *)
 
-val make :
-  status:status ->
-  headers:(string * string) list ->
-  Body.t ->
-  [> http]
-
 val of_binary :
   ?status:status ->
   ?content_type:string ->
@@ -94,6 +90,14 @@ val of_html :
   ?cookies:Cookies.t ->
   string ->
   [> http]
+
+val of_http :
+  status:status ->
+  headers:(string * string) list ->
+  Body.t ->
+  [> http]
+(** [of_http ~status ~headers body] responds with an HTTP response
+  composed of [status], [headers], and [body]. *)
 
 val of_json :
   ?status:status ->
@@ -175,4 +179,5 @@ val of_websocket : ?headers:headers -> handler -> [> websocket]
     as necessary. *)
 
 val status : [< http] -> status
+val status_code : [< http] -> int
 

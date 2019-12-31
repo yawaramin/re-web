@@ -77,7 +77,7 @@ let getStatic = (fileName, _) =>
 let echoBody = request =>
   request
   |> Request.body
-  |> Response.make(
+  |> Response.of_http(
        ~status=`OK,
        ~headers=[
          ("content-type", "application/octet-stream"),

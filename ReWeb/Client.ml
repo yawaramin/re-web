@@ -22,7 +22,7 @@ let convert_response result =
   let+ { Piaf.Response.status; headers; version; _ }, body = result in
   let status = status |> Piaf.Status.to_code |> H.Status.of_code in
   let headers = Piaf.Headers.to_list headers in
-  body |> Body.of_piaf |> Response.make ~status ~headers
+  body |> Body.of_piaf |> Response.of_http ~status ~headers
 
 module New = struct
   module Client = Piaf.Client.Oneshot

@@ -45,7 +45,7 @@ let header name response = H.Headers.get (get_headers response) name
 let headers name response =
   H.Headers.get_multi (get_headers response) name
 
-let make ~status ~headers body =
+let of_http ~status ~headers body =
   `HTTP (H.Response.create ~headers:(H.Headers.of_list headers) status, body)
 
 let cookie_to_header (name, value) = "set-cookie", name ^ "=" ^ value
@@ -73,7 +73,7 @@ let of_binary
     ~content_length:(String.length body)
     content_type
   in
-  make ~status ~headers (Body.of_string body)
+  of_http ~status ~headers (Body.of_string body)
 
 let of_html ?(status=`OK) ?headers ?cookies =
   of_binary ~status ~content_type:"text/html" ?headers ?cookies
@@ -114,10 +114,11 @@ let of_status ?(content_type=`text) ?headers ?cookies ?message status =
     let body = Option.fold ~none:"" ~some message in
     of_html ~status ?headers ?cookies ("<h1>" ^ header ^ "</h1>" ^ body)
 
-let of_redirect ?(content_type="text/plain") ?(body="") location = make
-  ~status:`Moved_permanently
-  ~headers:["location", location; "content-type", content_type]
-  (Body.of_string body)
+let of_redirect ?(content_type="text/plain") ?(body="") location =
+  of_http
+    ~status:`Moved_permanently
+    ~headers:["location", location; "content-type", content_type]
+    (Body.of_string body)
 
 let make_chunk line =
   let off = 0 in
@@ -132,7 +133,7 @@ let of_view ?(status=`OK) ?(content_type="text/html") ?headers ?cookies view =
 
   stream
   |> Body.of_stream
-  |> make ~status ~headers:(make_headers ?headers ?cookies content_type)
+  |> of_http ~status ~headers:(make_headers ?headers ?cookies content_type)
 
 let of_file ?(status=`OK) ?content_type ?headers ?cookies file_name =
   let f () =
@@ -149,7 +150,7 @@ let of_file ?(status=`OK) ?content_type ?headers ?cookies file_name =
     let+ () = Lwt_unix.close file_descr in
     let headers = make_headers ?headers ?cookies content_type in
     let body = Body.of_bigstring bigstring in
-    make ~status ~headers body
+    of_http ~status ~headers body
   in
   Lwt.catch f @@ fun exn ->
     Lwt.return @@ match exn with
@@ -165,4 +166,5 @@ let of_websocket ?headers handler =
   `WebSocket (headers, handler)
 
 let status (`HTTP ({ H.Response.status; _ }, _ )) = status
+let status_code response = response |> status |> H.Status.to_code
 
