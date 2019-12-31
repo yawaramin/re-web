@@ -48,6 +48,6 @@
     One possible exception is if you want to directly echo the request
     body without touching it--in that case you can get the body using
     {!ReWeb.Request.body} and passing it to {!ReWeb.Response.make}.
-    Remember that request and response bodies are the same type. We
-    will cover ReWeb responses in the next chapter. *)
+    Remember that request and response bodies are the same type. We will
+    cover ReWeb responses in the next chapter. *)
 

@@ -9,20 +9,15 @@ let form = make
   user
 
 let%test "decoder - decode correctly" =
-  match decoder form "id=1&name=Bob" with
-  | Ok { id = 1; name = "Bob" } -> true
-  | _ -> false
+  decoder form "id=1&name=Bob" = Ok { id = 1; name = "Bob" }
 
-let%test "decoder - error on bad input" = match decoder form "" with
-  | Error "ReWeb.Form.decoder: could not find key id" -> true
-  | _ -> false
+let%test "decoder - error on bad input" =
+  decoder form "" = Error "ReWeb.Form.decoder: could not find key id"
 
 let%test _ =
   let fields { id; name } = ["id", string_of_int id; "name", name] in
   encode fields { id = 1; name = "Bob Roberts" } = "id=1&name=Bob%20Roberts"
 
 let%test "ensure - error on validation fail" =
-  match decoder form "id=1&name=" with
-  | Error "ReWeb.Form.Field.ensure: name" -> true
-  | _ -> false
+  decoder form "id=1&name=" = Error "ReWeb.Form.Field.ensure: name"
 
