@@ -193,7 +193,7 @@
     {[let rec handler = (pull, push) => {
         let%lwt message = pull(2.);
 
-        switch (String.trim(message)) {
+        switch (Option.map(String.trim, message)) {
         | Some("close") => Lwt.return_unit
         | Some(message) =>
           push(message);
