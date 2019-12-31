@@ -3,7 +3,7 @@ open ReWeb;
 // Couple of helpers
 
 let tickToJson = Printf.sprintf({|{"data": {"tick": "%s"}}|});
-let errorToJson = Printf.sprintf({|{"error": %s}|});
+let errorToJson = Printf.sprintf({|{"error": "%s"}|});
 
 /** [service(request)] is a service that starts a WebSocket that queries
     the {i same} server (i.e. the one defined in [Main.re]) to get data
