@@ -249,6 +249,9 @@ let server =
   /* This is a really cool WS: it queries the {i same} ReWeb server it's
      running in to get data! */
   | (`GET, ["ticks"]) => GetTicks.service
+  /* Example of a Rails-like resource. Go to
+     [http://localhost:8080/articles] in your browser to try it! */
+  | (meth, ["articles", ...path]) => Articles.resource @@ (meth, path)
   | _ => notFound;
 
 // Apply a top-level filter to the entire server

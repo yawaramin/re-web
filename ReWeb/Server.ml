@@ -4,7 +4,33 @@ module Wsd = Websocketaf.Wsd
 type path = string list
 type route = H.Method.t * path
 type ('ctx, 'resp) service = 'ctx Request.t -> 'resp Response.t Lwt.t
+
+type ('ctx, 'resp) http_service =
+  'ctx Request.t -> ([> Response.http] as 'resp) Lwt.t
+
 type ('ctx, 'resp) t = route -> ('ctx, 'resp) service
+
+let not_found _ = `Not_found |> Response.of_status |> Lwt.return
+let not_found_id _ = not_found
+
+let resource
+  ?(index=not_found)
+  ?(create=not_found)
+  ?(new_=not_found)
+  ?(edit=not_found_id)
+  ?(show=not_found_id)
+  ?(update=fun _ -> not_found_id)
+  ?(destroy=not_found_id) =
+  function
+  | `GET, [] -> index
+  | `POST, [] -> create
+  | `GET, ["new"] -> new_
+  | `GET, [id; "edit"] -> edit id
+  | `GET, [id] -> show id
+  | `Other "PATCH", [id] -> update `PATCH id
+  | `PUT, [id] -> update `PUT id
+  | `DELETE, [id] -> destroy id
+  | _ -> not_found
 
 let segment path = path |> String.split_on_char '/' |> List.tl
 

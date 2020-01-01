@@ -25,6 +25,13 @@ val bearer_auth : ('ctx1, < bearer_token : string; prev : 'ctx1 >, _ Response.t)
 (** [bearer_auth] stores the bearer token sent with the [Authorization]
     header or returns a 401 Unauthorized error if there is none. *)
 
+val body_form : ('ctor, 'ty) Form.t -> (unit, < form : 'ty >, [> Response.http]) t
+(** [body_form typ] is a filter that decodes a web form in the request
+    body and puts it inside the request for the next service. The
+    decoding is done as specified by the form definition [typ]. If the
+    form fails to decode, it short-circuits and returns a 400 Bad
+    Request. *)
+
 val body_json : (unit, < body : Ezjsonm.t >, [> Response.http]) t
 (** [body_json] is a filter that transforms a 'root' service (i.e. one
     with [unit] context) into a service with a context containing the
@@ -43,13 +50,6 @@ val body_json_decode :
 val body_string : (unit, < body : string >, [> Response.http]) t
 (** [body_string] is a filter that transforms a 'root' service into a
     service whose context contains the request body as a single string. *)
-
-val body_form : ('ctor, 'ty) Form.t -> (unit, < form : 'ty >, [> Response.http]) t
-(** [body_form typ] is a filter that decodes a web form in the request
-    body and puts it inside the request for the next service. The
-    decoding is done as specified by the form definition [typ]. If the
-    form fails to decode, it short-circuits and returns a 400 Bad
-    Request. *)
 
 val query_form : ('ctor, 'ty) Form.t -> ('ctx1, < query : 'ty; prev : 'ctx1 >, _ Response.t) t
 (** [query_form typ] is a filter that decodes the request query (the
