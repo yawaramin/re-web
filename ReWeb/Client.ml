@@ -17,6 +17,8 @@ type config = Piaf.Config.t = {
 
 type headers = (string * string) list
 
+let config = Piaf.Config.default
+
 let convert_response result =
   let open Let.Result in
   let+ { Piaf.Response.status; headers; version; _ }, body = result in

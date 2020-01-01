@@ -1,3 +1,8 @@
+(** The request functions below return a response of type
+    [([> Response.http], string) Lwt_result.t]. This is a promise
+    containing a [result] of either [Ok response] where [response] is an
+    HTTP response, or a [string] containing an error message. *)
+
 type config = Piaf.Config.t = {
   follow_redirects : bool;
   max_redirects : int;
@@ -16,6 +21,10 @@ type config = Piaf.Config.t = {
     options. *)
 
 type headers = (string * string) list
+
+val config : config
+(** Use this [config] value to override the default config in client
+    requests. *)
 
 module New : sig
   type 'resp request_body =
