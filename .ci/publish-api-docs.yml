@@ -1,12 +1,9 @@
 steps:
   - script: |
-      git clone git@github.com:yawaramin/re-web.git .
+      git clone https://github.com:yawaramin/re-web.git .
       git checkout gh-pages
-      git pull
     workingDirectory: $(Build.StagingDirectory)
     displayName: "Clone GitHub pages repo"
-    inputs:
-      azureSubscription: 'github.com_yawaramin'
 
   - script: |
       rm -rf $(Build.StagingDirectory)/ReWeb || true
@@ -20,14 +17,23 @@ steps:
     inputs:
       artifactName: Docs
       targetPath: $(Build.StagingDirectory)
-    
+
+  - task: DownloadSecureFile@1
+    inputs:
+      secureFile: deploy_key
+    displayName: 'Get the deploy key'
+
   - script: |
+      mkdir ~/.ssh
+      mv $DOWNLOADSECUREFILE_SECUREFILEPATH ~/.ssh/id_rsa
+      chmod 700 ~/.ssh
+      chmod 600 ~/.ssh/id_rsa
+      ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+      git remote set-url --push origin git@github.com:yawaramin/re-web.git
       git config user.name "ReWeb Docs Bot"
       git add --all
       git commit --amend --message "Generate docs"
       git push --force origin gh-pages
     workingDirectory: $(Build.StagingDirectory)
     displayName: "Push docs to Github pages"
-    inputs:
-      azureSubscription: 'github.com_yawaramin'
 
