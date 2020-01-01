@@ -1,10 +1,12 @@
 steps:
   - script: |
-      git clone https://$(github_pat)@github.com/yawaramin/re-web .
+      git clone git@github.com:yawaramin/re-web.git .
       git checkout gh-pages
       git pull
     workingDirectory: $(Build.StagingDirectory)
     displayName: "Clone GitHub pages repo"
+    inputs:
+      azureSubscription: 'github.com_yawaramin'
 
   - script: |
       rm -rf $(Build.StagingDirectory)/ReWeb || true
@@ -22,8 +24,10 @@ steps:
   - script: |
       git config user.name "ReWeb Docs Bot"
       git add --all
-      git commit --amend --message "$(Build.SourceVersionMessage)"
-      git push origin gh-pages
+      git commit --amend --message "Generate docs"
+      git push --force origin gh-pages
     workingDirectory: $(Build.StagingDirectory)
     displayName: "Push docs to Github pages"
+    inputs:
+      azureSubscription: 'github.com_yawaramin'
 
