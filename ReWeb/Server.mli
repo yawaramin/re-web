@@ -23,7 +23,7 @@ type ('ctx, 'resp) t = route -> ('ctx, 'resp) service
 val serve :
   ?port:int ->
   (unit, [< Response.http | Response.websocket]) t ->
-  unit Lwt.t
+  unit
 (** [serve ?port server] starts the top-level [server] listening on
     [port]. Top-level servers must have no context i.e. their context is
     [()]. *)

@@ -14,4 +14,4 @@ let routes =
   | _ => notFound;
 
 /* Run the server */
-let () = routes |> Server.serve |> Lwt_main.run;
+let () = Server.serve(routes);

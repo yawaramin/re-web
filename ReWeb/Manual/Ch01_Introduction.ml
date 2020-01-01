@@ -23,10 +23,10 @@
 
       let helloService = _request => Lwt.return(Response.of_text("Hello"));
       let server = _route => helloService;
-      let () = Lwt_main.run(Server.serve(server));]}
+      let () = Server.serve(server);]}
 
     [Lwt.return] returns a fulfilled promise containing its argument,
-    and [Lwt_main.run] starts Lwt's main event loop which runs promises.
+    and {!ReWeb.Server.serve} starts running the server.
 
     {1 Routes}
 
@@ -60,7 +60,7 @@
       request =>
       [filter1 => ... => filterN =>]
       service =>
-      response]}
+      promise of response]}
 
     As you can tell, zero or more filters can be plugged into the
     pipeline before the service. By the time the service runs, the

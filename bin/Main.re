@@ -255,4 +255,4 @@ let server =
 let server = route => rejectExplorer @@ server @@ route;
 
 // Run the server
-let () = server |> Server.serve |> Lwt_main.run;
+let () = Server.serve(server);

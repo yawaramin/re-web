@@ -21,4 +21,4 @@ let routes =
   | (`POST, ["increment"]) => increment
   | _ => notFound;
 
-let () = routes |> Server.serve |> Lwt_main.run;
+let () = Server.serve(routes);

@@ -105,7 +105,7 @@ let error_handler _ ?request:_ error handle =
 
   H.Body.close_writer body
 
-let serve ?(port=8080) server =
+let serve ~port server =
   let request_handler client_addr reqd =
     let send = function
       | `HTTP (resp, body) ->
@@ -152,4 +152,6 @@ let serve ?(port=8080) server =
   let* () = Lwt_io.printf "ReWeb.Server: listening on port %d\n" port in
   let forever, _ = Lwt.wait () in
   forever
+
+let serve ?(port=8080) server = server |> serve ~port |> Lwt_main.run
 

@@ -28,17 +28,7 @@
     {[ReWeb.Server.serve(server);]}
 
     This is ReWeb's entry point into the application. The [server] would
-    now be called with every incoming route and request. However, the
-    problem is that the resulting promise returned here is being thrown
-    away. And so the application will immediately exit. We need to start
-    up a promise runtime that keeps waiting for the ReWeb server promise
-    and keeps handling requests in a loop. This is done by the
-    [Lwt_main.run] function:
-
-    {[let () = server |> ReWeb.Server.serve |> Lwt_main.run;]}
-
-    Here we are using the pipe-forward operator to first start the
-    server, then start the promise runtime.
+    now be called with every incoming route and request.
 
     {1 Matching routes}
 
