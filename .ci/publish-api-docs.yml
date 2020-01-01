@@ -1,6 +1,6 @@
 steps:
   - script: |
-      git clone https://github.com:yawaramin/re-web.git .
+      git clone https://github.com/yawaramin/re-web.git .
       git checkout gh-pages
     workingDirectory: $(Build.StagingDirectory)
     displayName: "Clone GitHub pages repo"
