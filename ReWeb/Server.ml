@@ -1,14 +1,11 @@
 module H = Httpaf
+module Request = Request.Make(H.Reqd)
+module Service = Service.Make(Request)
 module Wsd = Websocketaf.Wsd
 
 type path = string list
 type route = H.Method.t * path
-type ('ctx, 'resp) service = 'ctx Request.t -> 'resp Response.t Lwt.t
-
-type ('ctx, 'resp) http_service =
-  'ctx Request.t -> ([> Response.http] as 'resp) Lwt.t
-
-type ('ctx, 'resp) t = route -> ('ctx, 'resp) service
+type ('ctx, 'resp) t = route -> ('ctx, 'resp) Service.t
 
 let not_found _ = `Not_found |> Response.of_status |> Lwt.return
 let not_found_id _ = not_found

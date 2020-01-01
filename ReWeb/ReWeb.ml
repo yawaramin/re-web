@@ -10,17 +10,34 @@ module Client = Client
 
 module Cookies = Cookies
 
-module Filter = Filter
-(** Transform services. *)
-
 module Form = Form
 (** Encode and decode web forms to/from specified types. *)
-
-module Request = Request
-(** Read requests. *)
 
 module Response = Response
 (** Send responses. *)
 
 module Server = Server
 (** Create and serve endpoints. *)
+
+module Service = Server.Service
+(** Services model the request-response pipeline. *)
+
+module Request = Server.Request
+(** Read requests. *)
+
+module type Filter = Filter.S
+(** Transform services. Please see here for documentation.
+
+    The filters here that don't read the request body additionally
+    preserve whatever context was already in the request before the
+    current filter ran. They do this by putting the previous context in
+    a [prev] method in the new context object. This is just a convention
+    but a useful one.
+
+    The filters which read the body don't do this because they only work
+    with request which have no context (i.e., context of type [unit]). *)
+
+module Filter = Filter.Make(Request)
+(** This is the implementation of the above module type. Please see
+    above for documentation. *)
+

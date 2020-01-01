@@ -1,3 +1,10 @@
+module Request : Request.S
+  with type ('fd, 'io) Reqd.t = ('fd, 'io) Httpaf.Reqd.t
+
+module Service : Service.S
+  with type ('fd, 'io) Request.Reqd.t = ('fd, 'io) Httpaf.Reqd.t
+  and type 'ctx Request.t = 'ctx Request.t
+
 type path = string list
 
 type route = Httpaf.Method.t * path
@@ -10,29 +17,21 @@ type route = Httpaf.Method.t * path
     E.g., [GET /api/user/1] would be represented as
     [(`GET, ["api", "user", "1"])] *)
 
-type ('ctx, 'resp) service = 'ctx Request.t -> 'resp Response.t Lwt.t
-(** A service is an asynchronous function that handles a request and
-    returns a response. See also {!module:Filter} for filters which can
-    manipulate services. *)
-
-type ('ctx, 'resp) http_service =
-  'ctx Request.t -> ([> Response.http] as 'resp) Lwt.t
-
-type ('ctx, 'resp) t = route -> ('ctx, 'resp) service
+type ('ctx, 'resp) t = route -> ('ctx, 'resp) Service.t
 (** A server is a function that takes a [route] and returns a service. A
     route is pattern-matchable (see above), so you will almost always do
     that to handle different endpoints with different services. *)
 
 val resource :
-  ?index:('ctx, 'resp) http_service ->
-  ?create:('ctx, 'resp) http_service ->
-  ?new_:('ctx, 'resp) http_service ->
-  ?edit:(string -> ('ctx, 'resp) http_service) ->
-  ?show:(string -> ('ctx, 'resp) http_service) ->
-  ?update:([`PATCH | `PUT] -> string -> ('ctx, 'resp) http_service) ->
-  ?destroy:(string -> ('ctx, 'resp) http_service) ->
+  ?index:('ctx, 'resp) Service.http ->
+  ?create:('ctx, 'resp) Service.http ->
+  ?new_:('ctx, 'resp) Service.http ->
+  ?edit:(string -> ('ctx, 'resp) Service.http) ->
+  ?show:(string -> ('ctx, 'resp) Service.http) ->
+  ?update:([`PATCH | `PUT] -> string -> ('ctx, 'resp) Service.http) ->
+  ?destroy:(string -> ('ctx, 'resp) Service.http) ->
   route ->
-  ('ctx, 'resp) http_service
+  ('ctx, 'resp) Service.http
 (** [resource ?index ?create ?new_ ?edit ?show ?update ?destroy]
     returns a resource, that is a server, with the standard HTTP
     CRUD actions that you specify as services. The resource handles
@@ -52,7 +51,9 @@ val resource :
     resource directly as your toplevel server.
 
     All the service parameters are optional, with a 404 Not Found
-    response as the default. *)
+    response as the default. Note that [resource] is just a convenience
+    function; you can implement a custom resource yourself if needed, by
+    creating a server function of type [('ctx, 'resp) t] instead. *)
 
 val serve :
   ?port:int ->
