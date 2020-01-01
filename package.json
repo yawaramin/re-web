@@ -23,6 +23,7 @@
     "run-example": "esy b dune exec",
     "check": "esy b dune build @check",
     "doc": "esy dune build @doc",
+    "doc-path": "esy echo #{self.target_dir}/default/_doc/_html",
     "test": "esy b dune runtest"
   },
   "dependencies": {

@@ -1,45 +1,51 @@
-name: Build npm release
+name: Build master - $(Build.BuildId)
 
 trigger:
-  - master
+  branches:
+    include:
+      - master
 
-jobs:
-  - template: .ci/build-platform.yml
-    parameters:
-      platform: Linux
-      vmImage: ubuntu-16.04
-      STAGING_DIRECTORY: /home/vsts/STAGING
-      STAGING_DIRECTORY_UNIX: /home/vsts/STAGING
-      ESY__CACHE_INSTALL_PATH: /home/vsts/.esy/3_____________________________________________________________________/i
-      ESY__CACHE_SOURCE_TARBALL_PATH: /home/vsts/.esy/source/i
-
-  - template: .ci/build-platform.yml
-    parameters:
-      platform: macOS
-      vmImage: macOS-10.13
-      STAGING_DIRECTORY: /Users/vsts/STAGING
-      STAGING_DIRECTORY_UNIX: /Users/vsts/STAGING
-      ESY__CACHE_INSTALL_PATH: /Users/vsts/.esy/3____________________________________________________________________/i
-      ESY__CACHE_SOURCE_TARBALL_PATH: /Users/vsts/.esy/source/i
-
-  - template: .ci/build-platform.yml
-    parameters:
-      platform: Windows
-      vmImage: vs2017-win2016
-      STAGING_DIRECTORY: C:\Users\VssAdministrator\STAGING
-      STAGING_DIRECTORY_UNIX: /C/Users/VssAdministrator/STAGING
-      ESY__CACHE_INSTALL_PATH: /C/Users/VssAdministrator/.esy/3_/i
-      ESY__CACHE_SOURCE_TARBALL_PATH: /C/Users/VssAdministrator/.esy/source/i
-
-  # This job is kept here as we want to have the platform names in the same file
-  - job: Release
-    displayName: Release
-    dependsOn:
-      - Linux
-      - macOS
-      - Windows
+stages:
+- stage: Build
+  jobs:
+  - job: Linux
     pool:
-      vmImage: macOS-10.13
-      demands: node.js
+      vmImage: ubuntu-latest
+    variables:
+      CACHE_FOLDER: $(Pipeline.Workspace)/cache
+      ESY__CACHE_INSTALL_PATH: /home/vsts/.esy/3_____________________________________________________________________/i
     steps:
-      - template: .ci/cross-release.yml
+    - template: .ci/build-platform.yml
+      parameters:
+        installFolderPath: "/3______________________________________________________________/i"
+    - template: .ci/build-docs.yml
+    - template: .ci/utils/prepare-cache.yml
+
+  - job: macOS
+    pool:
+      vmImage: macOS-latest
+    variables:
+      CACHE_FOLDER: $(Pipeline.Workspace)/cache
+      ESY__CACHE_INSTALL_PATH: /Users/vsts/.esy/3____________________________________________________________________/i
+    steps:
+    - template: .ci/build-platform.yml
+    - template: .ci/utils/prepare-cache.yml
+      parameters:
+        installFolderPath: "/3_______________________________________________/i"
+
+- stage: Publish_docs
+  displayName: Publish documentation
+  dependsOn: [Build]
+  jobs:
+  - deployment: Publish_docs
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    displayName: Publish docs to GitHub
+    environment: gh-pages
+    pool:
+      vmImage: ubuntu-16.04
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+            - template: .ci/publish-api-docs.yml
+

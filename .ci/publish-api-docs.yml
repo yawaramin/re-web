@@ -1,0 +1,29 @@
+steps:
+  - script: |
+      git clone https://$(github_pat)@github.com/yawaramin/re-web .
+      git checkout gh-pages
+      git pull
+    workingDirectory: $(Build.StagingDirectory)
+    displayName: "Clone GitHub pages repo"
+
+  - script: |
+      rm -rf $(Build.StagingDirectory)/ReWeb || true
+      rm $(Build.StagingDirectory)/index.html || true
+      rm $(Build.StagingDirectory)/odoc.css || true
+      rm $(Build.StagingDirectory)/highlight.pack.js || true
+    displayName: Remove last version of the docs
+
+  - task: DownloadPipelineArtifact@2
+    displayName: Download docs
+    inputs:
+      artifactName: Docs
+      targetPath: $(Build.StagingDirectory)
+    
+  - script: |
+      git config user.name "ReWeb Docs Bot"
+      git add --all
+      git commit --amend --message "$(Build.SourceVersionMessage)"
+      git push origin gh-pages
+    workingDirectory: $(Build.StagingDirectory)
+    displayName: "Push docs to Github pages"
+
