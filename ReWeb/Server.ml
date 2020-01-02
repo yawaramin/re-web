@@ -1,5 +1,11 @@
 module H = Httpaf
-module Request = Request.Make(H.Reqd)
+
+module Reqd = struct
+  module Body = H.Body
+  include H.Reqd
+end
+
+module Request = Request.Make(H.Body)(Reqd)
 module Service = Service.Make(Request)
 module Wsd = Websocketaf.Wsd
 

@@ -1,8 +1,20 @@
+module type BODY = sig
+  type _ t
+
+  val schedule_read :
+    [`read] t ->
+    on_eof:(unit -> unit) ->
+    on_read:(Bigstringaf.t -> off:int -> len:int -> unit) ->
+    unit
+end
+(** This interface abstracts away the Httpaf body type. *)
+
 module type REQD = sig
+  module Body : BODY
   type ('fd, 'io) t
 
   val request : _ t -> Httpaf.Request.t
-  val request_body : _ t -> [`read] Httpaf.Body.t
+  val request_body : _ t -> [`read] Body.t
 end
 (** This interface abstracts away the Httpaf request descriptor. *)
 
@@ -58,7 +70,7 @@ end
 
 module H = Httpaf
 
-module Make(R : REQD) = struct
+module Make(B : BODY)(R : REQD with type 'rw Body.t = 'rw B.t) = struct
   module Reqd = R
 
   type 'ctx t = {
@@ -73,9 +85,9 @@ module Make(R : REQD) = struct
     let on_eof () = push_to_stream None in
     let rec on_read buffer ~off ~len =
       push_to_stream (Some { H.IOVec.off; len; buffer });
-      H.Body.schedule_read request_body ~on_eof ~on_read
+      B.schedule_read request_body ~on_eof ~on_read
     in
-    H.Body.schedule_read request_body ~on_eof ~on_read;
+    B.schedule_read request_body ~on_eof ~on_read;
     Body.of_stream stream
 
   let body_string ?(buf_size=Lwt_io.default_buffer_size ()) request =
@@ -87,9 +99,9 @@ module Make(R : REQD) = struct
     in
     let rec on_read data ~off:_ ~len:_ =
       data |> Bigstringaf.to_string |> Buffer.add_string buffer;
-      H.Body.schedule_read request_body ~on_eof ~on_read
+      B.schedule_read request_body ~on_eof ~on_read
     in
-    H.Body.schedule_read request_body ~on_eof ~on_read;
+    B.schedule_read request_body ~on_eof ~on_read;
     body
 
   let context { ctx; _ } = ctx
