@@ -1,6 +1,6 @@
 (test
   (name ReWebTest)
   (flags (-w -40 -w +26))
-  (libraries ReWeb alcotest)
+  (libraries ReWeb alcotest alcotest-lwt)
   (action (run %{test} --color=always)))
 

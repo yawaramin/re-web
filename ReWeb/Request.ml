@@ -97,8 +97,8 @@ module Make(B : BODY)(R : REQD with type 'rw Body.t = 'rw B.t) = struct
     let on_eof () =
       buffer |> Buffer.contents |> Lwt.wakeup_later set_body
     in
-    let rec on_read data ~off:_ ~len:_ =
-      data |> Bigstringaf.to_string |> Buffer.add_string buffer;
+    let rec on_read data ~off ~len =
+      data |> Bigstringaf.substring ~off ~len |> Buffer.add_string buffer;
       B.schedule_read request_body ~on_eof ~on_read
     in
     B.schedule_read request_body ~on_eof ~on_read;
