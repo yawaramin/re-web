@@ -16,24 +16,25 @@ module Field : sig
   (** Used to create a form field list. *)
 
   val bool : string -> bool t
-  (** [bool name] returns a boolean field named [name]. *)
+  (** [bool(name)] returns a boolean field named [name]. *)
 
   val ensure : ('a -> bool) -> 'a t -> 'a t
-  (** [ensure pred field] returns a field that will succeed decoding a
-      value [a] of type ['a] if [pred a] is [true]. Otherwise it will
+  (** [ensure(pred, field)] returns a field that will succeed decoding a
+      value [a] of type ['a] if [pred(a)] is [true]. Otherwise it will
       fail decoding. *)
 
   val float : string -> float t
-  (** [float name] returns a float field named [name]. *)
+  (** [float(name)] returns a float field named [name]. *)
 
   val int : string -> int t
-  (** [int name] returns an integer field named [name]. *)
+  (** [int(name)] returns an integer field named [name]. *)
 
   val make : string -> 'a decoder -> 'a t
-  (** [make name decoder] returns a field with a [decoder] of type ['a]. *)
+  (** [make(name, decoder)] returns a field with a [decoder] of type
+      ['a]. *)
 
   val string : string -> string t
-  (** [string name] returns a string field named [name]. *)
+  (** [string(name)] returns a string field named [name]. *)
 end
 (** Allows creating a list of form fields using normal list syntax with
     a local open (e.g. [Field.[bool("remember-me"), string("username")]] *)
@@ -43,15 +44,15 @@ type ('ctor, 'ty) t
     decoded field values and returns a value of type ['ty]. *)
 
 val decoder : ('ctor, 'ty) t -> 'ty decoder
-(** [decoder form] takes a form definition (see above) and returns a
+(** [decoder(form)] takes a form definition (see above) and returns a
     decoder from that form to a type ['ty]. *)
 
 val encode : ('ty -> (string * string) list) -> 'ty -> string
-(** [encode fields value] is a query-encoded string form. It calls
+(** [encode(fields, value)] is a query-encoded string form. It calls
     [fields value] to get the representation of [value] as a list of
     key-value string pairs. *)
 
 val make : ('ctor, 'ty) Field.list -> 'ctor -> ('ctor, 'ty) t
-(** [make fields ctor] allows creating a form that can be used to decode
-    (with {!decoder}) www forms. *)
+(** [make(fields, ctor)] allows creating a form that can be used to
+    decode (with {!decoder}) www forms. *)
 

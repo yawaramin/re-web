@@ -29,20 +29,21 @@ val add_header :
   value:string ->
   [< http | websocket] ->
   _ t
-(** [add_header ?replace ~name ~value response] returns a response with
-    a header [name] with value [value] added to the original [response].
-    If [response] already contains the header [name], then its value is
-    replaced only if [replace] is [true], which is the default. *)
+(** [add_header(?replace, ~name, ~value, response)] returns a response
+    with a header [name] with value [value] added to the original
+    [response]. If [response] already contains the header [name], then
+    its value is replaced only if [replace] is [true], which is the
+    default. *)
 
 val add_headers : headers -> [< http | websocket] -> _ t
-(** [add_headers headers response] returns a response with the [headers]
-    added to the end of the original [response]'s header list. *)
+(** [add_headers(headers, response)] returns a response with the
+    [headers] added to the end of the original [response]'s header list. *)
 
 val add_headers_multi :
   (string * string list) list ->
   [< http | websocket] ->
   _ t
-(** [add_headers_multi headers_multi response] returns a response with
+(** [add_headers_multi(headers_multi, response)] returns a response with
     [headers_multi] added to the end of the original [response]'s header
     list. *)
 
@@ -51,11 +52,11 @@ val body : [< http] -> Body.t
 val cookies : [< http | websocket] -> Cookies.t
 
 val header : string -> [< http | websocket] -> string option
-(** [header name request] gets the last value corresponding to the given
-    header, if present. *)
+(** [header(name, request)] gets the last value corresponding to the
+    given header, if present. *)
 
 val headers : string -> [< http | websocket] -> string list
-(** [headers name request] gets all the values corresponding to the
+(** [headers(name, request)] gets all the values corresponding to the
     given header. *)
 
 val of_binary :
@@ -73,10 +74,10 @@ val of_file :
   ?cookies:Cookies.t ->
   string ->
   [> http] Lwt.t
-(** [of_file ?status ?content_type ?headers ?cookies file_name] responds
-    with the contents of [file_name] which must be an absolute path in
-    the filesystem, with HTTP response code [status] and content-type
-    header [content_type].
+(** [of_file(?status, ?content_type, ?headers, ?cookies, file_name)]
+    responds with the contents of [file_name] which must be an absolute
+    path in the filesystem, with HTTP response code [status] and
+    content-type header [content_type].
 
     If the file is not found, responds with a 404 Not Found status and
     an appropriate message.
@@ -96,8 +97,8 @@ val of_http :
   headers:(string * string) list ->
   Body.t ->
   [> http]
-(** [of_http ~status ~headers body] responds with an HTTP response
-  composed of [status], [headers], and [body]. *)
+(** [of_http(~status, ~headers, body)] responds with an HTTP response
+    composed of [status], [headers], and [body]. *)
 
 val of_json :
   ?status:status ->
@@ -111,7 +112,7 @@ val of_redirect :
   ?body:string ->
   string ->
   [> http]
-(** [of_redirect ?content_type ?body location] responds with an HTTP
+(** [of_redirect(?content_type, ?body, location)] responds with an HTTP
     redirect response to the new [location], with an optional
     [content_type] (defaulting to [text/plain]) and [body] (defaulting
     to an empty body). *)
@@ -123,8 +124,8 @@ val of_status :
   ?message:string ->
   status ->
   [> http]
-(** [of_status ?content_type ?headers ?cookies ?message status] responds
-    with a standard boilerplate response message based on the
+(** [of_status(?content_type, ?headers, ?cookies, ?message, status)]
+    responds with a standard boilerplate response message based on the
     [content_type] and [status]. [content_type] defaults to [`text]. The
     boilerplate message can be overridden by [message] if present. *)
 
@@ -142,11 +143,11 @@ val of_view :
   ?cookies:Cookies.t ->
   ((string -> unit) -> unit) ->
   [> http]
-(** [of_view ?status ?content_type ?headers ?cookies view] responds with
-    a rendered body as per the [view] function. The [view] is a function
-    that takes a 'printer' function ([string -> unit]) as a parameter
-    and 'prints' (i.e. renders piecemeal) strings to it. These strings
-    are pushed out as they are rendered.
+(** [of_view(?status, ?content_type, ?headers, ?cookies, view)] responds
+    with a rendered body as per the [view] function. The [view] is a
+    function that takes a 'printer' function ([string -> unit]) as a
+    parameter and 'prints' (i.e. renders piecemeal) strings to it. These
+    strings are pushed out as they are rendered.
 
     The difference from [of_html], [of_binary], and the other functions
     is that those hold the entire response in memory before sending it
@@ -154,22 +155,22 @@ val of_view :
     as it is streamed out. *)
 
 val of_websocket : ?headers:headers -> handler -> [> websocket]
-(** [of_websocket ?headers handler] responds with an open WebSocket.
+(** [of_websocket(?headers, handler)] responds with an open WebSocket.
     Optionally you can pass along extra [headers] which will be sent to
     the client when opening the WS.
 
-    [handler pull push] is an asynchronous callback that manages the WS
-    from the server side. The WS will shut down from the server side as
-    soon as [handler] exits, so if you want to keep it open you need to
-    make it call itself recursively. Because the call will be tail-
-    recursive, OCaml's tail-call elimination takes care of stack memory
-    use.
+    [handler(pull, push)] is an asynchronous callback that manages the
+    WS from the server side. The WS will shut down from the server side
+    as soon as [handler] exits, so if you want to keep it open you need
+    to make it call itself recursively. Because the call will be
+    tail-recursive, OCaml's tail-call elimination takes care of stack
+    memory use.
 
-    [pull timeout_s] asynchronously gets the next message from the WS if
-    there is any, with a timeout in seconds of [timeout_s]. If it
+    [pull(timeout_s)] asynchronously gets the next message from the WS
+    if there is any, with a timeout in seconds of [timeout_s]. If it
     doesn't time out it returns [Some string], otherwise [None].
 
-    [push response] pushes the string [response] to the WS client.
+    [push(response)] pushes the string [response] to the WS client.
 
     {i Note} OCaml strings are un-encoded byte arrays, and ReWeb treats
     all incoming and outgoing WebSocket data as such--even if the client

@@ -20,10 +20,10 @@ module type S = sig
       there is none. *)
 
   val body_form : ('ctor, 'ty) Form.t -> (unit, < form : 'ty >, [> Response.http]) t
-  (** [body_form typ] is a filter that decodes a web form in the request
-      body and puts it inside the request for the next service. The
-      decoding is done as specified by the form definition [typ]. If the
-      form fails to decode, it short-circuits and returns a 400 Bad
+  (** [body_form(typ)] is a filter that decodes a web form in the
+      request body and puts it inside the request for the next service.
+      The decoding is done as specified by the form definition [typ]. If
+      the form fails to decode, it short-circuits and returns a 400 Bad
       Request. *)
 
   val body_json : (unit, < body : Ezjsonm.t >, [> Response.http]) t
@@ -35,7 +35,7 @@ module type S = sig
   val body_json_decode :
     (Ezjsonm.t -> ('ty, exn) result) ->
     (< body : Ezjsonm.t >, < body : 'ty >, [> Response.http]) t
-  (** [body_json_decode decoder] is a filter that transforms a service
+  (** [body_json_decode(decoder)] is a filter that transforms a service
       with a parsed JSON structure in its context, to a service with a
       decoded value of type ['ty] in its context. If the request body
       fails to decode with [decoder], the filter short-circuits and
@@ -47,7 +47,7 @@ module type S = sig
       string. *)
 
   val query_form : ('ctor, 'ty) Form.t -> ('ctx1, < query : 'ty; prev : 'ctx1 >, _ Response.t) t
-  (** [query_form typ] is a filter that decodes the request query (the
+  (** [query_form(typ)] is a filter that decodes the request query (the
       part after the [?] in the endpoint) into a value of type ['ty] and
       stores it in the request context for the next service. The
       decoding and failure works in the same way as for [body_form]. *)

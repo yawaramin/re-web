@@ -5,8 +5,7 @@ module type S = sig
   (** A service is an asynchronous function from a request to a
       response. *)
 
-  type ('ctx, 'resp) http =
-    'ctx Request.t -> ([> Response.http] as 'resp) Lwt.t
+  type ('ctx, 'resp) http = ('ctx, [> Response.http] as 'resp) t
   (** An HTTP service is a service that specifically returns HTTP
       responses (as opposed to WebSocket). *)
 end
@@ -16,6 +15,6 @@ module Make(R : Request.S) = struct
   module Request = R
 
   type ('ctx, 'resp) t = 'ctx Request.t -> 'resp Lwt.t
-  type ('ctx, 'resp) http = 'ctx Request.t -> ([> Response.http] as 'resp) Lwt.t
+  type ('ctx, 'resp) http = ('ctx, [> Response.http] as 'resp) t
 end
 

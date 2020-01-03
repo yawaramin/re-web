@@ -12,7 +12,7 @@
       ]
     },
     "buildEnv": {
-      "ODOC_SYNTAX": "ml"
+      "ODOC_SYNTAX": "re"
     }
   },
   "repository": {
@@ -33,8 +33,8 @@
     "@opam/ezjsonm": ">= 1.1.0 < 2.0.0",
     "@opam/httpaf": "0.6.5",
     "@opam/httpaf-lwt-unix": "0.6.5",
-    "@opam/lwt": "4.4.0",
-    "@opam/lwt_ppx": ">= 1.2.1 < 2.0.0",
+    "@opam/lwt": ">= 5.1.0 < 6.0.0",
+    "@opam/lwt_ppx": ">= 2.0.0 < 3.0.0",
     "@opam/piaf": "0.1.0",
     "@opam/uri": ">= 3.1.0 < 4.0.0",
     "@opam/websocketaf": "0.1.0",

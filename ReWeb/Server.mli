@@ -32,7 +32,7 @@ val resource :
   ?destroy:(string -> ('ctx, 'resp) Service.http) ->
   route ->
   ('ctx, 'resp) Service.http
-(** [resource ?index ?create ?new_ ?edit ?show ?update ?destroy]
+(** [resource(?index, ?create, ?new_, ?edit, ?show, ?update, ?destroy)]
     returns a resource, that is a server, with the standard HTTP
     CRUD actions that you specify as services. The resource handles
     the paths corresponding to those CRUD actions:
@@ -59,7 +59,7 @@ val serve :
   ?port:int ->
   (unit, [< Response.http | Response.websocket]) t ->
   unit
-(** [serve ?port server] starts the top-level [server] listening on
+(** [serve(?port, server)] starts the top-level [server] listening on
     [port]. Top-level servers must have no context i.e. their context is
     [()]. *)
 
