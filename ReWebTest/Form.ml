@@ -1,3 +1,4 @@
+open Alcotest
 open ReWeb.Form
 
 type user = { id : int; name : string }
@@ -8,16 +9,20 @@ let form = make
   Field.[int "id"; "name" |> string |> ensure ((<>) "")]
   user
 
-let%test "decoder - decode correctly" =
-  decoder form "id=1&name=Bob" = Ok { id = 1; name = "Bob" }
+let tests = "Form", [
+  test_case "decoder - decode correctly" `Quick begin fun () ->
+    match decoder form "id=1&name=Bob" with
+    | Ok { id; name } ->
+      check int "" 1 id;
+      check string "" "Bob" name
+    | Error message -> fail message
+  end;
 
-let%test "decoder - error on bad input" =
-  decoder form "" = Error "ReWeb.Form.decoder: could not find key id"
-
-let%test _ =
-  let fields { id; name } = ["id", string_of_int id; "name", name] in
-  encode fields { id = 1; name = "Bob Roberts" } = "id=1&name=Bob%20Roberts"
-
-let%test "ensure - error on validation fail" =
-  decoder form "id=1&name=" = Error "ReWeb.Form.Field.ensure: name"
+  test_case "decoder - error on bad input" `Quick begin fun () ->
+    match decoder form "" with
+    | Ok _ -> fail "should not decode bad input"
+    | Error message ->
+      check string "" "ReWeb.Form.decoder: could not find key id" message
+  end;
+]
 

@@ -1,7 +1,6 @@
-(library
+(test
   (name ReWebTest)
   (flags (-w -40 -w +26))
-  (libraries ReWeb)
-  (inline_tests)
-  (preprocess (pps ppx_inline_test)))
+  (libraries ReWeb alcotest)
+  (action (run %{test} --color=always)))
 

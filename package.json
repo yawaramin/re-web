@@ -36,12 +36,13 @@
     "@opam/lwt": "4.4.0",
     "@opam/lwt_ppx": ">= 1.2.1 < 2.0.0",
     "@opam/piaf": "0.1.0",
-    "@opam/ppx_inline_test": "*",
     "@opam/uri": ">= 3.1.0 < 4.0.0",
     "@opam/websocketaf": "0.1.0",
     "@opam/websocketaf-lwt-unix": "0.1.0"
   },
   "devDependencies": {
+    "@opam/alcotest": ">= 0.8.5 < 1.0.0",
+    "@opam/alcotest-lwt": ">= 0.8.5 < 1.0.0",
     "@opam/merlin": "*",
     "ocaml": "~4.8.1000",
     "@opam/odoc": "*",

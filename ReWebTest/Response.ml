@@ -1,48 +1,69 @@
+open Alcotest
 open ReWeb.Response
 
-let%test "add_header - replace" =
-  let name = "x" in
-  ""
-  |> of_binary ~headers:[name, "1"]
-  |> add_header ~name ~value:"2"
-  |> header name
-  |> ((=) (Some "2"))
+let name = "x"
+let option_string = option string
 
-let%test "add_header - no replace" =
-  let name = "x" in
-  ""
-  |> of_binary ~headers:[name, "1"]
-  |> add_header ~replace:false ~name ~value:"2"
-  |> header name
-  |> ((=) (Some "1"))
-
-let%test "add_headers" =
-  let name = "x" in
-  let response = ""
+let tests = "Response", [
+  test_case "add_header - replace" `Quick begin fun () ->
+    let value = "2" in
+    ""
     |> of_binary ~headers:[name, "1"]
-    |> add_headers ["x", "2"; "y", "3"]
-  in
-  (header name response, header "y" response) = (Some "2", Some "3")
+    |> add_header ~name ~value
+    |> header name
+    |> check option_string "" (Some value)
+  end;
 
-let%test "add_headers_multi" =
-  let name = "x" in
-  ""
-  |> of_binary
-  |> add_headers_multi [name, ["1"; "2"]]
-  |> headers name
-  |> ((=) ["1"; "2"])
+  test_case "add_header - no replace" `Quick begin fun () ->
+    let value = "1" in
+    ""
+    |> of_binary ~headers:[name, value]
+    |> add_header ~replace:false ~name ~value:"2"
+    |> header name
+    |> check option_string "" (Some value)
+  end;
 
-let%test "of_binary - merge content-type into headers" =
-  let response =
-    of_binary ~content_type:"text/plain" ~headers:["x", "1"] ""
-  in
-  (header "x" response, header "content-type" response) = (Some "1", Some "text/plain")
+  test_case "add_headers" `Quick begin fun () ->
+    let response = ""
+      |> of_binary ~headers:[name, "1"]
+      |> add_headers [name, "2"; "y", "3"]
+    in
+    check option_string "" (Some "2") @@ header name response;
+    check option_string "" (Some "3") @@ header "y" response
+  end;
 
-let%test "of_binary - merge headers and cookies" =
-  let response = of_binary ~headers:["x", "1"] ~cookies:["y", "2"] "" in
-  (header "x" response, header "set-cookie" response) = (Some "1", Some "y=2")
+  test_case "add_headers_multi" `Quick begin fun () ->
+    let values = ["1"; "2"] in
+    ""
+    |> of_binary
+    |> add_headers_multi [name, values]
+    |> headers name
+    |> check (list string) "" values
+  end;
 
-let%test "of_redirect - build redirect response" =
-  let response = of_redirect "/hello" in
-  (header "location" response, status response) = (Some "/hello", `Moved_permanently)
+  test_case "of_binary - merge content-type into headers" `Quick begin fun () ->
+    let content_type = "text/plain" in
+    let value = "1" in
+    let response = of_binary ~content_type ~headers:[name, value] "" in
+
+    check option_string "" (Some value) @@ header name response;
+    check option_string "" (Some content_type) @@ header "content-type" response
+  end;
+
+  test_case "of_binary - merge headers and cookies" `Quick begin fun () ->
+    let value = "1" in
+    let response = of_binary ~headers:[name, value] ~cookies:["y", "2"] "" in
+
+    check option_string "" (Some value) @@ header name response;
+    check option_string "" (Some "y=2") @@ header "set-cookie" response
+  end;
+
+  test_case "of_redirect - build redirect response" `Quick begin fun () ->
+    let location = "/hello" in
+    let response = of_redirect location in
+
+    check option_string "" (Some location) @@ header "location" response;
+    check int "" 301 @@ status_code response
+  end;
+]
 
