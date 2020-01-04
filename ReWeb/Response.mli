@@ -9,6 +9,9 @@ type headers = (string * string) list
     [[("x-client-id", "1")]]. *)
 
 type status = Httpaf.Status.t
+(** See {{: https://docs.mirage.io/httpaf/Httpaf/Status/index.html}} for
+    valid statuses. *)
+
 type http = [`HTTP of Httpaf.Response.t * Body.t]
 
 type pull = float -> string option Lwt.t

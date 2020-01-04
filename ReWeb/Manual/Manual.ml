@@ -1,6 +1,8 @@
 (** ReWeb User's Manual. This manual is written in ReasonML syntax.
     OCaml syntax readers should hopefully be able to follow along
-    without too much trouble. *)
+    without too much trouble.
+
+    See {{: https://github.com/yawaramin/re-web/}} for sources *)
 
 module Ch01_Introduction = Ch01_Introduction
 (** Introduction to ReWeb--starting point--some ReasonML language

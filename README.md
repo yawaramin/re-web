@@ -1,4 +1,4 @@
-## ReWeb - a type-safe ergonomic ReasonML web framework (WIP)
+## ReWeb - a type-safe ergonomic ReasonML and OCaml web framework (WIP)
 
 [![Build Status](https://dev.azure.com/yawaramin/re-web/_apis/build/status/yawaramin.re-web?branchName=master)](https://dev.azure.com/yawaramin/re-web/_build/latest?definitionId=1?branchName=master)
 
@@ -6,8 +6,8 @@ ReWeb is a web framework based on several foundations:
 
 - The amazing work of the people behind
   [Httpaf](https://github.com/inhabitedtype/httpaf),
-  [H2](https://github.com/anmonteiro/ocaml-h2), [Esy](esy.sh/), and
-  others
+  [H2](https://github.com/anmonteiro/ocaml-h2), [Esy](https://esy.sh/),
+  and others
 - The core idea of
   ['Your server as a function'](https://monkey.org/~marius/funsrv.pdf)
   by Marius Eriksen which was also the idea behind Twitter's Finagle web

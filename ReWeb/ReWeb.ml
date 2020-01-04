@@ -1,6 +1,8 @@
 (** ReWeb - an ergonomic web framework. Start by looking at
     {!module:Server} for an overview of the framework. See [bin/Main.re]
-    for an example server. *)
+    for an example server.
+    
+    See {{: https://github.com/yawaramin/re-web/}} for sources. *)
 
 module Body = Body
 (** Handle request and response bodies. *)
