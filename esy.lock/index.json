@@ -1,6 +1,6 @@
 {
-  "checksum": "3acde054ff98dca652d55f0ffef16368",
-  "root": "ReWeb@link-dev:./package.json",
+  "checksum": "4963250e8fa8a486b52b290fb64bd20c",
+  "root": "re-web@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#cca65f99674ed2d954d28788edeb8c57fada5ed0@d41d8cd9": {
       "id":
@@ -17,6 +17,36 @@
       "overrides": [],
       "dependencies": [],
       "devDependencies": []
+    },
+    "re-web@link-dev:./package.json": {
+      "id": "re-web@link-dev:./package.json",
+      "name": "re-web",
+      "version": "link-dev:./package.json",
+      "source": {
+        "type": "link-dev",
+        "path": ".",
+        "manifest": "package.json"
+      },
+      "overrides": [],
+      "dependencies": [
+        "@opam/websocketaf-lwt-unix@github:anmonteiro/websocketaf:websocketaf-lwt-unix.opam#42673bd@9570a337",
+        "@opam/websocketaf@github:anmonteiro/websocketaf:websocketaf.opam#42673bd@d41d8cd9",
+        "@opam/uri@opam:3.1.0@d38ac0ae",
+        "@opam/piaf@github:anmonteiro/piaf:piaf.opam#172fcce@f1c00629",
+        "@opam/lwt_ppx@opam:2.0.0@9a61dd37", "@opam/lwt@opam:5.1.0@e9f9e9f8",
+        "@opam/httpaf-lwt-unix@github:anmonteiro/httpaf:httpaf-lwt-unix.opam#90e7c87@d41d8cd9",
+        "@opam/httpaf@github:anmonteiro/httpaf:httpaf.opam#90e7c87@d41d8cd9",
+        "@opam/ezjsonm@opam:1.1.0@467206a0",
+        "@opam/dune@opam:1.11.4@a7ccb7ae",
+        "@opam/base64@opam:3.2.0@6303aa3a",
+        "@esy-ocaml/reason@3.5.2@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/utop@opam:2.4.3@5dd230c9",
+        "@opam/odoc@opam:1.4.2@11b715bb", "@opam/merlin@opam:3.3.3@d653b06a",
+        "@opam/alcotest-lwt@opam:0.8.5@b44c6920",
+        "@opam/alcotest@opam:0.8.5@68e6c66c"
+      ]
     },
     "ocaml@4.8.1000@d41d8cd9": {
       "id": "ocaml@4.8.1000@d41d8cd9",
@@ -47,36 +77,6 @@
       "overrides": [],
       "dependencies": [],
       "devDependencies": []
-    },
-    "ReWeb@link-dev:./package.json": {
-      "id": "ReWeb@link-dev:./package.json",
-      "name": "ReWeb",
-      "version": "link-dev:./package.json",
-      "source": {
-        "type": "link-dev",
-        "path": ".",
-        "manifest": "package.json"
-      },
-      "overrides": [],
-      "dependencies": [
-        "@opam/websocketaf-lwt-unix@github:anmonteiro/websocketaf:websocketaf-lwt-unix.opam#42673bd@9570a337",
-        "@opam/websocketaf@github:anmonteiro/websocketaf:websocketaf.opam#42673bd@d41d8cd9",
-        "@opam/uri@opam:3.1.0@d38ac0ae",
-        "@opam/piaf@github:anmonteiro/piaf:piaf.opam#172fcce@f1c00629",
-        "@opam/lwt_ppx@opam:2.0.0@9a61dd37", "@opam/lwt@opam:5.1.0@e9f9e9f8",
-        "@opam/httpaf-lwt-unix@github:anmonteiro/httpaf:httpaf-lwt-unix.opam#90e7c87@d41d8cd9",
-        "@opam/httpaf@github:anmonteiro/httpaf:httpaf.opam#90e7c87@d41d8cd9",
-        "@opam/ezjsonm@opam:1.1.0@467206a0",
-        "@opam/dune@opam:1.11.4@a7ccb7ae",
-        "@opam/base64@opam:3.2.0@6303aa3a",
-        "@esy-ocaml/reason@3.5.2@d41d8cd9"
-      ],
-      "devDependencies": [
-        "ocaml@4.8.1000@d41d8cd9", "@opam/utop@opam:2.4.3@5dd230c9",
-        "@opam/odoc@opam:1.4.2@11b715bb", "@opam/merlin@opam:3.3.3@d653b06a",
-        "@opam/alcotest-lwt@opam:0.8.5@b44c6920",
-        "@opam/alcotest@opam:0.8.5@68e6c66c"
-      ]
     },
     "@opam/zed@opam:2.0.4@f9f7c80f": {
       "id": "@opam/zed@opam:2.0.4@f9f7c80f",
