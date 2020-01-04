@@ -61,8 +61,10 @@ module View = {
     let title = p => p("New Article");
     let body = p => {
       backToArticles(p);
-      p({|<h1>New Article</h1>
-  <form method="post" action="|});
+      p(
+        {|<h1>New Article</h1>
+  <form method="POST" enctype="multipart/form-data" action="|},
+      );
       p(scope);
       p(
         {|">
@@ -73,6 +75,10 @@ module View = {
     <p>
       <label for="name">Name: </label>
       <input type="text" name="name" required>
+    </p>
+    <p>
+      <label for="banner">Banner: </label>
+      <input type="file" name="banner">
     </p>
     <p><input type="submit" value="Create"></p>
   </form>|},
@@ -130,7 +136,11 @@ let viewId = (view, id, _) =>
 let resource = route =>
   Server.resource(
     ~index,
-    ~create=Filter.body_form(createForm) @@ create,
+    ~create=
+      Filter.multipart_form(~typ=createForm, (~filename as _, _) =>
+        "/tmp/banner"
+      ) @@
+      create,
     ~new_,
     ~show=viewId(View.article),
     route,

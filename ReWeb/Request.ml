@@ -64,6 +64,9 @@ module type S = sig
   (** [make(query, reqd)] returns a new request containing the given
       [query] and Httpaf [reqd]. *)
 
+  val meth : _ t -> Httpaf.Method.t
+  (** [meth(request)] gets the request method ([`GET], [`POST], etc.). *)
+
   val query : _ t -> string
   (** [query(request)] gets the query string of the [request]. *)
 end
@@ -84,7 +87,11 @@ module Make(B : BODY)(R : REQD with type 'rw Body.t = 'rw B.t) = struct
     let stream, push_to_stream = Lwt_stream.create () in
     let on_eof () = push_to_stream None in
     let rec on_read buffer ~off ~len =
-      push_to_stream (Some { H.IOVec.off; len; buffer });
+      push_to_stream (Some {
+        H.IOVec.off;
+        len;
+        buffer = Bigstringaf.copy buffer ~off ~len
+      });
       B.schedule_read request_body ~on_eof ~on_read
     in
     B.schedule_read request_body ~on_eof ~on_read;
@@ -119,6 +126,7 @@ module Make(B : BODY)(R : REQD with type 'rw Body.t = 'rw B.t) = struct
     |> Cookies.of_headers
 
   let make query reqd = { ctx = (); query; reqd }
+  let meth { reqd; _ } = (Reqd.request reqd).H.Request.meth
   let query { query; _ } = query
 end
 

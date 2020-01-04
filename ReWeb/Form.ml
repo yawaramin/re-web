@@ -60,6 +60,8 @@ let rec decode :
 
 let decoder form string = string |> Uri.query_of_encoded |> decode form
 
+let empty = { fields = []; ctor = () }
+
 let encode fields value = value
   |> fields
   |> List.map (fun (k, v) -> k, [v])

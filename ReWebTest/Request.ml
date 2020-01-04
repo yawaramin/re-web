@@ -5,14 +5,21 @@ module ReqdBody = struct
     chunks : Bigstringaf.t H.IOVec.t array;
     length : int;
     mutable index : int;
+    mutable curr : Bigstringaf.t H.IOVec.t option;
   }
 
+  (* We need to reuse the same buffer when we call [on_read] because
+     that's how Httpaf itself works. See
+     https://github.com/inhabitedtype/httpaf/issues/140#issuecomment-517072327 *)
   let schedule_read body ~on_eof ~on_read =
     if body.index = body.length then on_eof ()
-    else
-      let { H.IOVec.buffer; off; len } = body.chunks.(body.index) in
+    else begin
+      body.curr <- Some body.chunks.(body.index);
       body.index <- succ body.index;
-      on_read buffer ~off ~len
+      match body.curr with
+      | Some { H.IOVec.buffer; off; len } -> on_read buffer ~off ~len
+      | None -> failwith "Unreachable branch"
+    end
 end
 
 module Reqd = struct
@@ -31,9 +38,10 @@ let iovec string =
   { H.IOVec.buffer = Bigstringaf.of_string ~off ~len string; off; len }
 
 let body strings = {
-  ReqdBody.chunks = Array.map iovec strings;
+  Reqd.Body.chunks = Array.map iovec strings;
   length = Array.length strings;
   index = 0;
+  curr = None;
 }
 
 let request body_strings =

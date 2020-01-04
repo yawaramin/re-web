@@ -43,9 +43,15 @@ type ('ctor, 'ty) t
 (** A web form is a list of fields and a 'constructor' that takes their
     decoded field values and returns a value of type ['ty]. *)
 
+val decode : ('ctor, 'ty) t -> (string * string list) list -> ('ty, string) result
+
 val decoder : ('ctor, 'ty) t -> 'ty decoder
 (** [decoder(form)] takes a form definition (see above) and returns a
     decoder from that form to a type ['ty]. *)
+
+val empty : (unit, unit) t
+(** [empty] is an empty form i.e. one that does not decode any form data
+    and always succeeds at it. *)
 
 val encode : ('ty -> (string * string) list) -> 'ty -> string
 (** [encode(fields, value)] is a query-encoded string form. It calls

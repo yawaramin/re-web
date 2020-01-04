@@ -8,6 +8,7 @@
     httpaf
     httpaf-lwt-unix
     lwt.unix
+    multipart-form-data
     piaf
     uri
     websocketaf

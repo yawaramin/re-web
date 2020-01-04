@@ -29,12 +29,13 @@
   "dependencies": {
     "@esy-ocaml/reason": ">= 3.4.0 < 3.6.0",
     "@opam/base64": ">= 3.2.0 < 4.0.0",
-    "@opam/dune": "*",
+    "@opam/dune": "< 2.0.0",
     "@opam/ezjsonm": ">= 1.1.0 < 2.0.0",
     "@opam/httpaf": "*",
     "@opam/httpaf-lwt-unix": "*",
     "@opam/lwt": ">= 5.1.0 < 6.0.0",
     "@opam/lwt_ppx": ">= 2.0.0 < 3.0.0",
+    "@opam/multipart-form-data": "*",
     "@opam/piaf": "0.1.0",
     "@opam/uri": ">= 3.1.0 < 4.0.0",
     "@opam/websocketaf": "*",
@@ -53,6 +54,7 @@
     "@opam/httpaf": "anmonteiro/httpaf:httpaf.opam#90e7c87",
     "@opam/httpaf-lwt": "anmonteiro/httpaf:httpaf-lwt.opam#90e7c87",
     "@opam/httpaf-lwt-unix": "anmonteiro/httpaf:httpaf-lwt-unix.opam#90e7c87",
+    "@opam/multipart-form-data": "cryptosense/multipart-form-data:multipart-form-data.opam#d49fd89",
     "@opam/piaf": {
       "source": "anmonteiro/piaf:piaf.opam#172fcce",
       "override": {

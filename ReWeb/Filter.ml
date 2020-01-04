@@ -46,12 +46,30 @@ module type S = sig
       service whose context contains the request body as a single
       string. *)
 
+  val multipart_form :
+    ?typ:('ctor, 'ty) Form.t ->
+    (filename:string -> string -> string) ->
+    (unit, < form : 'ty >, [> Response.http]) t
+  (** [multipart_form(?typ, path)] is a filter that decodes multipart
+      form data. If [typ] is provided it decodes the parts of the form
+      into a value of type ['ty]. Else it decodes parts into an empty
+      (i.e. unit) value.
+
+      [path(~filename, name)] is used to get the filesystem absolute
+      path to save the given [filename] with corresponding form field
+      [name]. Note that [filename] is the basename, not the full path.
+      Also that the file will be overwritten if it already exists on
+      disk! This callback gives you a chance to sanitize incoming
+      filenames before storing the files on disk. *)
+
   val query_form : ('ctor, 'ty) Form.t -> ('ctx1, < query : 'ty; prev : 'ctx1 >, _ Response.t) t
   (** [query_form(typ)] is a filter that decodes the request query (the
       part after the [?] in the endpoint) into a value of type ['ty] and
       stores it in the request context for the next service. The
       decoding and failure works in the same way as for [body_form]. *)
 end
+
+module H = Httpaf
 
 module Make(R : Request.S) : S
   with type ('fd, 'io) Service.Request.Reqd.t = ('fd, 'io) R.Reqd.t
@@ -139,6 +157,69 @@ module Make(R : Request.S) : S
       end
     | _ ->
       bad_request "ReWeb.Filter.form: request content-type is not form"
+
+  let multipart_ct_length = 30
+
+  let chunk_to_string { H.IOVec.buffer; off; len } =
+    Bigstringaf.substring buffer ~off ~len
+
+  (* Complex because we need to keep track of files being uploaded *)
+  let multipart_form ?(typ=Obj.magic Form.empty) path next request =
+    match Request.meth request, Request.header "content-type" request with
+    | `POST, Some content_type
+      when String.length content_type > multipart_ct_length
+      && String.sub content_type 0 multipart_ct_length = "multipart/form-data; boundary=" ->
+      let stream = request
+        |> Request.body
+        |> Body.to_stream
+        |> Lwt_stream.map chunk_to_string
+      in
+      let files = Hashtbl.create ~random:true 5 in
+      let open Let.Lwt in
+      let close _ file prev =
+        let* () = prev in
+        Lwt_unix.close file
+      in
+      let callback ~name ~filename string =
+        let filename =
+          path ~filename:(Filename.basename filename) name
+        in
+        let write file =
+          let f () = string
+            |> String.length
+            |> Lwt_unix.write_string file string 0
+            |> Lwt.map ignore
+          in
+          Lwt.catch f @@ fun exn ->
+            exn |> Printexc.to_string |> Lwt_io.printf "ERROR: %s\n"
+        in
+        match Hashtbl.find_opt files filename with
+        | Some file -> write file
+        | None ->
+          let* file = Lwt_unix.openfile
+            filename
+            Unix.[O_CREAT; O_TRUNC; O_WRONLY; O_NONBLOCK]
+            0o600
+          in
+          Hashtbl.add files filename file;
+          write file
+      in
+      let f () =
+        Multipart_form_data.parse ~stream ~content_type ~callback
+      in
+      let* fields = Lwt.catch f @@ fun exn ->
+        let+ () = exn |> Printexc.to_string |> Lwt_io.printf "ERROR: %s" in
+        []
+      in
+      let* () = Hashtbl.fold close files Lwt.return_unit in
+      let fields = List.map (fun (k, v) -> k, [v]) fields in
+      begin match Form.decode typ fields with
+      | Ok obj ->
+        next { request with Request.ctx = object method form = obj end }
+      | Error string -> bad_request string
+      end
+    | _ ->
+      bad_request "ReWeb.Filter.multipart_form: request is not well-formed"
 
   let query_form typ next request =
     match Form.decoder typ request.Request.query with
