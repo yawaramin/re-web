@@ -25,11 +25,11 @@ let resource
   ?(update=fun _ -> not_found_id)
   ?(destroy=not_found_id) =
   function
-  | `GET, [] -> index
+  | `GET, ([] | [""]) -> index
   | `POST, [] -> create
-  | `GET, ["new"] -> new_
-  | `GET, [id; "edit"] -> edit id
-  | `GET, [id] -> show id
+  | `GET, (["new"] | ["new"; ""]) -> new_
+  | `GET, ([id; "edit"] | [id; "edit"; ""]) -> edit id
+  | `GET, ([id] | [id; ""]) -> show id
   | `Other "PATCH", [id] -> update `PATCH id
   | `PUT, [id] -> update `PUT id
   | `DELETE, [id] -> destroy id

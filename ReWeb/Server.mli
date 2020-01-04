@@ -37,14 +37,14 @@ val resource :
     CRUD actions that you specify as services. The resource handles
     the paths corresponding to those CRUD actions:
 
-    - [GET /scope]: [index]
-    - [POST /scope]: [create]
-    - [GET /scope/new]: [new_]
-    - [GET /scope/id/edit]: [edit id]
-    - [GET /scope/id]: [show id]
-    - [PATCH /scope/id]: [update `PATCH id]
-    - [PUT /scope/id]: [update `PUT id]
-    - [DELETE /scope/id]: [destroy id]
+    - [GET /scope] or [GET /scope/] calls [index]
+    - [POST /scope] calls [create]
+    - [GET /scope/new] or [GET /scope/new/] calls [new_]
+    - [GET /scope/id/edit] or [GET /scope/id/edit/] calls [edit id]
+    - [GET /scope/id] or [GET /scope/id/] calls [show id]
+    - [PATCH /scope/id] calls [update `PATCH id]
+    - [PUT /scope/id] calls [update `PUT id]
+    - [DELETE /scope/id] calls [destroy id]
 
     The [scope] above is whatever scope you put the resource inside in a
     parent router, or maybe even the toplevel scope [/] if you use the
