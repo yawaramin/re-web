@@ -1,4 +1,4 @@
 (library
   (name Manual)
-  (public_name ReWeb.Manual)
+  (public_name re-web.Manual)
   (libraries ReWeb))

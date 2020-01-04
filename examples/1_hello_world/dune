@@ -1,6 +1,6 @@
 (executable
   (name Main)
   (public_name 1_hello_world)
-  (package ReWeb)
+  (package re-web)
   (libraries ReWeb lwt))
 
