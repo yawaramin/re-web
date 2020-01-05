@@ -23,6 +23,19 @@ let to_piaf = function
   | Piaf body -> body
   | String string -> Piaf.Body.of_string string
 
+let to_stream = function
+  | Bigstring bigstring -> Lwt_stream.of_list [make_chunk bigstring]
+  | Chunks chunks -> chunks
+  | Piaf body ->
+    body |> Piaf.Body.to_stream |> Lwt_stream.map make_chunk
+  | String string ->
+    let len = String.length string in
+    Lwt_stream.of_list [
+      string
+      |> Bigstringaf.of_string ~off:0 ~len
+      |> make_chunk ~len
+    ]
+
 let to_string = function
   | Bigstring bigstring ->
     bigstring |> Bigstringaf.to_string |> Lwt.return

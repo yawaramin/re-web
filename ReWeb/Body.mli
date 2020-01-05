@@ -17,5 +17,6 @@ val of_stream : chunk Lwt_stream.t -> t
 val of_string : string -> t
 val to_json : t -> (Ezjsonm.t, string) Lwt_result.t
 val to_piaf : t -> Piaf.Body.t
+val to_stream : t -> chunk Lwt_stream.t
 val to_string : t -> string Lwt.t
 
