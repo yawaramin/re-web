@@ -57,10 +57,15 @@ module type S = sig
 
       [path(~filename, name)] is used to get the filesystem absolute
       path to save the given [filename] with corresponding form field
-      [name]. Note that [filename] is the basename, not the full path.
-      Also that the file will be overwritten if it already exists on
-      disk! This callback gives you a chance to sanitize incoming
-      filenames before storing the files on disk. *)
+      [name]. Note that:
+
+      - The file will be overwritten if it already exists on disk
+      - [filename] is the basename, not the full path
+      - The filter will short-circuit with a 401 Unauthorized error
+        response if any of the files can't be opened for writing.
+
+      This callback gives you a chance to sanitize incoming filenames
+      before storing the files on disk. *)
 
   val query_form : ('ctor, 'ty) Form.t -> ('ctx1, < query : 'ty; prev : 'ctx1 >, _ Response.t) t
   (** [query_form(typ)] is a filter that decodes the request query (the
@@ -180,6 +185,7 @@ module Make(R : Request.S) : S
         let* () = prev in
         Lwt_unix.close file
       in
+      let cleanup () = Hashtbl.fold close files Lwt.return_unit in
       let callback ~name ~filename string =
         let filename =
           path ~filename:(Filename.basename filename) name
@@ -200,7 +206,6 @@ module Make(R : Request.S) : S
           Hashtbl.add files filename file;
           write file
       in
-      let cleanup () = Hashtbl.fold close files Lwt.return_unit in
       let f () =
         Multipart_form_data.parse ~stream ~content_type ~callback
       in
