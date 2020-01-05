@@ -184,14 +184,10 @@ module Make(R : Request.S) : S
         let filename =
           path ~filename:(Filename.basename filename) name
         in
-        let write file =
-          let f () = string
-            |> String.length
-            |> Lwt_unix.write_string file string 0
-            |> Lwt.map ignore
-          in
-          Lwt.catch f @@ fun exn ->
-            exn |> Printexc.to_string |> Lwt_io.printf "ERROR: %s\n"
+        let write file = string
+          |> String.length
+          |> Lwt_unix.write_string file string 0
+          |> Lwt.map ignore
         in
         match Hashtbl.find_opt files filename with
         | Some file -> write file
@@ -204,19 +200,30 @@ module Make(R : Request.S) : S
           Hashtbl.add files filename file;
           write file
       in
+      let cleanup () = Hashtbl.fold close files Lwt.return_unit in
       let f () =
         Multipart_form_data.parse ~stream ~content_type ~callback
       in
-      let* fields = Lwt.catch f @@ fun exn ->
-        let+ () = exn |> Printexc.to_string |> Lwt_io.printf "ERROR: %s" in
-        []
+      let g fields =
+        let* () = cleanup () in
+        let fields = List.map (fun (k, v) -> k, [v]) fields in
+        match Form.decode typ fields with
+        | Ok obj ->
+          next { request with Request.ctx = object method form = obj end }
+        | Error string -> bad_request string
       in
-      let* () = Hashtbl.fold close files Lwt.return_unit in
-      let fields = List.map (fun (k, v) -> k, [v]) fields in
-      begin match Form.decode typ fields with
-      | Ok obj ->
-        next { request with Request.ctx = object method form = obj end }
-      | Error string -> bad_request string
+      Lwt.try_bind f g begin fun exn ->
+        let* () = cleanup () in
+        begin match exn with
+          | Unix.Unix_error (Unix.EPERM, _, _) -> unauthorized
+          | _ ->
+            let message = exn
+              |> Printexc.to_string
+              |> ((^) "ReWeb.Filter.multpart_form: ") in
+            `Internal_server_error
+            |> Response.of_status ~message
+            |> Lwt.return
+        end
       end
     | _ ->
       bad_request "ReWeb.Filter.multipart_form: request is not well-formed"
