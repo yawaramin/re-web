@@ -47,13 +47,13 @@ module type S = sig
       string. *)
 
   val multipart_form :
-    ?typ:('ctor, 'ty) Form.t ->
+    typ:('ctor, 'ty) Form.t ->
     (filename:string -> string -> string) ->
     (unit, < form : 'ty >, [> Response.http]) t
-  (** [multipart_form(?typ, path)] is a filter that decodes multipart
-      form data. If [typ] is provided it decodes the parts of the form
-      into a value of type ['ty]. Else it decodes parts into an empty
-      (i.e. unit) value.
+  (** [multipart_form(~typ, path)] is a filter that decodes multipart
+      form data. [typ] must be provided but if you don't actually have
+      any other fields in the form you can use [Form.empty] to decode
+      into an 'empty' (unit) value.
 
       [path(~filename, name)] is used to get the filesystem absolute
       path to save the given [filename] with corresponding form field
@@ -164,7 +164,7 @@ module Make(R : Request.S) : S
     Bigstringaf.substring buffer ~off ~len
 
   (* Complex because we need to keep track of files being uploaded *)
-  let multipart_form ?(typ=Obj.magic Form.empty) path next request =
+  let multipart_form ~typ path next request =
     match Request.meth request, Request.header "content-type" request with
     | `POST, Some content_type
       when String.length content_type > multipart_ct_length
