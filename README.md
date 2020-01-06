@@ -60,6 +60,13 @@ again with the same simple `esy` command.
 
     $ esy
 
+## Documentation
+
+- API reference:
+  https://yawaramin.github.io/re-web/re-web/ReWeb/index.html
+- User's manual:
+  https://yawaramin.github.io/re-web/re-web/Manual/index.html
+
 ## Example
 
 Check out the example server in the `bin/` directory. The `Main.re` file

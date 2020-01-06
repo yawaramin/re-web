@@ -17,3 +17,6 @@ module Ch03_Requests = Ch03_Requests
 module Ch04_Responses = Ch04_Responses
 (** Sending responses back to clients. *)
 
+module Ch05_Filters = Ch05_Filters
+(** Transforming requests and responses in the pipeline. *)
+
