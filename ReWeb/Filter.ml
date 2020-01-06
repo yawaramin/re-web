@@ -79,15 +79,14 @@ module H = Httpaf
 module Make(R : Request.S) : S
   with type ('fd, 'io) Service.Request.Reqd.t = ('fd, 'io) R.Reqd.t
   and type 'ctx Service.Request.t = 'ctx R.t = struct
-  module Request = R
-  module Service = Service.Make(Request)
+  module Service = Service.Make(R)
 
   type ('ctx1, 'ctx2, 'resp) t =
     ('ctx2, 'resp) Service.t -> ('ctx1, 'resp) Service.t
 
   let get_auth request =
     let open Let.Option in
-    let* value = Request.header "Authorization" request in
+    let* value = R.header "Authorization" request in
     match String.split_on_char ' ' value with
     | [typ; credentials] -> Some (typ, credentials)
     | _ -> None
@@ -105,7 +104,7 @@ module Make(R : Request.S) : S
         begin match String.split_on_char ':' credentials with
         | [username; password] ->
           next {
-            request with Request.ctx = object
+            request with R.ctx = object
               method username = username
               method password = password
               method prev = request.ctx
@@ -120,7 +119,7 @@ module Make(R : Request.S) : S
   let bearer_auth next request = match get_auth request with
     | Some ("Bearer", token) ->
       next {
-        request with Request.ctx = object
+        request with R.ctx = object
           method bearer_token = token
           method prev = request.ctx
         end
@@ -128,11 +127,11 @@ module Make(R : Request.S) : S
     | _ -> unauthorized
 
   let set_body body request =
-    { request with Request.ctx = object method body = body end }
+    { request with R.ctx = object method body = body end }
 
   let body_json next request =
     let open Let.Lwt in
-    let* body = Request.body_string request in
+    let* body = R.body_string request in
     match Ezjsonm.from_string body with
     | body -> request |> set_body body |> next
     | exception Ezjsonm.Parse_error (_, string) ->
@@ -141,23 +140,23 @@ module Make(R : Request.S) : S
       bad_request "ReWeb.Filter.body_json: not a JSON document"
 
   let body_json_decode decoder next request =
-    match decoder (Request.context request)#body with
+    match decoder (R.context request)#body with
     | Ok body -> request |> set_body body |> next
     | Error exn -> exn |> Printexc.to_string |> bad_request
 
   let body_string next request =
     let open Let.Lwt in
-    let* body = Request.body_string request in
+    let* body = R.body_string request in
     request |> set_body body |> next
 
   let body_form typ next request =
-    match Request.header "content-type" request with
+    match R.header "content-type" request with
     | Some "application/x-www-form-urlencoded" ->
       let open Let.Lwt in
-      let* body = Request.body_string request in
+      let* body = R.body_string request in
       begin match Form.decoder typ body with
       | Ok obj ->
-        next { request with Request.ctx = object method form = obj end }
+        next { request with R.ctx = object method form = obj end }
       | Error string -> bad_request string
       end
     | _ ->
@@ -170,12 +169,12 @@ module Make(R : Request.S) : S
 
   (* Complex because we need to keep track of files being uploaded *)
   let multipart_form ~typ path next request =
-    match Request.meth request, Request.header "content-type" request with
+    match R.meth request, R.header "content-type" request with
     | `POST, Some content_type
       when String.length content_type > multipart_ct_length
       && String.sub content_type 0 multipart_ct_length = "multipart/form-data; boundary=" ->
       let stream = request
-        |> Request.body
+        |> R.body
         |> Body.to_stream
         |> Lwt_stream.map chunk_to_string
       in
@@ -214,7 +213,7 @@ module Make(R : Request.S) : S
         let fields = List.map (fun (k, v) -> k, [v]) fields in
         match Form.decode typ fields with
         | Ok obj ->
-          next { request with Request.ctx = object method form = obj end }
+          next { request with R.ctx = object method form = obj end }
         | Error string -> bad_request string
       in
       Lwt.try_bind f g begin fun exn ->
@@ -234,12 +233,12 @@ module Make(R : Request.S) : S
       bad_request "ReWeb.Filter.multipart_form: request is not well-formed"
 
   let query_form typ next request =
-    match Form.decoder typ request.Request.query with
+    match Form.decoder typ request.R.query with
     | Ok obj ->
       next {
-        request with Request.ctx = object
+        request with R.ctx = object
           method query = obj
-          method prev = request.ctx
+          method prev = request.R.ctx
         end
       }
     | Error string -> bad_request string
