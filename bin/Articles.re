@@ -113,7 +113,7 @@ let index = _ => View.articles(~list=all^) |> Response.of_view |> Lwt.return;
 
 // Service to create a new article
 let create = request => {
-  all := [Request.context(request)#form, ...all^];
+  all := [Request.context(request), ...all^];
   index(request);
 };
 

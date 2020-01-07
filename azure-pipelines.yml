@@ -13,11 +13,8 @@ stages:
       vmImage: ubuntu-latest
     variables:
       CACHE_FOLDER: $(Pipeline.Workspace)/cache
-      ESY__CACHE_INSTALL_PATH: /home/vsts/.esy/3_____________________________________________________________________/i
     steps:
     - template: .ci/build-platform.yml
-      parameters:
-        installFolderPath: "/3______________________________________________________________/i"
     - template: .ci/build-docs.yml
     - template: .ci/utils/prepare-cache.yml
 
@@ -26,12 +23,22 @@ stages:
       vmImage: macOS-latest
     variables:
       CACHE_FOLDER: $(Pipeline.Workspace)/cache
-      ESY__CACHE_INSTALL_PATH: /Users/vsts/.esy/3____________________________________________________________________/i
     steps:
     - template: .ci/build-platform.yml
     - template: .ci/utils/prepare-cache.yml
-      parameters:
-        installFolderPath: "/3_______________________________________________/i"
+
+# Currently erroring when trying to untar due to savonet-ocaml-ssl symlink
+#- stage: Windows_build
+#  jobs:
+#  - job: Windows
+#    pool:
+#      vmImage: windows-2019
+#    timeoutInMinutes: 120
+#    variables:
+#      CACHE_FOLDER: $(Pipeline.Workspace)/cache
+#    steps:
+#    - template: .ci/build-platform.yml
+#    - template: .ci/utils/prepare-cache.yml
 
 - stage: Publish_docs
   displayName: Publish documentation

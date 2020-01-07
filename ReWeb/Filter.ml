@@ -19,14 +19,14 @@ module type S = sig
       [Authorization] header or returns a 401 Unauthorized error if
       there is none. *)
 
-  val body_form : ('ctor, 'ty) Form.t -> (unit, < form : 'ty >, [> Response.http]) t
+  val body_form : ('ctor, 'ty) Form.t -> (unit, 'ty, [> Response.http]) t
   (** [body_form(typ)] is a filter that decodes a web form in the
       request body and puts it inside the request for the next service.
       The decoding is done as specified by the form definition [typ]. If
       the form fails to decode, it short-circuits and returns a 400 Bad
       Request. *)
 
-  val body_json : (unit, < body : Ezjsonm.t >, [> Response.http]) t
+  val body_json : (unit, Ezjsonm.t, [> Response.http]) t
   (** [body_json] is a filter that transforms a 'root' service (i.e. one
       with [unit] context) into a service with a context containing the
       request body. If the request body fails to parse as valid JSON, it
@@ -34,14 +34,14 @@ module type S = sig
 
   val body_json_decode :
     (Ezjsonm.t -> ('ty, exn) result) ->
-    (< body : Ezjsonm.t >, < body : 'ty >, [> Response.http]) t
+    (Ezjsonm.t, 'ty, [> Response.http]) t
   (** [body_json_decode(decoder)] is a filter that transforms a service
       with a parsed JSON structure in its context, to a service with a
       decoded value of type ['ty] in its context. If the request body
       fails to decode with [decoder], the filter short-circuits and
       returns a 400 Bad Request. *)
 
-  val body_string : (unit, < body : string >, [> Response.http]) t
+  val body_string : (unit, string, [> Response.http]) t
   (** [body_string] is a filter that transforms a 'root' service into a
       service whose context contains the request body as a single
       string. *)
@@ -49,7 +49,7 @@ module type S = sig
   val multipart_form :
     typ:('ctor, 'ty) Form.t ->
     (filename:string -> string -> string) ->
-    (unit, < form : 'ty >, [> Response.http]) t
+    (unit, 'ty, [> Response.http]) t
   (** [multipart_form(~typ, path)] is a filter that decodes multipart
       form data. [typ] must be provided but if you don't actually have
       any other fields in the form you can use [Form.empty] to decode
@@ -126,28 +126,25 @@ module Make(R : Request.S) : S
       }
     | _ -> unauthorized
 
-  let set_body body request =
-    { request with R.ctx = object method body = body end }
-
   let body_json next request =
     let open Let.Lwt in
     let* body = R.body_string request in
     match Ezjsonm.from_string body with
-    | body -> request |> set_body body |> next
+    | ctx -> next { request with ctx }
     | exception Ezjsonm.Parse_error (_, string) ->
       bad_request ("ReWeb.Filter.body_json: " ^ string)
     | exception Assert_failure (_, _, _) ->
       bad_request "ReWeb.Filter.body_json: not a JSON document"
 
   let body_json_decode decoder next request =
-    match decoder (R.context request)#body with
-    | Ok body -> request |> set_body body |> next
+    match decoder request.R.ctx with
+    | Ok ctx -> next { request with ctx }
     | Error exn -> exn |> Printexc.to_string |> bad_request
 
   let body_string next request =
     let open Let.Lwt in
-    let* body = R.body_string request in
-    request |> set_body body |> next
+    let* ctx = R.body_string request in
+    next { request with ctx }
 
   let body_form typ next request =
     match R.header "content-type" request with
@@ -155,8 +152,7 @@ module Make(R : Request.S) : S
       let open Let.Lwt in
       let* body = R.body_string request in
       begin match Form.decoder typ body with
-      | Ok obj ->
-        next { request with R.ctx = object method form = obj end }
+      | Ok ctx -> next { request with ctx }
       | Error string -> bad_request string
       end
     | _ ->
@@ -212,8 +208,7 @@ module Make(R : Request.S) : S
         let* () = cleanup () in
         let fields = List.map (fun (k, v) -> k, [v]) fields in
         match Form.decode typ fields with
-        | Ok obj ->
-          next { request with R.ctx = object method form = obj end }
+        | Ok ctx -> next { request with ctx }
         | Error string -> bad_request string
       in
       Lwt.try_bind f g begin fun exn ->
@@ -223,7 +218,8 @@ module Make(R : Request.S) : S
           | _ ->
             let message = exn
               |> Printexc.to_string
-              |> ((^) "ReWeb.Filter.multpart_form: ") in
+              |> ((^) "ReWeb.Filter.multpart_form: ")
+            in
             `Internal_server_error
             |> Response.of_status ~message
             |> Lwt.return

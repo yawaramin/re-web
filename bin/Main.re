@@ -51,7 +51,7 @@ let getLogin = _ =>
 
     It returns the credentials in the response body. */
 let postLogin = request => {
-  let {User.username, password} = Request.context(request)#form;
+  let {User.username, password} = Request.context(request);
   View.loggedIn(~username, ~password) |> Response.of_view |> Lwt.return;
 };
 

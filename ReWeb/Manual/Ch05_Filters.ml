@@ -3,8 +3,14 @@
 
     Filters help to keep services clean, by extracting functionality
     that is not conceptually part of the service. They also help to
-    keep code reusable and composeable. Here's the simplest possible
-    filter:
+    keep code reusable and composeable.
+
+    {1 Creating a filter}
+
+    This section shows how to create filters. To see how to actually
+    insert filters into your application, go to {!section:inserting}.
+
+    Here's the simplest possible filter:
 
     {[let noFilter = service => service;]}
 
@@ -22,7 +28,7 @@
     Here, [next] is a reminder that that is the {i next} service in the
     pipeline after the current filter.
 
-    {1 Doing something in a filter}
+    {2 Doing something in a filter}
 
     Ultimately, a filter returns a promise of a response. You have two
     main options when you need to return something:
@@ -47,7 +53,7 @@
     and values), and calls the next request in the pipeline if it was
     found. Otherwise it sends back the unauthorized error response.
 
-    {1 Updating the request context}
+    {2 Updating the request context}
 
     Although interesting, this filter is ultimately not very helpful,
     because although it retrieves the session cookie it actually just
@@ -75,7 +81,7 @@
     simply accessing the [request.ctx] field or using the
     {!ReWeb.Request.context} function.
 
-    {2 Preserving existing context}
+    {3 Preserving existing context}
 
     However, there is an issue with simply setting the context like we
     have above: there might be some existing value in the context
@@ -108,13 +114,13 @@
     use its object system: when you want to whip up a container to hold
     named values of any types, without having to declare its type first.
 
-    To be honest though, you will get a typechecker error any type you
+    To be honest though, you will get a typechecker error any time you
     change a request pipeline's filters. In my humble opinion this is a
     good thing because it forces you to examine the pipeline from start
     to finish and ensure that it's getting exactly the context it needs
     from its filter chain.
 
-    {2 Accessing wrapped contexts}
+    {3 Accessing wrapped contexts}
 
     The service which comes after this filter will want to access its
     values. It can do so with:
@@ -125,7 +131,7 @@
       farther back in the filter chain, you would have to do
       [Request.context(request)#prev#prev...].
 
-    {1 Running a filter after a request}
+    {2 Running a filter after a request}
 
     Filters can not only run before and modify requests, but also run
     after and modify responses. For example, suppose you want to add a
@@ -160,6 +166,91 @@
     'action' that you do to the response (even though it is really a
     partially-applied function).
 
+    {1:inserting Inserting a filter in the request-response pipeline}
+
+    To set up a filter to run before a service, call the service with
+    the filter. For example, suppose you have the following service:
+
+    {[let hello = _ => "Hello, World!" |> Response.of_text |> Lwt.return;]}
+
+    You can {i compose} the filter with a service, e.g.:
+
+    {[noFilter(hello)]}
+
+    Typically I use the
+    {{: https://caml.inria.fr/pub/docs/manual-ocaml/libref/Stdlib.html#VAL(@@)} [@@]}
+    operator to compose filters:
+
+    {[noFilter @@ hello]}
+
+    This sort of looks like a data flow. As you compose more filters
+    together you can sort of visualize them as a left-to-right series of
+    filtering actions that happen before the service runs. Here's a more
+    complex example:
+
+    {[let hello = request => {
+        let _: Ezjsonm.t = Request.context(request)#prev;
+        "Hello, World!" |> Response.of_text |> Lwt.return;
+      };
+
+      let test = Filter.body_json @@ Filter.basic_auth @@ hello;]}
+
+    What's happening above, starting from the bottom up:
+
+    - We compose two filters and a service
+    - The service accesses the context and then its wrapped [prev]
+      method to get the request body JSON and typechecks that it
+      actually is JSON. And this check happens at compile time!
+
+    As you can see, a filter chain can be composed by following certain
+    conditions:
+
+    - The previous filter in the chain needs to 'output' a context type
+      that the next filter in the chain can handle
+    - Any filter that accesses the request body needs to be {i first} in
+      the filter chain
+    - The service at the end of the filter chain may access the context
+      in a way that type-checks
+
+    These conditions however are enforced at compile time (provided the
+    filters are implemented correctly), so you don't need to worry about
+    getting them wrong.
+
+    {2 Inserting a filter for a specific scope in the router}
+
+    Because of the design of routers (i.e. servers), you can plug in
+    filters at specific route scopes. Suppose you want to parse all
+    request bodies as JSON but only at the [/api/...] scope. You can
+    write a router specifically for that scope:
+
+    {[let getHeroes = request => {
+        let _: Ezjsonm.t = Request.context(request);
+        "Heroes!" |> Response.of_text |> Lwt.return;
+      };
+
+      let notFound = _ => `Not_found |> Response.of_status |> Lwt.return;
+
+      let apiServer =
+        fun
+        | (`GET, ["heroes"]) => getHeroes
+        | _ => notFound;]}
+
+    The [apiServer] doesn't actually know that it's serving the
+    [/api/...] scope. Its services simply access the request context
+    JSON and that typechecks, because...
+
+    {[let server =
+        fun
+        | (meth, ["api", ...path]) =>
+          Filter.body_json @@ apiServer @@ (meth, path)
+        | _ => notFound;]}
+
+    Its parent [server] pattern-matches on all paths starting with [api]
+    and passes them forward (along with the request method) to the
+    [apiServer], but only after applying the [body_json] filter so that
+    all [apiServer] services will see requests with a context containing
+    the body JSON.
+
     {1 The ReWeb filters}
 
     ReWeb ships with some built-in filters, which you can see in the
@@ -168,6 +259,26 @@
     body, decode a web form, upload files with multipart form encoding
     while also optionally decoding a web form, and decode a query string
     as a form. See the API docs for details.
+
+    Note that, as mentioned in the previous section, the ReWeb filters
+    are written in a type-safe and composeable way. For example, the
+    type signature of the {!ReWeb.Filter.body_json} filter:
+
+    {[val body_json : (unit, Ezjsonm.t, [> Response.http]) t]}
+
+    If we compare the type parameters to their formal parameter names:
+
+    - ['ctx1] = [unit]
+    - ['ctx2] = [Ezjsonm.t]
+    - ['resp] = [[> Response.http]]
+
+    This tells us that the filter starts with an 'input' context type of
+    [unit] and transforms it into an 'output' context type of
+    [Ezjsonm.t] (i.e. a JSON document). And the third type parameter
+    says that the response type is HTTP (as opposed to a WebSocket).
+
+    This means that this must be either first in the filter chain or
+    must come after filters that don't change the context.
 
     I expect to add more filters either to [ReWeb.Filter] module itself
     or as addon packages as appropriate. (Anyone can create ReWeb
