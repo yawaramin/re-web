@@ -109,5 +109,63 @@
     the head is [api], and pass the tail forward.
 
     This technique is especially useful with filters, which we will
-    cover in a future chapter. *)
+    cover in a future chapter.
+
+    {1 Setting up a resource}
+
+    You can set up a {i resource,} which is a normal server created with
+    the {!ReWeb.Server.resource} function. A resource in ReWeb is the
+    same as the one in
+    {{: https://guides.rubyonrails.org/getting_started.html#getting-up-and-running} Rails},
+    in other words--a set of routes that manage the CRUD operations of a
+    collection of objects.
+
+    Resources involve several concepts--requests, responses, and usually
+    also views and web forms with some JavaScript that can send the
+    proper requests that web forms in browsers unfortunately can't. You
+    will learn about all these concepts in the upcoming chapters, but
+    for now here's a rough sketch of what a resource might look like:
+
+    {[// Article.re
+
+      // Renders various pages that deal with the resource
+      module View = {
+        let index = p => ...;
+        let new_ = p => ...;
+        let edit = (~id, p) => ...;
+        let show = (~id, p) => ...;
+      };
+
+      // These are the services that handle the routes
+      let index = _ => View.index |> Response.of_view |> Lwt.return;
+      let create = _ => ...;
+      let new_ = _ => View.new_ |> Response.of_view |> Lwt.return;
+      let edit = (id, _) => View.edit(~id) |> Response.of_view |> Lwt.return;
+      let show = (id, _) => View.show(~id) |> Response.of_view |> Lwt.return;
+      let update = (meth, id, _) => ...;
+      let destroy = (id, _) => ...;
+
+      // This is the server that routes the requests to the correct services:
+      let resource = route => Server.resource(
+        ~index,
+        ~create,
+        ~new_,
+        ~edit,
+        ~show,
+        ~update,
+        ~destroy,
+        route,
+      );]}
+
+    Recall from the previous section that you can set up a child server
+    to handle the routes in a certain scope. So with this resource you
+    can set it up to handle the [/articles/...] scope:
+
+    {[let server = fun
+        | (meth, ["articles", ...path]) => Article.resource @@ (meth, path)
+        | _ => notFound;]}
+
+    The nice thing about the [Server.resource] function is that it sets
+    up all the [GET] routes to be valid both with a trailing slash and
+    without. *)
 

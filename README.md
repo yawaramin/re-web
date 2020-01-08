@@ -12,9 +12,10 @@ ReWeb is a web framework based on several foundations:
   ['Your server as a function'](https://monkey.org/~marius/funsrv.pdf)
   by Marius Eriksen which was also the idea behind Twitter's Finagle web
   stack
-- Jasim Basheer's essay 'Rails on OCaml' which identifies the need for
-  an ergonomic, Rails-like web framework that still preserves the type
-  safety benefits of OCaml.
+- Jasim Basheer's essay
+  ['Rails on OCaml'](https://protoship.io/blog/rails-on-ocaml/) which
+  identifies the need for an ergonomic, Rails-like web framework that
+  still preserves the type safety benefits of OCaml.
 
 ReWeb's main concepts are:
 
@@ -36,6 +37,28 @@ composeable using just function composition. Services can call other
 services. Filters can slot together by calling each other. Servers can
 delegate smaller scopes to other servers. See `bin/Main.re` for examples
 of all of these.
+
+## Documentation
+
+- [API Reference](https://yawaramin.github.io/re-web/re-web/ReWeb/index.html)
+- [User's Manual](https://yawaramin.github.io/re-web/re-web/Manual/index.html)
+
+## Example
+
+Check out the example server in the `bin/` directory. The `Main.re` file
+there is extensively commented with explanations.
+
+Run the example server:
+
+    $ esy bin
+
+Send some requests to it:
+
+    $ curl localhost:8080/hello
+    $ curl localhost:8080/auth/hello
+    $ curl --user 'bob:secret' localhost:8080/auth/hello
+
+Go to http://localhost:8080/login in your browser, etc.
 
 ## Try
 
@@ -59,30 +82,6 @@ After you make some changes to source code, you can re-run project's build
 again with the same simple `esy` command.
 
     $ esy
-
-## Documentation
-
-- API reference:
-  https://yawaramin.github.io/re-web/re-web/ReWeb/index.html
-- User's manual:
-  https://yawaramin.github.io/re-web/re-web/Manual/index.html
-
-## Example
-
-Check out the example server in the `bin/` directory. The `Main.re` file
-there is extensively commented with explanations.
-
-Run the example server:
-
-    $ esy bin
-
-Send some requests to it:
-
-    $ curl localhost:8080/hello
-    $ curl localhost:8080/auth/hello
-    $ curl --user 'bob:secret' localhost:8080/auth/hello
-
-Go to http://localhost:8080/login in your browser, etc.
 
 Generate documentation:
 
