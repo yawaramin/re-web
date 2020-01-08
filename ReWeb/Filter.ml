@@ -46,6 +46,12 @@ module type S = sig
       service whose context contains the request body as a single
       string. *)
 
+  val cache_control :
+    Header.CacheControl.t ->
+    ('ctx, 'ctx, [Response.http | Response.websocket]) t
+  (** [cache_control(policy)] is a filter that applies the caching
+      [policy] policy to the HTTP response. *)
+
   val multipart_form :
     typ:('ctor, 'ty) Form.t ->
     (filename:string -> string -> string) ->
@@ -157,6 +163,12 @@ module Make(R : Request.S) : S
       end
     | _ ->
       bad_request "ReWeb.Filter.form: request content-type is not form"
+
+  let cache_control policy next request = request
+    |> next
+    |> Lwt.map @@ Response.add_header
+      ~name:"cache-control"
+      ~value:(Header.CacheControl.to_string policy)
 
   let multipart_ct_length = 30
 

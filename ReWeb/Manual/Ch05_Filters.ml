@@ -254,11 +254,11 @@
     {1 The ReWeb filters}
 
     ReWeb ships with some built-in filters, which you can see in the
-    {!ReWeb.Filter} module. Currently, there are filters to validate
-    Basic Auth and Bearer Token credentials, parse and decode a JSON
-    body, decode a web form, upload files with multipart form encoding
-    while also optionally decoding a web form, and decode a query string
-    as a form. See the API docs for details.
+    {!ReWeb.Filter} module. Currently, there are filters to set a cache
+    control policy, to validate Basic Auth and Bearer Token credentials,
+    parse and decode a JSON body, decode a web form, upload files with
+    multipart form encoding while also optionally decoding a web form,
+    and decode a query string as a form. See the API docs for details.
 
     Note that, as mentioned in the previous section, the ReWeb filters
     are written in a type-safe and composeable way. For example, the

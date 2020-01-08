@@ -52,9 +52,11 @@ let cookie_to_header (name, value) = "set-cookie", name ^ "=" ^ value
 
 let make_headers ?(headers=[]) ?(cookies=[]) ?content_length content_type =
   let cookie_headers = List.map cookie_to_header cookies in
-  let headers = headers
-    @ ["content-type", content_type; "connection", "close"]
-    @ cookie_headers
+  let headers = headers @ cookie_headers @ [
+    "connection", "close";
+    "content-type", content_type;
+    "server", "ReWeb";
+  ]
   in
   match content_length with
   | Some content_length ->

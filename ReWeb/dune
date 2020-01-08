@@ -3,6 +3,7 @@
   (public_name re-web)
   (flags (-w -40 -w +26))
   (libraries
+    Header
     base64
     ezjsonm
     httpaf
