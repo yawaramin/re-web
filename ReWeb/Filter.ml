@@ -73,7 +73,7 @@ module type S = sig
       This callback gives you a chance to sanitize incoming filenames
       before storing the files on disk. *)
 
-  val query_form : ('ctor, 'ty) Form.t -> ('ctx1, < query : 'ty; prev : 'ctx1 >, _ Response.t) t
+  val query_form : ('ctor, 'ty) Form.t -> ('ctx, < query : 'ty; prev : 'ctx >, _ Response.t) t
   (** [query_form(typ)] is a filter that decodes the request query (the
       part after the [?] in the endpoint) into a value of type ['ty] and
       stores it in the request context for the next service. The

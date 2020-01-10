@@ -81,8 +81,12 @@
     So concretely this means that a service that tries to get the auth
     token and the decoded form body from the request context, will only
     compile if the filters which do those jobs were actually plugged in
-    to the request pipeline before it. This will be explored in the
-    chapter on filters.
+    to the request pipeline before it.
+
+    A lot of ReWeb's functionality comes from filters, ones that ship
+    with ReWeb itself, or ones you write yourself, or even get from a
+    third party. If you're wondering how to do something, chances are
+    you can do it with a filter. Check {!Ch05_Filters} to start.
 
     {1 Promises (Lwt)}
 

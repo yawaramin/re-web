@@ -1,6 +1,7 @@
 (** See
     {{: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control}}
-    for detailed explanations of the various cache options. *)
+    for detailed explanations of the various cache options. See
+    {!ReWeb.Filter.cache_control} for the intended usage of this type. *)
 
 type privately = {
   must_revalidate : bool option;

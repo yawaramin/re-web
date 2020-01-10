@@ -254,15 +254,11 @@
     {1 The ReWeb filters}
 
     ReWeb ships with some built-in filters, which you can see in the
-    {!ReWeb.Filter} module. Currently, there are filters to set a cache
-    control policy, to validate Basic Auth and Bearer Token credentials,
-    parse and decode a JSON body, decode a web form, upload files with
-    multipart form encoding while also optionally decoding a web form,
-    and decode a query string as a form. See the API docs for details.
+    {!ReWeb.Filter} module. This section shows how to use them.
 
-    Note that, as mentioned in the previous section, the ReWeb filters
-    are written in a type-safe and composeable way. For example, the
-    type signature of the {!ReWeb.Filter.body_json} filter:
+    {i Note} that, as mentioned in the previous section, the ReWeb
+    filters are written in a type-safe and composeable way. For example,
+    the type signature of the {!ReWeb.Filter.body_json} filter:
 
     {[val body_json : (unit, Ezjsonm.t, [> Response.http]) t]}
 
@@ -280,7 +276,107 @@
     This means that this must be either first in the filter chain or
     must come after filters that don't change the context.
 
-    I expect to add more filters either to [ReWeb.Filter] module itself
-    or as addon packages as appropriate. (Anyone can create ReWeb
-    filters and publish them as packages.) *)
+    {2 Basic authentication}
+
+    This filter takes any context and outputs a context containing the
+    username and password taken from the request's basic auth
+    credentials:
+
+    {[basic_auth @@ service]}
+
+    It responds with an error status response if it can't understand the
+    auth header.
+
+    {2 Bearer authentication}
+
+    Takes any context and outputs a context containing bearer token:
+
+    {[bearer_auth @@ service]}
+
+    Error behaviour is like [basic_auth].
+
+    {2 Decode a web form from request body}
+
+    Takes a [unit] context (i.e. a context that has not been touched by
+    any other filter) and outputs a context of a custom type that you
+    specify. The reason it needs a unit context is that it needs to
+    fully read the request body to decode it, and wants to ensure
+    nothing else has already read the body.
+
+    For example to decode the following form in a request body into a
+    strongly-typed value:
+
+    {[id=1&name=Bob]}
+
+    You can declare the type and its corresponding form decoder:
+
+    {[type user = {id: int, name: string};
+
+      let user = (id, name) => {id, name};
+      let userForm = Form.(make(Field.[int("id"), string("name")], user));
+      body_form(userForm) @@ service]}
+
+    Note the placements of the parentheses that locally open the
+    {!ReWeb.Form} and {!ReWeb.Form.Field} modules. These expose the
+    [make] function to create a form and the field list type (which you
+    create using the square brackets), and also the field specifier
+    functions like [int], [string] which you use to describe the
+    fields--specifically their types and names.
+
+    Finally you pass in the [user] constructor to the [make] function
+    which actually creates the typed [user] value. The typechecker
+    verifies that the user constructor function matches up with the
+    types declared for the form.
+
+    {2 Parse request body JSON}
+
+    Takes a unit context and outputs a body JSON context:
+
+    {[body_json @@ service]}
+
+    {2 Decode request body JSON}
+
+    Takes a body JSON context and a JSON decoder and outputs a context
+    of a custom type:
+
+    {[let jsonToUser = json => ...;
+      body_json_decode(jsonToUser) @@ service]}
+
+    {2 Get request body as a string}
+
+    Takes a unit context and outputs a context of a string containing
+    the request body:
+
+    {[body_string @@ service]}
+
+    {2 Set response cache policy}
+
+    Takes any context and returns that context unmodified but with a
+    [cache-control] header added to the response. For example to set the
+    response to cache anywhere (publicly) for ten minutes:
+
+    {[cache_control(Header.CacheControl.public(~max_age=600)) @@ service]}
+
+    {2 Upload files & decode a multipart form}
+
+    Takes a unit context and returns a context of a custom type in the
+    same way as the body form decoder filter, and {i additionally} saves
+    any uploaded files sent in the multipart form using the specified
+    function to derive the file names:
+
+    {[let path = (~filename, name) => "./form_" ++ name ++ "_" ++ filename;
+      multipart_form(userForm, path) @@ service]}
+
+    The [filename] passed in to the [path] function is stripped of any
+    directory path beforehand so there's no risk of someone saving a
+    file in an unexpected directory.
+
+    {2 Decode form from request URI query}
+
+    Takes any context and returns a context containing a URI query
+    decoded into a strong type using the same form decoders as above.
+    Also returns the previous context wrapped inside the new context.
+    E.g.:
+
+    {[query_form(userForm) @@ service]} *)
 
