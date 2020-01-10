@@ -131,10 +131,10 @@ let viewId = (view, id, _) =>
     },
   );
 
-let oneWeek = 7 * 24 * 60 * 60;
+let tenMinutes = 600;
 
 let show = id =>
-  Filter.cache_control(Header.CacheControl.public(~max_age=oneWeek, ())) @@
+  Filter.cache_control(Header.CacheControl.public(~max_age=tenMinutes, ())) @@
   viewId(View.article, id);
 
 /* Due to the value restriction in OCaml we write the resource as a

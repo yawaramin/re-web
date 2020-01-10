@@ -7,6 +7,7 @@ end
 
 module Request = Request.Make(H.Body)(Reqd)
 module Service = Service.Make(Request)
+module Filter = Filter.Make(Request)
 module Wsd = Websocketaf.Wsd
 
 type path = string list
@@ -15,6 +16,7 @@ type ('ctx, 'resp) t = route -> ('ctx, 'resp) Service.t
 
 let not_found _ = `Not_found |> Response.of_status |> Lwt.return
 let not_found_id _ = not_found
+let one_wk = 7 * 24 * 60 * 60
 
 let resource
   ?(index=not_found)
@@ -24,15 +26,18 @@ let resource
   ?(show=not_found_id)
   ?(update=fun _ -> not_found_id)
   ?(destroy=not_found_id) =
+  let open Header.CacheControl in
+  let no_store = Filter.cache_control No_store in
   function
   | `GET, ([] | [""]) -> index
-  | `POST, [] -> create
-  | `GET, (["new"] | ["new"; ""]) -> new_
+  | `POST, [] -> no_store create
+  | `GET, (["new"] | ["new"; ""]) ->
+    Filter.cache_control (public ~max_age:one_wk ()) new_
   | `GET, ([id; "edit"] | [id; "edit"; ""]) -> edit id
   | `GET, ([id] | [id; ""]) -> show id
-  | `Other "PATCH", [id] -> update `PATCH id
-  | `PUT, [id] -> update `PUT id
-  | `DELETE, [id] -> destroy id
+  | `Other "PATCH", [id] -> no_store @@ update `PATCH id
+  | `PUT, [id] -> no_store @@ update `PUT id
+  | `DELETE, [id] -> no_store @@ destroy id
   | _ -> not_found
 
 let segment path = path |> String.split_on_char '/' |> List.tl

@@ -39,7 +39,7 @@ module type Filter = Filter.S
     The filters which read the body don't do this because they only work
     with request which have no context (i.e., context of type [unit]). *)
 
-module Filter = Filter.Make(Request)
+module Filter = Server.Filter
 (** This is the implementation of the above module type. Please see
     above for documentation. *)
 

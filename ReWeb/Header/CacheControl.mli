@@ -35,10 +35,7 @@ val public :
   unit ->
   t
 (** [public(?must_revalidate, ?max_age, ?no_transform, ?proxy_revalidate, ?s_maxage, ())]
-    is a convenience function for creating a public cache response.
-    [proxy_revalidate] defaults to the value of
-    [must_revalidate], and [s_maxage] defaults to the value of
-    [max_age]. *)
+    is a convenience function for creating a public cache response. *)
 
 val to_string : t -> string
 (** [to_string(value)] converts the cache-control instructions into a

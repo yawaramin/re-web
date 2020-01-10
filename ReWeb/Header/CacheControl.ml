@@ -20,10 +20,6 @@ let private_ ?must_revalidate ?max_age () = Private {
   max_age;
 }
 
-let (or) option1 option2 = match option1, option2 with
-  | Some _, _ -> option1
-  | _, _ -> option2
-
 let public
   ?must_revalidate
   ?max_age
@@ -31,8 +27,6 @@ let public
   ?proxy_revalidate
   ?s_maxage
   () =
-  let proxy_revalidate = proxy_revalidate or must_revalidate in
-  let s_maxage = s_maxage or max_age in
   Public (
     { must_revalidate; max_age },
     { no_transform; proxy_revalidate; s_maxage }
