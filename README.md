@@ -43,10 +43,26 @@ of all of these.
 - [API Reference](https://yawaramin.github.io/re-web/re-web/ReWeb/index.html)
 - [User's Manual](https://yawaramin.github.io/re-web/re-web/Manual/index.html)
 
-## Example
+## Examples
 
-Check out the example server in the `bin/` directory. The `Main.re` file
-there is extensively commented with explanations.
+### Fullstack Reason
+
+Check out the demo repo which shows a fullstack Reason setup with ReWeb
+and ReasonReact, with code sharing:
+https://github.com/yawaramin/fullstack-reason/
+
+This repo can be cloned and used right away for a new project.
+
+### Examples directory
+
+Check out the `examples/` directory for small, self-contained basic
+examples.
+
+### Bin directory
+
+Finally, check out the example server in the `bin/` directory. The
+`Main.re` file there has extensive examples of almost everything ReWeb
+currently supports.
 
 Run the example server:
 
