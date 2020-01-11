@@ -276,6 +276,20 @@
     This means that this must be either first in the filter chain or
     must come after filters that don't change the context.
 
+    {2 CORS protection}
+
+    This filter takes any context and outputs the same context, with the
+    [Access-Control-Allow-Origin] header added to the response:
+
+    {[// Equivalent to '*':
+      access_control_allow_origin(Header.AccessControlAllowOrigin.All) @@ service
+
+      // A specific origin:
+      access_control_allow_origin(
+        Header.AccessControlAllowOrigin.One("http://localhost:8080")
+      ) @@
+      service]}
+
     {2 Basic authentication}
 
     This filter takes any context and outputs a context containing the

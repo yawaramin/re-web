@@ -9,6 +9,13 @@ module type S = sig
 
       Filters can be composed using function composition. *)
 
+  val access_control_allow_origin :
+    Header.AccessControlAllowOrigin.t ->
+    ('ctx, 'ctx, [Response.http | Response.websocket]) t
+  (** [access_control_allow_origin(origin)] adds an
+      {{: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Origin} Access-Control-Allow-Origin}
+      header with the given [origin]. *)
+
   val basic_auth : ('ctx1, < username : string; password : string; prev : 'ctx1 >, _ Response.t) t
   (** [basic_auth] decodes and stores the login credentials sent with
       the [Authorization] header or returns a 401 Unauthorized error if
@@ -102,6 +109,12 @@ module Make(R : Request.S) : S
     |> Lwt.return
 
   let unauthorized = `Unauthorized |> Response.of_status |> Lwt.return
+
+  let access_control_allow_origin origin next request = request
+    |> next
+    |> Lwt.map @@ Response.add_header
+      ~name:"access-control-allow-origin"
+      ~value:(Header.AccessControlAllowOrigin.to_string origin)
 
   let basic_auth next request = match get_auth request with
     | Some ("Basic", credentials) ->
