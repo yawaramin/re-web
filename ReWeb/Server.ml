@@ -5,7 +5,7 @@ module Reqd = struct
   include H.Reqd
 end
 
-module Request = Request.Make(H.Body)(Reqd)
+module Request = Request.Make(Config.Default)(H.Body)(Reqd)
 module Service = Service.Make(Request)
 module Filter = Filter.Make(Request)
 module Wsd = Websocketaf.Wsd

@@ -10,6 +10,10 @@ module Body = Body
 module Client = Client
 (** Make web requests. *)
 
+module Config = Config
+(** Configure and override the behaviour of ReWeb and applications built
+    with it. *)
+
 module Cookies = Cookies
 
 module Form = Form

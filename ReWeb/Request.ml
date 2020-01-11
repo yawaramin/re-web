@@ -43,7 +43,7 @@ module type S = sig
   val body_string : ?buf_size:int -> unit t -> string Lwt.t
   (** [body_string(?buf_size, request)] returns the request body
       converted into a string, internally using a buffer of size
-      [buf_size] with a default of Lwt's default buffer size. *)
+      [buf_size] with a default configured by {!ReWeb.Config.S.buf_size}. *)
 
   val context : 'ctx t -> 'ctx
 
@@ -73,7 +73,7 @@ end
 
 module H = Httpaf
 
-module Make(B : BODY)(R : REQD with type 'rw Body.t = 'rw B.t) = struct
+module Make(Config : Config.S)(B : BODY)(R : REQD with type 'rw Body.t = 'rw B.t) = struct
   module Reqd = R
 
   type 'ctx t = {
@@ -97,7 +97,7 @@ module Make(B : BODY)(R : REQD with type 'rw Body.t = 'rw B.t) = struct
     B.schedule_read request_body ~on_eof ~on_read;
     Body.of_stream stream
 
-  let body_string ?(buf_size=Lwt_io.default_buffer_size ()) request =
+  let body_string ?(buf_size=Config.buf_size) request =
     let request_body = Reqd.request_body request.reqd in
     let body, set_body = Lwt.wait () in
     let buffer = Buffer.create buf_size in

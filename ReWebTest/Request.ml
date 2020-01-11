@@ -30,7 +30,7 @@ module Reqd = struct
   let request_body = snd
 end
 
-module Request = ReWeb__Request.Make(ReqdBody)(Reqd)
+module Request = ReWeb__Request.Make(ReWeb.Config.Default)(ReqdBody)(Reqd)
 
 let iovec string =
   let off = 0 in

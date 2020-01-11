@@ -14,7 +14,11 @@ module type S = sig
     ('ctx, 'ctx, [Response.http | Response.websocket]) t
   (** [access_control_allow_origin(origin)] adds an
       {{: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Origin} Access-Control-Allow-Origin}
-      header with the given [origin]. *)
+      header with the given [origin].
+
+      {i Note} that it's upto you to pass in a well-formed origin
+      string. The [Header.AccessControlAllowOrigin] module does not
+      validate the origin string. *)
 
   val basic_auth : ('ctx1, < username : string; password : string; prev : 'ctx1 >, _ Response.t) t
   (** [basic_auth] decodes and stores the login credentials sent with
