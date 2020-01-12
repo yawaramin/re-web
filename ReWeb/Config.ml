@@ -1,13 +1,16 @@
 (** You can use and override this configuration by setting the values of
     environment variables with names derived from the names in the [S]
     module type below by prefixing [REWEB__]. For example,
-    [REWEB__buf_size].
+    [REWEB__buf_size]. You can set up your own configuration by using
+    the functions below.
 
-    Or, you can build a new config module that
-    conforms to the [S] signature either by [include]ing the [Default]
-    module and shadowing its values as appropriate, or by creating a new
-    module from scratch. Then you would pass in this config module to
-    those functors in ReWeb which accept a config, like {!ReWeb__Request.Make}. *)
+    Another technique to customize configuration is creating a custom
+    config module. However that is primarily intended for testing and is
+    covered in the manual: {!Manual.Ch06_Configuration}.
+
+    You can also create a configuration module in your own application
+    that reads values from the system environment, by using the
+    (type-safe) functions below. *)
 
 let string name = Sys.getenv_opt @@ "REWEB__" ^ name
 (** [string(name)] gets a value from the system environment variable
@@ -16,11 +19,9 @@ let string name = Sys.getenv_opt @@ "REWEB__" ^ name
 
 let bool name = Option.bind (string name) bool_of_string_opt
 
-let char_of_string_opt = function
+let char name = Option.bind (string name) @@ function
   | "" -> None
   | string -> Some (String.unsafe_get string 0)
-
-let char name = Option.bind (string name) char_of_string_opt
 (** [char(name)] gets the first character of the value of the system
     environment variable named [REWEB__name]. *)
 

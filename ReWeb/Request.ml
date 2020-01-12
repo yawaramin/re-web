@@ -19,6 +19,7 @@ end
 (** This interface abstracts away the Httpaf request descriptor. *)
 
 module type S = sig
+  module Config : Config.S
   module Reqd : REQD
 
   type 'ctx t = {
@@ -73,7 +74,11 @@ end
 
 module H = Httpaf
 
-module Make(Config : Config.S)(B : BODY)(R : REQD with type 'rw Body.t = 'rw B.t) = struct
+module Make
+  (C : Config.S)
+  (B : BODY)
+  (R : REQD with type 'rw Body.t = 'rw B.t) = struct
+  module Config = C
   module Reqd = R
 
   type 'ctx t = {

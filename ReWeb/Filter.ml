@@ -1,4 +1,5 @@
 module type S = sig
+  module Config : Config.S
   module Service : Service.S
 
   type ('ctx1, 'ctx2, 'resp) t =
@@ -97,6 +98,7 @@ module Make(R : Request.S) : S
   with type ('fd, 'io) Service.Request.Reqd.t = ('fd, 'io) R.Reqd.t
   and type 'ctx Service.Request.t = 'ctx R.t = struct
   module Service = Service.Make(R)
+  module Config = Service.Config
 
   type ('ctx1, 'ctx2, 'resp) t =
     ('ctx2, 'resp) Service.t -> ('ctx1, 'resp) Service.t

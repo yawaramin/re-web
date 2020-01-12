@@ -1,4 +1,5 @@
 module type S = sig
+  module Config : Config.S
   module Request : Request.S
 
   type ('ctx, 'resp) t = 'ctx Request.t -> 'resp Lwt.t
@@ -14,6 +15,8 @@ end
 
 module Make(R : Request.S) = struct
   module Request = R
+  module Config = Request.Config
+
   type ('ctx, 'resp) t = 'ctx Request.t -> 'resp Lwt.t
   type 'ctx all = ('ctx, [Response.http | Response.websocket]) t
 end

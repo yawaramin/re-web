@@ -20,3 +20,6 @@ module Ch04_Responses = Ch04_Responses
 module Ch05_Filters = Ch05_Filters
 (** Transforming requests and responses in the pipeline. *)
 
+module Ch06_Configuration = Ch06_Configuration
+(** How to configure ReWeb. *)
+
