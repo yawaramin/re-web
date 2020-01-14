@@ -38,7 +38,7 @@ let body (`HTTP (_, body)) = body
 
 let cookies response = "set-cookie"
   |> H.Headers.get_multi (get_headers response)
-  |> List.filter_map Cookie.of_header
+  |> List.filter_map Header.SetCookie.of_header
 
 let header name response = H.Headers.get (get_headers response) name
 
@@ -49,7 +49,7 @@ let of_http ~status ~headers body =
   `HTTP (H.Response.create ~headers:(H.Headers.of_list headers) status, body)
 
 let make_headers ?(headers=[]) ?(cookies=[]) ?content_length content_type =
-  let cookie_headers = List.map Cookie.to_header cookies in
+  let cookie_headers = List.map Header.SetCookie.to_header cookies in
   let headers = headers @ cookie_headers @ [
     "connection", "close";
     "content-type", content_type;

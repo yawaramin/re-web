@@ -14,10 +14,10 @@ module Config = Config
 (** Configure and override the behaviour of ReWeb and applications built
     with it. *)
 
-module Cookie = Cookie
-
 module Form = Form
 (** Encode and decode web forms to/from specified types. *)
+
+module Header = Header
 
 module Response = Response
 (** Send responses. *)

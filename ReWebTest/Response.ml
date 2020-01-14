@@ -52,8 +52,11 @@ let tests = "Response", [
 
   test_case "of_binary - merge headers and cookies" `Quick begin fun () ->
     let value = "1" in
-    let cookie =
-      ReWeb.Cookie.make ~secure:false ~http_only:false ~name:"y" "2"
+    let cookie = ReWeb.Header.SetCookie.make
+      ~secure:false
+      ~http_only:false
+      ~name:"y"
+      "2"
     in
     let response =
       of_binary ~headers:[name, value] ~cookies:[cookie] ""
