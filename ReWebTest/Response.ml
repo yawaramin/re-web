@@ -52,10 +52,15 @@ let tests = "Response", [
 
   test_case "of_binary - merge headers and cookies" `Quick begin fun () ->
     let value = "1" in
-    let response = of_binary ~headers:[name, value] ~cookies:["y", "2"] "" in
-
+    let cookie =
+      ReWeb.Cookie.make ~secure:false ~http_only:false ~name:"y" "2"
+    in
+    let response =
+      of_binary ~headers:[name, value] ~cookies:[cookie] ""
+    in
     check option_string "" (Some value) @@ header name response;
-    check option_string "" (Some "y=2") @@ header "set-cookie" response
+    check option_string "" (Some "y=2; SameSite=Lax")
+      @@ header "set-cookie" response
   end;
 
   test_case "of_redirect - build redirect response" `Quick begin fun () ->

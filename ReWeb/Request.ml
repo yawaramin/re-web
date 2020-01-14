@@ -48,7 +48,7 @@ module type S = sig
 
   val context : 'ctx t -> 'ctx
 
-  val cookies : _ t -> Cookies.t
+  val cookies : _ t -> Cookie.t list
 
   val header : string -> _ t -> string option
   (** [header(name, request)] gets the last value corresponding to the
@@ -128,7 +128,7 @@ module Make
 
   let cookies request = request
     |> headers "cookie"
-    |> Cookies.of_headers
+    |> List.filter_map Cookie.of_header
 
   let make query reqd = { ctx = (); query; reqd }
   let meth { reqd; _ } = (Reqd.request reqd).H.Request.meth

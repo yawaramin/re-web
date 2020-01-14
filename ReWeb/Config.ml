@@ -29,12 +29,18 @@ let float name = Option.bind (string name) float_of_string_opt
 let int name = Option.bind (string name) int_of_string_opt
 
 module type S = sig
+  val secure_cookies : bool
+  (** Whether to use secure i.e. HTTPS-only cookies. *)
+
   val buf_size : int
   (** Buffer size for internal string/bigstring handling. *)
 end
 (** The known ReWeb configuration settings. *)
 
 module Default : S = struct
+  let secure_cookies =
+    "cookie__secure" |> bool |> Option.value ~default:true
+
   let buf_size = "buf_size"
     |> int
     |> Option.value ~default:(Lwt_io.default_buffer_size ())

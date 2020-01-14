@@ -52,7 +52,7 @@ val add_headers_multi :
 
 val body : [< http] -> Body.t
 
-val cookies : [< http | websocket] -> Cookies.t
+val cookies : [< http | websocket] -> Cookie.t list
 
 val header : string -> [< http | websocket] -> string option
 (** [header(name, request)] gets the last value corresponding to the
@@ -66,7 +66,7 @@ val of_binary :
   ?status:status ->
   ?content_type:string ->
   ?headers:headers ->
-  ?cookies:Cookies.t ->
+  ?cookies:Cookie.t list ->
   string ->
   [> http]
 
@@ -74,7 +74,7 @@ val of_file :
   ?status:status ->
   ?content_type:string ->
   ?headers:headers ->
-  ?cookies:Cookies.t ->
+  ?cookies:Cookie.t list ->
   string ->
   [> http] Lwt.t
 (** [of_file(?status, ?content_type, ?headers, ?cookies, file_name)]
@@ -91,7 +91,7 @@ val of_file :
 val of_html :
   ?status:status ->
   ?headers:headers ->
-  ?cookies:Cookies.t ->
+  ?cookies:Cookie.t list ->
   string ->
   [> http]
 
@@ -106,7 +106,7 @@ val of_http :
 val of_json :
   ?status:status ->
   ?headers:headers ->
-  ?cookies:Cookies.t ->
+  ?cookies:Cookie.t list ->
   Ezjsonm.t ->
   [> http]
 
@@ -123,7 +123,7 @@ val of_redirect :
 val of_status :
   ?content_type:[`text | `html] ->
   ?headers:headers ->
-  ?cookies:Cookies.t ->
+  ?cookies:Cookie.t list ->
   ?message:string ->
   status ->
   [> http]
@@ -135,7 +135,7 @@ val of_status :
 val of_text :
   ?status:status ->
   ?headers:headers ->
-  ?cookies:Cookies.t ->
+  ?cookies:Cookie.t list ->
   string ->
   [> http]
 
@@ -143,7 +143,7 @@ val of_view :
   ?status:status ->
   ?content_type:string ->
   ?headers:headers ->
-  ?cookies:Cookies.t ->
+  ?cookies:Cookie.t list ->
   ((string -> unit) -> unit) ->
   [> http]
 (** [of_view(?status, ?content_type, ?headers, ?cookies, view)] responds
