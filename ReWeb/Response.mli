@@ -26,6 +26,20 @@ type 'resp t = [> http | websocket] as 'resp
     functions below work with either HTTP or WebSocket responses, and
     some with only one or the other. This is enforced at the type level. *)
 
+val add_cookie :
+  Header.SetCookie.t ->
+  [< http | websocket] ->
+  _ t
+(** [add_cookie(cookie, response)] returns a response with a cookie
+    [cookie] added to the original [response]. *)
+
+val add_cookies :
+  Header.SetCookie.t list ->
+  [< http | websocket] ->
+  _ t
+(** [add_cookies(cookies, response)] returns a response with the
+    [cookies] added to the original [response]. *)
+
 val add_header :
   ?replace:bool ->
   name:string ->
@@ -34,9 +48,8 @@ val add_header :
   _ t
 (** [add_header(?replace, ~name, ~value, response)] returns a response
     with a header [name] with value [value] added to the original
-    [response]. If [response] already contains the header [name], then
-    its value is replaced only if [replace] is [true], which is the
-    default. *)
+    [response]. If the response already contains the [header], then it
+    is replaced only if [replace] is [true], which is the default. *)
 
 val add_headers : headers -> [< http | websocket] -> _ t
 (** [add_headers(headers, response)] returns a response with the

@@ -16,7 +16,7 @@ let s = "SetCookie", [
       ~same_site:Strict
       ~name:cookie_name
     |> value
-    |> check string "" "c=0; Max-Age=0; Secure; HttpOnly; Domain=localhost; Path=/api; SameSite=Strict"
+    |> check string "" "0; Max-Age=0; Secure; HttpOnly; Domain=localhost; Path=/api; SameSite=Strict"
   end;
 
   test_case "make - omits directives" `Quick begin fun () ->
@@ -27,7 +27,7 @@ let s = "SetCookie", [
       ~same_site:Strict
       ~name:cookie_name
     |> value
-    |> check string "" "c=0; HttpOnly; SameSite=Strict"
+    |> check string "" "0; HttpOnly; SameSite=Strict"
   end;
 
   test_case "of_header - parses header value into cookie" `Quick begin fun () ->
@@ -40,6 +40,16 @@ let s = "SetCookie", [
     let cookie = of_header cookie_name in
     check option_string "name" None @@ Option.map name cookie;
     check option_string "value" None @@ Option.map value cookie
+  end;
+
+  test_case "to_header" `Quick begin fun () ->
+    "0"
+    |> make ~name:cookie_name
+    |> to_header
+    |> check
+      (pair string string)
+      ""
+      ("set-cookie", "c=0; Secure; HttpOnly; SameSite=Lax")
   end;
 ]
 

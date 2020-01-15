@@ -5,6 +5,34 @@ let name = "x"
 let option_string = option string
 
 let s = "Response", [
+  test_case "add_cookie" `Quick begin fun () ->
+    ""
+    |> of_binary
+    |> add_cookie @@ Header.SetCookie.make ~name "0"
+    |> cookies
+    |> List.map Header.SetCookie.to_header
+    |> check (list (pair string string)) "" @@ [
+      "set-cookie", "x=0; Secure; HttpOnly; SameSite=Lax"
+    ]
+  end;
+
+  test_case "add_cookies" `Quick begin fun () ->
+    let cookies_to_add = Header.SetCookie.[
+      make ~name:"x" "0";
+      make ~name:"y" "1";
+    ]
+    in
+    ""
+    |> of_binary
+    |> add_cookies cookies_to_add
+    |> cookies
+    |> List.map Header.SetCookie.to_header
+    |> check (list (pair string string)) "" @@ [
+      "set-cookie", "x=0; Secure; HttpOnly; SameSite=Lax";
+      "set-cookie", "y=1; Secure; HttpOnly; SameSite=Lax";
+    ]
+  end;
+
   test_case "add_header - replace" `Quick begin fun () ->
     let value = "2" in
     ""

@@ -26,6 +26,10 @@ let add_header ?(replace=true) ~name ~value response =
   in
   set_headers (add (get_headers response) name value) response
 
+let add_cookie cookie =
+  let (name, value) = Header.SetCookie.to_header cookie in
+  add_header ~replace:false ~name ~value
+
 let add_headers headers response = set_headers
   (H.Headers.add_list (get_headers response) headers)
   response
@@ -33,6 +37,13 @@ let add_headers headers response = set_headers
 let add_headers_multi headers_multi response = set_headers
   (H.Headers.add_multi (get_headers response) headers_multi)
   response
+
+let add_cookies cookies = add_headers_multi [
+  "set-cookie",
+  List.map
+    (fun cookie -> cookie |> Header.SetCookie.to_header |> snd)
+    cookies
+]
 
 let body (`HTTP (_, body)) = body
 

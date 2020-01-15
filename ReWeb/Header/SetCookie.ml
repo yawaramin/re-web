@@ -20,10 +20,8 @@ let make
     | Strict -> "Strict"
     | Lax -> "Lax"
   in
-  "set-cookie",
-  name
-  ^ "="
-  ^ value
+  name,
+  value
   ^ int ~name:"Max-Age" max_age
   ^ bool ~name:"Secure" secure
   ^ bool ~name:"HttpOnly" http_only
@@ -33,11 +31,11 @@ let make
   ^ same_site
 
 let name = fst
-let to_header cookie = cookie
+let to_header (name, value) = "set-cookie", name ^ "=" ^ value
 
 let of_header value = match String.split_on_char '=' value with
-  | [name; value] -> Some (name, value)
-  | _ -> None
+  | name :: value -> Some (name, String.concat "=" value)
+  | [] -> None
 
 let value = snd
 
