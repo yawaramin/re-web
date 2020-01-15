@@ -18,6 +18,7 @@ module Form = Form
 (** Encode and decode web forms to/from specified types. *)
 
 module Header = Header
+(** Create correct response headers. *)
 
 module Response = Response
 (** Send responses. *)
