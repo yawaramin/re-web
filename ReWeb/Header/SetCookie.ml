@@ -34,8 +34,9 @@ let name = fst
 let to_header (name, value) = "set-cookie", name ^ "=" ^ value
 
 let of_header value = match String.split_on_char '=' value with
+  | []
+  | [_] -> Option.None
   | name :: value -> Some (name, String.concat "=" value)
-  | [] -> None
 
 let value = snd
 
