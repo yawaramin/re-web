@@ -53,7 +53,7 @@ let to_string { H.IOVec.buffer; off; len } =
 open Alcotest
 open Alcotest_lwt
 
-let tests = "Request", [
+let s = "Request", [
   test_case "body - empty" `Quick begin fun _ () ->
     [||]
     |> request 

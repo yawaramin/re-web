@@ -4,7 +4,7 @@ open ReWeb.Response
 let name = "x"
 let option_string = option string
 
-let tests = "Response", [
+let s = "Response", [
   test_case "add_header - replace" `Quick begin fun () ->
     let value = "2" in
     ""

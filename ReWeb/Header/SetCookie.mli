@@ -7,13 +7,6 @@ type same_site = None | Strict | Lax
 type t
 (** Set-Cookie header. *)
 
-val name : t -> string
-(** [name(cookie)] gets the cookie name. *)
-
-val of_header : string -> t option
-(** [of_header(header)] tries to parse the [header] string into a
-    cookie. *)
-
 val make :
   ?max_age:int ->
   ?secure:bool ->
@@ -30,7 +23,15 @@ val make :
     [secure] defaults to [true] but can be overridden here or at the
     config level.
 
+    [http_only] defaults to [true] but can be overridden here.
+
     [same_site] defaults to [Lax]. *)
+
+val name : t -> string
+(** [name(cookie)] gets the cookie name. *)
+
+val of_header : string -> t option
+(** [of_header(header)] tries to parse the [header] value into a cookie. *)
 
 val to_header : t -> string * string
 (** [to_header(cookie)] returns a [Set-Cookie] header setting the
