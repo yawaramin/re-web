@@ -1,7 +1,7 @@
 (** See {{: https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies}}
     for explanations of all the options below. *)
 
-type same_site = None | Strict | Lax
+type same_site = None | Strict | Lax (**)
 (** Cookie same-site policy. *)
 
 type t
@@ -18,7 +18,8 @@ val make :
   string ->
   t
 (** [make(?max_age, ?secure, ?http_only, ?domain, ?path, ?same_site, ~name, value)]
-    creates a cookie with the given options.
+    creates a cookie with the given options. Use this to create cookies
+    unless you need more control, in which case you can use [of_header].
 
     [secure] defaults to [true] but can be overridden here or at the
     config level.

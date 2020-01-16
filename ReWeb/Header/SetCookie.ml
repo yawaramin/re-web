@@ -1,11 +1,6 @@
 type same_site = None | Strict | Lax
 type t = string * string
 
-let bool ~name value = if value then "; " ^ name else ""
-let string ~name value =
-  Option.fold ~none:"" ~some:((^) ("; " ^ name ^ "=")) value
-let int ~name value = string ~name @@ Option.map string_of_int value
-
 let make
   ?max_age
   ?(secure=Config.Default.secure_cookies)
@@ -20,6 +15,7 @@ let make
     | Strict -> "Strict"
     | Lax -> "Lax"
   in
+  let open Directive in
   name,
   value
   ^ int ~name:"Max-Age" max_age

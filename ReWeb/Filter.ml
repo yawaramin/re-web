@@ -64,6 +64,12 @@ module type S = sig
   (** [cache_control(policy)] is a filter that applies the caching
       [policy] policy to the HTTP response. *)
 
+  val hsts :
+    Header.StrictTransportSecurity.t ->
+    ('ctx, 'ctx, [Response.http | Response.websocket]) t
+  (** [hsts(value)] is a filter that applies the HTTP Strict Transport
+      Security header to the response. *)
+
   val multipart_form :
     typ:('ctor, 'ty) Form.t ->
     (filename:string -> string -> string) ->
@@ -188,6 +194,12 @@ module Make(R : Request.S) : S
     |> Lwt.map @@ Response.add_header
       ~name:"cache-control"
       ~value:(Header.CacheControl.to_string policy)
+
+  let hsts value next request =
+    let name, value = Header.StrictTransportSecurity.to_header value in
+    request
+    |> next
+    |> Lwt.map @@ Response.add_header ~name ~value
 
   let multipart_ct_length = 30
 
