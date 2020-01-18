@@ -126,13 +126,19 @@ module Make
     let { H.Request.headers; _ } = Reqd.request reqd in
     H.Headers.get_multi headers name
 
-  let cookie_of_header value = match String.split_on_char '=' value with
+  let parse_cookie string =
+    match string |> String.trim |> String.split_on_char '=' with
     | [name; value] -> Some (name, value)
     | _ -> None
 
+  let cookie_of_header value = value
+    |> String.split_on_char ';'
+    |> List.filter_map parse_cookie
+
   let cookies request = request
     |> headers "cookie"
-    |> List.filter_map cookie_of_header
+    |> List.map cookie_of_header
+    |> List.flatten
 
   let make query reqd = { ctx = (); query; reqd }
   let meth { reqd; _ } = (Reqd.request reqd).H.Request.meth

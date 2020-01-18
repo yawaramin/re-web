@@ -44,17 +44,19 @@ let body strings = {
   curr = None;
 }
 
-let request body_strings =
-  Request.make "" (H.Request.create `GET "", body body_strings)
+let request ?(headers=[]) body_strings =
+  let headers = H.Headers.of_list headers in
+  Request.make "" (H.Request.create ~headers `GET "", body body_strings)
 
 let to_string { H.IOVec.buffer; off; len } =
   Bigstringaf.substring ~off ~len buffer
 
 open Alcotest
-open Alcotest_lwt
+
+let cookies = list (pair string string)
 
 let s = "Request", [
-  test_case "body - empty" `Quick begin fun _ () ->
+  Alcotest_lwt.test_case "body - empty" `Quick begin fun _ () ->
     [||]
     |> request 
     |> Request.body
@@ -63,7 +65,7 @@ let s = "Request", [
     |> Lwt.map @@ check bool "" true
   end;
 
-  test_case "body - single chunk" `Quick begin fun _ () ->
+  Alcotest_lwt.test_case "body - single chunk" `Quick begin fun _ () ->
     let value = "a" in
     [|value|]
     |> request
@@ -74,7 +76,7 @@ let s = "Request", [
       values |> List.map to_string |> check (list string) "" [value]
   end;
 
-  test_case "body - multiple chunks" `Quick begin fun _ () ->
+  Alcotest_lwt.test_case "body - multiple chunks" `Quick begin fun _ () ->
     [|"a"; "b"; "c"|]
     |> request
     |> Request.body
@@ -86,14 +88,14 @@ let s = "Request", [
       |> check (list string) "" ["a"; "b"; "c"]
   end;
 
-  test_case "body_string - empty" `Quick begin fun _ () ->
+  Alcotest_lwt.test_case "body_string - empty" `Quick begin fun _ () ->
     [||]
     |> request
     |> Request.body_string
     |> Lwt.map @@ check string "" ""
   end;
 
-  test_case "body_string - single chunk" `Quick begin fun _ () ->
+  Alcotest_lwt.test_case "body_string - single chunk" `Quick begin fun _ () ->
     let value = "a" in
     [|value|]
     |> request
@@ -101,11 +103,35 @@ let s = "Request", [
     |> Lwt.map @@ check string "" value
   end;
 
-  test_case "body_string - multiple chunks" `Quick begin fun _ () ->
+  Alcotest_lwt.test_case "body_string - multiple chunks" `Quick begin fun _ () ->
     [|"a"; "b"|]
     |> request
     |> Request.body_string
     |> Lwt.map @@ check string "" "ab"
+  end;
+
+  test_case "cookies - single" `Quick begin fun () ->
+    let session = "session" in
+    let value = "session cookie value" in
+    [||]
+    |> request ~headers:["cookie", session ^ "=" ^ value]
+    |> Request.cookies
+    |> List.assoc_opt session
+    |> check (option string) "" @@ Some value
+  end;
+
+  test_case "cookies - multiple" `Quick begin fun () ->
+    [||]
+    |> request ~headers:["cookie", "a=b; c=d"]
+    |> Request.cookies
+    |> check cookies "" ["a", "b"; "c", "d"]
+  end;
+
+  test_case "cookies - multiple headers" `Quick begin fun () ->
+    [||]
+    |> request ~headers:["cookie", "a=b"; "cookie", "c=d; e=f"]
+    |> Request.cookies
+    |> check cookies "" ["a", "b"; "c", "d"; "e", "f"]
   end;
 ]
 
