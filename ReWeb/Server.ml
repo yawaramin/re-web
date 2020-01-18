@@ -136,7 +136,6 @@ let error_handler _ ?request:_ error handle =
   in
   let body = handle H.Headers.empty in
   H.Body.write_string body message;
-
   H.Body.close_writer body
 
 let serve ~port server =
@@ -167,8 +166,10 @@ let serve ~port server =
       | `WebSocket (headers, handler) ->
         print_string " ";
         client_addr |> string_of_unix_addr |> print_endline;
-
-        websocket_upgrader ?headers reqd client_addr handler
+        begin
+          try websocket_upgrader ?headers reqd client_addr handler with
+          | exn -> Reqd.report_exn reqd exn
+        end
     in
     let meth, path, query = reqd |> H.Reqd.request |> parse_route in
     let response = reqd |> Request.make query |> server (meth, path) in
