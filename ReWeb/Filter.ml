@@ -10,17 +10,6 @@ module type S = sig
 
       Filters can be composed using function composition. *)
 
-  val access_control_allow_origin :
-    Header.AccessControlAllowOrigin.t ->
-    ('ctx, 'ctx, [Response.http | Response.websocket]) t
-  (** [access_control_allow_origin(origin)] adds an
-      {{: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Origin} Access-Control-Allow-Origin}
-      header with the given [origin].
-
-      {i Note} that it's upto you to pass in a well-formed origin
-      string. The [Header.AccessControlAllowOrigin] module does not
-      validate the origin string. *)
-
   val basic_auth : ('ctx1, < username : string; password : string; prev : 'ctx1 >, _ Response.t) t
   (** [basic_auth] decodes and stores the login credentials sent with
       the [Authorization] header or returns a 401 Unauthorized error if
@@ -63,6 +52,17 @@ module type S = sig
     ('ctx, 'ctx, [Response.http | Response.websocket]) t
   (** [cache_control(policy)] is a filter that applies the caching
       [policy] policy to the HTTP response. *)
+
+  val cors :
+    Header.AccessControlAllowOrigin.t ->
+    ('ctx, 'ctx, [Response.http | Response.websocket]) t
+  (** [cors(origin)] adds an
+      {{: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Origin} Access-Control-Allow-Origin}
+      header with the given [origin].
+
+      {i Note} that it's upto you to pass in a well-formed origin
+      string. The [Header.AccessControlAllowOrigin] module does not
+      validate the origin string. *)
 
   val hsts :
     Header.StrictTransportSecurity.t ->
@@ -121,12 +121,6 @@ module Make(R : Request.S) : S
     |> Lwt.return
 
   let unauthorized = `Unauthorized |> Response.of_status |> Lwt.return
-
-  let access_control_allow_origin origin next request = request
-    |> next
-    |> Lwt.map @@ Response.add_header
-      ~name:"access-control-allow-origin"
-      ~value:(Header.AccessControlAllowOrigin.to_string origin)
 
   let basic_auth next request = match get_auth request with
     | Some ("Basic", credentials) ->
@@ -194,6 +188,13 @@ module Make(R : Request.S) : S
     |> Lwt.map @@ Response.add_header
       ~name:"cache-control"
       ~value:(Header.CacheControl.to_string policy)
+
+  let cors origin next request = request
+    |> next
+    |> Lwt.map @@ Response.add_headers [
+      Header.AccessControlAllowOrigin.to_header origin;
+      "vary", "Origin";
+    ]
 
   let hsts value next request =
     let name, value = Header.StrictTransportSecurity.to_header value in

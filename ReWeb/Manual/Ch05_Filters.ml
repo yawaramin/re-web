@@ -279,13 +279,14 @@
     {2 CORS protection}
 
     This filter takes any context and outputs the same context, with the
-    [Access-Control-Allow-Origin] header added to the response:
+    [Access-Control-Allow-Origin] and [Vary] headers correctly added to
+    the response:
 
     {[// Equivalent to '*':
-      access_control_allow_origin(Header.AccessControlAllowOrigin.All) @@ service
+      cors(Header.AccessControlAllowOrigin.All) @@ service
 
       // A specific origin:
-      access_control_allow_origin(
+      cors(
         Header.AccessControlAllowOrigin.One("http://localhost:8080")
       ) @@
       service]}

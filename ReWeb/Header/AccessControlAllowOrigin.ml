@@ -1,6 +1,6 @@
 type t = All | One of string
 
-let to_string = function
+let to_header t = "access-control-allow-origin", match t with
   | All -> "*"
   | One origin -> origin
 
