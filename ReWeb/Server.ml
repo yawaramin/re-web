@@ -138,6 +138,17 @@ let error_handler _ ?request:_ error handle =
   H.Body.write_string body message;
   H.Body.close_writer body
 
+let two_years = 2 * 365 * 24 * 60 * 60
+let id x = x
+
+let filter server route =
+  begin
+    if Config.Default.Filters.hsts
+    then two_years |> Header.StrictTransportSecurity.make |> Filter.hsts
+    else id
+  end
+  @@ server route
+
 let serve ~port server =
   let request_handler client_addr reqd =
     let send = function
@@ -172,6 +183,7 @@ let serve ~port server =
         end
     in
     let meth, path, query = reqd |> H.Reqd.request |> parse_route in
+    let server = filter server in
     let response = reqd |> Request.make query |> server (meth, path) in
     Lwt.on_success response send;
   in

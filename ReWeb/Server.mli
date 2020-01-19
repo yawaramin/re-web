@@ -64,7 +64,7 @@ val resource :
 
 val serve :
   ?port:int ->
-  (unit, [< Response.http | Response.websocket]) t ->
+  (unit, [Response.http | Response.websocket]) t ->
   unit
 (** [serve(?port, server)] starts the top-level [server] listening on
     [port]. Top-level servers must have no context i.e. their context is

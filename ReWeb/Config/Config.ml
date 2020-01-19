@@ -29,8 +29,13 @@ let float name = Option.bind (string name) float_of_string_opt
 let int name = Option.bind (string name) int_of_string_opt
 
 module type S = sig
+  module Filters : sig
+    val hsts : bool
+    (** Whether to turn on HSTS for all responses--default true. *)
+  end
+
   val secure_cookies : bool
-  (** Whether to use secure i.e. HTTPS-only cookies. *)
+  (** Whether to use secure i.e. HTTPS-only cookies--default true. *)
 
   val buf_size : int
   (** Buffer size for internal string/bigstring handling. *)
@@ -38,6 +43,10 @@ end
 (** The known ReWeb configuration settings. *)
 
 module Default : S = struct
+  module Filters = struct
+    let hsts = "filters__hsts" |> bool |> Option.value ~default:true
+  end
+
   let secure_cookies =
     "cookie__secure" |> bool |> Option.value ~default:true
 
