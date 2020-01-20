@@ -90,6 +90,28 @@ let make
   block_all_mixed_content;
 }
 
+let has_report_to = function
+  | Option.None
+  | Some [] -> false
+  | _ -> true
+
+let to_endpoint uri = {|{ "url": "|} ^ uri ^ {|" }|}
+let csp_endpoint = "csp-endpoint"
+
+let report_to_header directives = "report-to", match directives with
+  | { report_to = Option.None | Some []; _ } -> ""
+  | { report_to = Some uris; _ } ->
+    let endpoints = uris |> List.map to_endpoint |> String.concat ", " in
+    {|{
+  "group": "|}
+    ^ csp_endpoint
+    ^ {|",
+  "max_age": 10886400,
+  "endpoints": [|}
+    ^ endpoints
+    ^ {|]
+}|}
+
 let scheme_to_string = function
   | `HTTP -> "http:"
   | `HTTPS -> "https:"
@@ -182,6 +204,11 @@ let to_header ?(report_only=false) {
     | Some true -> "block-all-mixed-content"
     | _ -> "";
   ]
+  in
+  let directives =
+    if has_report_to report_to
+    then ("report-to " ^ csp_endpoint) :: directives
+    else directives
   in
   name,
   directives |> List.filter ((<>) "") |> String.concat "; "

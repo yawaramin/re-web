@@ -43,6 +43,8 @@ type t = private {
 }
 (** CSP header value data model. *)
 
+val has_report_to : string list option -> bool
+
 val make :
   ?child_src:src list ->
   ?connect_src:src list ->
@@ -70,6 +72,10 @@ val make :
   t
 (** [make(..., default_src)] is a content security policy consisting of
     the given options. *)
+
+val report_to_header : t -> string * string
+(** [report_to_string(directives)] is a valid [Report-To] header using
+    the [directives]. *)
 
 val to_header : ?report_only:bool -> t -> string * string
 (** [to_header(?report_only, directives)] is a either a

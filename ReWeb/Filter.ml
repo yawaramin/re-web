@@ -64,6 +64,10 @@ module type S = sig
       string. The [Header.AccessControlAllowOrigin] module does not
       validate the origin string. *)
 
+  val csp :
+    Header.ContentSecurityPolicy.t ->
+    ('ctx, 'ctx, [Response.http | Response.websocket]) t
+
   val hsts :
     Header.StrictTransportSecurity.t ->
     ('ctx, 'ctx, [Response.http | Response.websocket]) t
@@ -195,6 +199,18 @@ module Make(R : Request.S) : S
       Header.AccessControlAllowOrigin.to_header origin;
       "vary", "Origin";
     ]
+
+  let csp directives next request =
+    let open Header.ContentSecurityPolicy in
+    let headers = [to_header directives] in
+    let headers =
+      if has_report_to directives.report_to
+      then report_to_header directives :: headers
+      else headers
+    in
+    request
+    |> next
+    |> Lwt.map @@ Response.add_headers headers
 
   let hsts value next request =
     let name, value = Header.StrictTransportSecurity.to_header value in
