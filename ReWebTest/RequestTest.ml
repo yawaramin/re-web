@@ -55,7 +55,7 @@ open Alcotest
 
 let cookies = list (pair string string)
 
-let s = "Request", [
+let s = "ReWeb.Request", [
   Alcotest_lwt.test_case "body - empty" `Quick begin fun _ () ->
     [||]
     |> request 

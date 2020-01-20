@@ -4,7 +4,7 @@ open ReWeb.Header.SetCookie
 let cookie_name = "c"
 let option_string = option string
 
-let s = "SetCookie", [
+let s = "ReWeb.Header.SetCookie", [
   test_case "make - constructs all directives" `Quick begin fun () ->
     "0"
     |> make

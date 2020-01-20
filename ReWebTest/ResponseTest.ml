@@ -4,7 +4,7 @@ open ReWeb.Response
 let name = "x"
 let option_string = option string
 
-let s = "Response", [
+let s = "ReWeb.Response", [
   test_case "add_cookie" `Quick begin fun () ->
     ""
     |> of_binary

@@ -9,7 +9,7 @@ let form = make
   Field.[int "id"; "name" |> string |> ensure ((<>) "")]
   user
 
-let s = "Form", [
+let s = "ReWeb.Form", [
   test_case "decoder - decode correctly" `Quick begin fun () ->
     match decoder form "id=1&name=Bob" with
     | Ok { id; name } ->
