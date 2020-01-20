@@ -3,7 +3,7 @@ type t = string * string
 
 let make
   ?max_age
-  ?(secure=Config.Default.secure_cookies)
+  ?(secure=Config.Default.secure)
   ?(http_only=true)
   ?domain
   ?path

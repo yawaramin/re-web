@@ -34,8 +34,9 @@ module type S = sig
     (** Whether to turn on HSTS for all responses--default true. *)
   end
 
-  val secure_cookies : bool
-  (** Whether to use secure i.e. HTTPS-only cookies--default true. *)
+  val secure : bool
+  (** Whether to use HTTPS for various settings e.g. cookies, content
+      security policy, etc.--default true. *)
 
   val buf_size : int
   (** Buffer size for internal string/bigstring handling. *)
@@ -47,8 +48,7 @@ module Default : S = struct
     let hsts = "filters__hsts" |> bool |> Option.value ~default:true
   end
 
-  let secure_cookies =
-    "cookie__secure" |> bool |> Option.value ~default:true
+  let secure = "secure" |> bool |> Option.value ~default:true
 
   let buf_size = "buf_size"
     |> int
