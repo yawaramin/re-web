@@ -143,11 +143,18 @@ let id x = x
 
 let filter server route =
   begin
+    if Config.Default.Filters.csp
+    then [] |> Header.ContentSecurityPolicy.make |> Filter.csp
+    else id
+  end
+  @@
+  begin
     if Config.Default.Filters.hsts
     then two_years |> Header.StrictTransportSecurity.make |> Filter.hsts
     else id
   end
-  @@ server route
+  @@
+  server route
 
 let serve ~port server =
   let request_handler client_addr reqd =

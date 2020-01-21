@@ -67,6 +67,8 @@ module type S = sig
   val csp :
     Header.ContentSecurityPolicy.t ->
     ('ctx, 'ctx, [Response.http | Response.websocket]) t
+  (** [csp(directives)] is a filter that applies the
+      [Content-Security-Policy] header [directives] to the response. *)
 
   val hsts :
     Header.StrictTransportSecurity.t ->

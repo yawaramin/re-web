@@ -30,6 +30,10 @@ let int name = Option.bind (string name) int_of_string_opt
 
 module type S = sig
   module Filters : sig
+    val csp : bool
+    (** Whether to apply a default [Content-Security-Policy] header to
+        all responses--default true. *)
+
     val hsts : bool
     (** Whether to turn on HSTS for all responses--default true. *)
   end
@@ -45,6 +49,7 @@ end
 
 module Default : S = struct
   module Filters = struct
+    let csp = "filters__csp" |> bool |> Option.value ~default:true
     let hsts = "filters__hsts" |> bool |> Option.value ~default:true
   end
 
