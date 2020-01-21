@@ -62,7 +62,6 @@ let of_http ~status ~headers body =
 let make_headers ?(headers=[]) ?(cookies=[]) ?content_length content_type =
   let cookie_headers = List.map Header.SetCookie.to_header cookies in
   let headers = headers @ cookie_headers @ [
-    "connection", "close";
     "content-type", content_type;
     "server", "ReWeb";
   ]
@@ -70,7 +69,7 @@ let make_headers ?(headers=[]) ?(cookies=[]) ?content_length content_type =
   match content_length with
   | Some content_length ->
     ("content-length", string_of_int content_length) :: headers
-  | None -> headers
+  | None -> ("connection", "close") :: headers
 
 let of_binary
   ?(status=`OK)
