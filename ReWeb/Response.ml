@@ -57,13 +57,21 @@ let headers name response =
   H.Headers.get_multi (get_headers response) name
 
 let of_http ~status ~headers body =
-  `HTTP (H.Response.create ~headers:(H.Headers.of_list headers) status, body)
+  let headers = match body with
+    | Body.Chunks _ -> ("transfer-encoding", "chunked") :: headers
+    | _ -> headers
+  in
+  `HTTP (
+    H.Response.create ~headers:(H.Headers.of_list headers) status,
+    body
+  )
 
 let make_headers ?(headers=[]) ?(cookies=[]) ?content_length content_type =
   let cookie_headers = List.map Header.SetCookie.to_header cookies in
   let headers = headers @ cookie_headers @ [
     "content-type", content_type;
     "server", "ReWeb";
+    "x-content-type-options", "nosniff";
   ]
   in
   match content_length with

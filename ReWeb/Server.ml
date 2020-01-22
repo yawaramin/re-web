@@ -138,11 +138,6 @@ let error_handler _ ?request:_ error handle =
   H.Body.write_string body message;
   H.Body.close_writer body
 
-let add_header ~name ~value response = {
-  response with H.Response.headers =
-    H.Headers.add response.H.Response.headers name value;
-}
-
 let two_years = 2 * 365 * 24 * 60 * 60
 let id x = x
 
@@ -171,9 +166,6 @@ let serve ~port server =
         |> Printf.printf " %d %s\n%!" code;
 
         let send stream =
-          let resp =
-            add_header ~name:"transfer-encoding" ~value:"chunked" resp
-          in
           let writer = H.Reqd.respond_with_streaming reqd resp in
           let fully_written =
             Lwt_stream.iter (schedule_chunk writer) stream
