@@ -189,7 +189,7 @@
     complex example:
 
     {[let hello = request => {
-        let _: Ezjsonm.t = Request.context(request)#prev;
+        let _: Yojson.Safe.t = Request.context(request)#prev;
         "Hello, World!" |> Response.of_text |> Lwt.return;
       };
 
@@ -224,7 +224,7 @@
     write a router specifically for that scope:
 
     {[let getHeroes = request => {
-        let _: Ezjsonm.t = Request.context(request);
+        let _: Yojson.Safe.t = Request.context(request);
         "Heroes!" |> Response.of_text |> Lwt.return;
       };
 
@@ -260,17 +260,17 @@
     filters are written in a type-safe and composeable way. For example,
     the type signature of the {!ReWeb.Filter.body_json} filter:
 
-    {[val body_json : (unit, Ezjsonm.t, [> Response.http]) t]}
+    {[val body_json : (unit, Yojson.Safe.t, [> Response.http]) t]}
 
     If we compare the type parameters to their formal parameter names:
 
     - ['ctx1] = [unit]
-    - ['ctx2] = [Ezjsonm.t]
+    - ['ctx2] = [Yojson.Safe.t]
     - ['resp] = [[> Response.http]]
 
     This tells us that the filter starts with an 'input' context type of
     [unit] and transforms it into an 'output' context type of
-    [Ezjsonm.t] (i.e. a JSON document). And the third type parameter
+    [Yojson.Safe.t] (i.e. a JSON document). And the third type parameter
     says that the response type is HTTP (as opposed to a WebSocket).
 
     This means that this must be either first in the filter chain or
