@@ -6,7 +6,6 @@
     Config
     Header
     base64
-    ezjsonm
     httpaf
     httpaf-lwt-unix
     lwt.unix
@@ -14,5 +13,6 @@
     piaf
     uri
     websocketaf
-    websocketaf-lwt-unix))
+    websocketaf-lwt-unix
+    yojson))
 

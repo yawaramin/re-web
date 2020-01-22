@@ -47,10 +47,8 @@ let to_string = function
 let to_json body =
   let open Let.Lwt in
   let+ body_string = to_string body in
-  match Ezjsonm.from_string body_string with
+  match Yojson.Safe.from_string body_string with
   | body -> Ok body
-  | exception Ezjsonm.Parse_error (_, string) ->
+  | exception Yojson.Json_error string ->
     Error ("ReWeb.Body.to_json: " ^ string)
-  | exception Assert_failure (_, _, _) ->
-    Error "ReWeb.Filter.body_json: not a JSON document"
 

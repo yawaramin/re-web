@@ -120,7 +120,7 @@ val of_json :
   ?status:status ->
   ?headers:headers ->
   ?cookies:Header.SetCookie.t list ->
-  Ezjsonm.t ->
+  Yojson.Safe.t ->
   [> http]
 
 val of_redirect :

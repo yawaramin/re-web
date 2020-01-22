@@ -30,7 +30,6 @@
     "@esy-ocaml/reason": ">= 3.4.0 < 3.6.0",
     "@opam/base64": ">= 3.2.0 < 4.0.0",
     "@opam/dune": "< 2.0.0",
-    "@opam/ezjsonm": ">= 1.1.0 < 2.0.0",
     "@opam/httpaf": "*",
     "@opam/httpaf-lwt-unix": "*",
     "@opam/lwt": ">= 5.1.0 < 6.0.0",
@@ -39,7 +38,8 @@
     "@opam/piaf": "0.1.0",
     "@opam/uri": ">= 3.1.0 < 4.0.0",
     "@opam/websocketaf": "*",
-    "@opam/websocketaf-lwt-unix": "*"
+    "@opam/websocketaf-lwt-unix": "*",
+    "@opam/yojson": ">= 1.7.0 < 2.0.0"
   },
   "devDependencies": {
     "@opam/alcotest": ">= 0.8.5 < 1.0.0",

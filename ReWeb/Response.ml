@@ -97,7 +97,7 @@ let of_html ?(status=`OK) ?headers ?cookies =
   of_binary ~status ~content_type:"text/html" ?headers ?cookies
 
 let of_json ?(status=`OK) ?headers ?cookies body = body
-  |> Ezjsonm.to_string ~minify:true
+  |> Yojson.Safe.to_string
   |> of_binary ~status ~content_type:"application/json" ?headers ?cookies
 
 let get_content_type file_name = match Filename.extension file_name with

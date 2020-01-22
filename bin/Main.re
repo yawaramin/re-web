@@ -118,11 +118,11 @@ let getTodoTitle = (id, request) => {
   let%lwt response = getTodo(id, request);
   let%lwt json = response |> Response.body |> Body.to_json;
 
-  /* We are manually pattern-matching against the JSON body here.
-     In the future we'll use a JSON decoder shipped with ReWeb to do
-     that. */
+  /* We are manually pattern-matching against the JSON body here. You
+     can also use [ppx_deriving_yojson] to auto-derive JSON decoders
+     for your types. */
   switch (json) {
-  | Ok(`O(props)) =>
+  | Ok(`Assoc(props)) =>
     switch (List.assoc("title", props)) {
     | `String(title) => title |> Response.of_text |> Lwt.return
     | _

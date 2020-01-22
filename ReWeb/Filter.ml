@@ -27,15 +27,15 @@ module type S = sig
       the form fails to decode, it short-circuits and returns a 400 Bad
       Request. *)
 
-  val body_json : (unit, Ezjsonm.t, [> Response.http]) t
+  val body_json : (unit, Yojson.Safe.t, [> Response.http]) t
   (** [body_json] is a filter that transforms a 'root' service (i.e. one
       with [unit] context) into a service with a context containing the
       request body. If the request body fails to parse as valid JSON, it
       short-circuits and returns a 400 Bad Request. *)
 
   val body_json_decode :
-    (Ezjsonm.t -> ('ty, exn) result) ->
-    (Ezjsonm.t, 'ty, [> Response.http]) t
+    (Yojson.Safe.t -> ('ty, exn) result) ->
+    (Yojson.Safe.t, 'ty, [> Response.http]) t
   (** [body_json_decode(decoder)] is a filter that transforms a service
       with a parsed JSON structure in its context, to a service with a
       decoded value of type ['ty] in its context. If the request body
@@ -158,14 +158,12 @@ module Make(R : Request.S) : S
     | _ -> unauthorized
 
   let body_json next request =
+    let body = R.body request in
     let open Let.Lwt in
-    let* body = R.body_string request in
-    match Ezjsonm.from_string body with
-    | ctx -> next { request with ctx }
-    | exception Ezjsonm.Parse_error (_, string) ->
-      bad_request ("ReWeb.Filter.body_json: " ^ string)
-    | exception Assert_failure (_, _, _) ->
-      bad_request "ReWeb.Filter.body_json: not a JSON document"
+    let* json = Body.to_json body in
+    match json with
+    | Ok ctx -> next { request with ctx }
+    | Error string -> bad_request ("ReWeb.Filter.body_json: " ^ string)
 
   let body_json_decode decoder next request =
     match decoder request.R.ctx with
