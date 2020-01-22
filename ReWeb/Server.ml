@@ -158,41 +158,46 @@ let filter server route =
 
 let serve ~port server =
   let request_handler client_addr reqd =
-    let send = function
-      | `HTTP (resp, body) ->
-        let code = H.Status.to_code resp.H.Response.status in
-        client_addr
-        |> string_of_unix_addr
-        |> Printf.printf " %d %s\n%!" code;
+    let f () =
+      let send = function
+        | `HTTP (resp, body) ->
+          let code = H.Status.to_code resp.H.Response.status in
+          client_addr
+          |> string_of_unix_addr
+          |> Printf.printf " %d %s\n%!" code;
 
-        let send stream =
-          let writer = H.Reqd.respond_with_streaming reqd resp in
-          let fully_written =
-            Lwt_stream.iter (schedule_chunk writer) stream
+          let send stream =
+            let writer = H.Reqd.respond_with_streaming reqd resp in
+            let fully_written =
+              Lwt_stream.iter (schedule_chunk writer) stream
+            in
+            Lwt.on_success fully_written @@ fun _ ->
+              H.Body.close_writer writer
           in
-          Lwt.on_success fully_written @@ fun _ ->
-            H.Body.close_writer writer
-        in
-        begin match body with
-        | Body.Bigstring bigstring ->
-          H.Reqd.respond_with_bigstring reqd resp bigstring
-        | Body.Chunks stream -> send stream
-        | Body.Piaf body -> body |> to_stream |> send
-        | Body.String string ->
-          H.Reqd.respond_with_string reqd resp string
-        end
-      | `WebSocket (headers, handler) ->
-        print_string " ";
-        client_addr |> string_of_unix_addr |> print_endline;
-        begin
-          try websocket_upgrader ?headers reqd client_addr handler with
-          | exn -> Reqd.report_exn reqd exn
-        end
+          begin match body with
+          | Body.Bigstring bigstring ->
+            H.Reqd.respond_with_bigstring reqd resp bigstring
+          | Body.Chunks stream -> send stream
+          | Body.Piaf body -> body |> to_stream |> send
+          | Body.String string ->
+            H.Reqd.respond_with_string reqd resp string
+          end
+        | `WebSocket (headers, handler) ->
+          print_string " ";
+          client_addr |> string_of_unix_addr |> print_endline;
+          begin
+            try websocket_upgrader ?headers reqd client_addr handler with
+            | exn -> Reqd.report_exn reqd exn
+          end
+      in
+      let meth, path, query = reqd |> H.Reqd.request |> parse_route in
+      let server = filter server in
+      let response = reqd |> Request.make query |> server (meth, path) in
+      Lwt.on_success response send
     in
-    let meth, path, query = reqd |> H.Reqd.request |> parse_route in
-    let server = filter server in
-    let response = reqd |> Request.make query |> server (meth, path) in
-    Lwt.on_success response send;
+    match H.Reqd.try_with reqd f with
+    | Ok () -> ()
+    | Error exn -> H.Reqd.report_exn reqd exn
   in
   let conn_handler = Httpaf_lwt_unix.Server.create_connection_handler
     ~request_handler

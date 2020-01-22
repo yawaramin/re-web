@@ -35,7 +35,7 @@
     "@opam/lwt": ">= 5.1.0 < 6.0.0",
     "@opam/lwt_ppx": ">= 2.0.0 < 3.0.0",
     "@opam/multipart-form-data": "*",
-    "@opam/piaf": "0.1.0",
+    "@opam/piaf": "*",
     "@opam/uri": ">= 3.1.0 < 4.0.0",
     "@opam/websocketaf": "*",
     "@opam/websocketaf-lwt-unix": "*",
@@ -51,12 +51,12 @@
   },
   "resolutions": {
     "@opam/conf-libssl": "esy-packages/esy-openssl#648930f",
-    "@opam/httpaf": "anmonteiro/httpaf:httpaf.opam#90e7c87",
-    "@opam/httpaf-lwt": "anmonteiro/httpaf:httpaf-lwt.opam#90e7c87",
-    "@opam/httpaf-lwt-unix": "anmonteiro/httpaf:httpaf-lwt-unix.opam#90e7c87",
+    "@opam/httpaf": "anmonteiro/httpaf:httpaf.opam#014a7c4",
+    "@opam/httpaf-lwt": "anmonteiro/httpaf:httpaf-lwt.opam#014a7c4",
+    "@opam/httpaf-lwt-unix": "anmonteiro/httpaf:httpaf-lwt-unix.opam#014a7c4",
     "@opam/multipart-form-data": "cryptosense/multipart-form-data:multipart-form-data.opam#d49fd89",
     "@opam/piaf": {
-      "source": "anmonteiro/piaf:piaf.opam#172fcce",
+      "source": "anmonteiro/piaf:piaf.opam#3208cf1",
       "override": {
         "dependencies": {
           "@opam/ocaml-syntax-shims": null
@@ -64,12 +64,12 @@
       }
     },
     "@opam/ssl": "savonet/ocaml-ssl:ssl.opam#fbffa9b",
-    "@opam/websocketaf": "anmonteiro/websocketaf:websocketaf.opam#42673bd",
+    "@opam/websocketaf": "anmonteiro/websocketaf:websocketaf.opam#bf0acbf",
     "@opam/websocketaf-lwt-unix": {
-      "source": "anmonteiro/websocketaf:websocketaf-lwt-unix.opam#42673bd",
+      "source": "anmonteiro/websocketaf:websocketaf-lwt-unix.opam#bf0acbf",
       "override": {
         "dependencies": {
-          "@opam/websocketaf-lwt": "anmonteiro/websocketaf:websocketaf-lwt.opam#42673bd"
+          "@opam/websocketaf-lwt": "anmonteiro/websocketaf:websocketaf-lwt.opam#bf0acbf"
         }
       }
     }
