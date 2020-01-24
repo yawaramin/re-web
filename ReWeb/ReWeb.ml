@@ -7,6 +7,9 @@
 module Body = Body
 (** Handle request and response bodies. *)
 
+module Cache = Cache
+(** Concurrent safe caching. *)
+
 module Client = Client
 (** Make web requests. *)
 

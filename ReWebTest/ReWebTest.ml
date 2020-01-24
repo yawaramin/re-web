@@ -1,4 +1,5 @@
 let () = Alcotest.run "ReWebTest" [
+  CacheTest.s;
   FormTest.s;
   HeaderTest.ContentSecurityPolicyTest.s;
   HeaderTest.SetCookieTest.s;
