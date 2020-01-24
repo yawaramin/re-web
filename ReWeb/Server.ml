@@ -195,9 +195,8 @@ let serve ~port server =
       let response = reqd |> Request.make query |> server (meth, path) in
       Lwt.on_success response send
     in
-    match H.Reqd.try_with reqd f with
-    | Ok () -> ()
-    | Error exn -> H.Reqd.report_exn reqd exn
+    (* Will report error if fails *)
+    f |> H.Reqd.try_with reqd |> ignore
   in
   let conn_handler = Httpaf_lwt_unix.Server.create_connection_handler
     ~request_handler

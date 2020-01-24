@@ -85,5 +85,9 @@ val to_header : ?report_only:bool -> t -> string * string
 
     If [directives] just contains empty lists, [to_header] will output
     the [default-src 'self'] directive under the assumption that you
-    want some protection since you're trying to use CSP. *)
+    want some protection since you're trying to use CSP.
+
+    If [directives] contains a non-empty [report_to], will output both
+    [report-uri] and [report-to] directives to try to target browsers
+    that support either. *)
 

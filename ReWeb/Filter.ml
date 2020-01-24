@@ -34,7 +34,7 @@ module type S = sig
       short-circuits and returns a 400 Bad Request. *)
 
   val body_json_decode :
-    (Yojson.Safe.t -> ('ty, exn) result) ->
+    (Yojson.Safe.t -> ('ty, string) result) ->
     (Yojson.Safe.t, 'ty, [> Response.http]) t
   (** [body_json_decode(decoder)] is a filter that transforms a service
       with a parsed JSON structure in its context, to a service with a
@@ -168,7 +168,7 @@ module Make(R : Request.S) : S
   let body_json_decode decoder next request =
     match decoder request.R.ctx with
     | Ok ctx -> next { request with ctx }
-    | Error exn -> exn |> Printexc.to_string |> bad_request
+    | Error string -> bad_request string
 
   let body_string next request =
     let open Let.Lwt in

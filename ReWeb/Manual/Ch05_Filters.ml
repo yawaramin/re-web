@@ -291,6 +291,24 @@
       ) @@
       service]}
 
+    {2 Content Security Policy}
+
+    This filter takes any context and outputs the same context, with the
+    [Content-Security-Policy] header and optionally the [Report-To]
+    headers correctly added to the response:
+
+    {[csp(Header.ContentSecurityPolicy.make()) @@ service]}
+
+    See the {!ReWeb.Header.ContentSecurityPolicy} docs for details of
+    creating policies.
+
+    {2 HTTP Strict Transport Security}
+
+    This filter takes any context and outputs the same context, with the
+    [Strict-Transport-Security] header added to the response:
+
+    {[hsts(Header.StrictTransportSecurity.make(100_000)) @@ service]}
+
     {2 Basic authentication}
 
     This filter takes any context and outputs a context containing the
@@ -355,7 +373,11 @@
     of a custom type:
 
     {[let jsonToUser = json => ...;
-      body_json_decode(jsonToUser) @@ service]}
+      body_json_decode(user_of_yojson) @@ service]}
+
+    You can hand-write a decoder function or use
+    {{: https://github.com/ocaml-ppx/ppx_deriving_yojson} ppx_deriving_yojson}
+    to derive it from your type definition.
 
     {2 Get request body as a string}
 
