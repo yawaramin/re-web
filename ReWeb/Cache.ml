@@ -4,7 +4,12 @@ module type S = sig
   type 'a t
 
   val access : 'a t -> ('a Table.t -> 'b) -> 'b Lwt.t
+  val add : 'a t -> key:key -> 'a -> unit Lwt.t
+  val find_opt : 'a t -> key:key -> 'a option Lwt.t
   val make : unit -> 'a t
+  val mem : 'a t -> key:key -> bool Lwt.t
+  val remove : 'a t -> key:key -> unit Lwt.t
+  val reset : 'a t -> unit Lwt.t
 end
 
 module InMemory(Key : Hashtbl.SeededHashedType) = struct
@@ -17,6 +22,16 @@ module InMemory(Key : Hashtbl.SeededHashedType) = struct
 
   let access (table, lock) f = Lwt_mutex.with_lock lock @@ fun () ->
     table |> f |> Lwt.return
+
+  let add t ~key value = access t @@ fun table ->
+    Table.add table key value
+
+  let find_opt t ~key = access t @@ fun table ->
+    Table.find_opt table key
+
+  let mem t ~key = access t @@ fun table -> Table.mem table key
+  let remove t ~key = access t @@ fun table -> Table.remove table key
+  let reset t = access t Table.reset
 end
 
 module SimpleKey = struct
