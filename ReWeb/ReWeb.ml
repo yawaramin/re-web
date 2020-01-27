@@ -29,12 +29,16 @@ module Response = Response
 module Server = Server
 (** Create and serve endpoints. *)
 
-module Service = Server.Service
-(** Services model the request-response pipeline. *)
+module Topic = Topic
+(** Subscribe to messages from publishers, and publish messages for
+    subscribers. *)
+
+module Filter = Server.Filter
+(** Transform requests and responses in the pipeline. *)
 
 module Request = Server.Request
 (** Read requests. *)
 
-module Filter = Server.Filter
-(** Transform requests and responses in the pipeline. *)
+module Service = Server.Service
+(** Services model the request-response pipeline. *)
 

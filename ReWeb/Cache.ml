@@ -6,6 +6,7 @@ module type S = sig
   val access : 'a t -> ('a Table.t -> 'b) -> 'b Lwt.t
   val add : 'a t -> key:key -> 'a -> unit Lwt.t
   val find_opt : 'a t -> key:key -> 'a option Lwt.t
+  val iter : 'a t -> f:(key -> 'a -> unit) -> unit Lwt.t
   val make : unit -> 'a t
   val mem : 'a t -> key:key -> bool Lwt.t
   val remove : 'a t -> key:key -> unit Lwt.t
@@ -29,6 +30,7 @@ module InMemory(Key : Hashtbl.SeededHashedType) = struct
   let find_opt t ~key = access t @@ fun table ->
     Table.find_opt table key
 
+  let iter t ~f = access t @@ fun table -> Table.iter f table
   let mem t ~key = access t @@ fun table -> Table.mem table key
   let remove t ~key = access t @@ fun table -> Table.remove table key
   let reset t = access t Table.reset

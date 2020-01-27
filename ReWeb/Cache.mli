@@ -22,6 +22,7 @@ module type S = sig
 
   val add : 'a t -> key:key -> 'a -> unit Lwt.t
   val find_opt : 'a t -> key:key -> 'a option Lwt.t
+  val iter : 'a t -> f:(key -> 'a -> unit) -> unit Lwt.t
 
   val make : unit -> 'a t
   (** [make()] allocates a new cache value. *)
