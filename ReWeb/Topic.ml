@@ -20,13 +20,17 @@ module Make(Msg : sig type t end) = struct
     let+ () = Cache.add topic ~key:stream push in
     stream, topic
 
-  let unsubscribe (stream, topic) =
-    Cache.access topic begin fun table ->
-      stream
-      |> Cache.Table.find_opt table
-      |> Option.iter @@ fun push -> push None;
+  let unsubscribe (stream, topic) = Cache.access topic begin fun table ->
+    stream
+    |> Cache.Table.find_opt table
+    |> Option.iter @@ fun push -> push None;
 
-      Cache.Table.remove table stream
-    end
+    Cache.Table.remove table stream
+  end
+
+  let close topic = Cache.access topic begin fun table ->
+    Cache.Table.iter (fun _ push -> push None) table;
+    Cache.Table.reset table
+  end
 end
 

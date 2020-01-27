@@ -2,6 +2,7 @@ module Make(Msg : sig type t end) : sig
   type subscription
   type t
 
+  val close : t -> unit Lwt.t
   val make : unit -> t
   val publish : t -> Msg.t -> unit Lwt.t
   val subscribe : t -> subscription Lwt.t
