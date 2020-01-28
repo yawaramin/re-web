@@ -34,7 +34,7 @@ let s = "ReWeb.Cache", [
     check cache_value "" None result
   end;
 
-  Alcotest_lwt.test_case "concurrent operations are safe" `Slow begin fun _ () ->
+  Alcotest_lwt.test_case "concurrent operations are serialized" `Slow begin fun _ () ->
     let cache = Cache.make () in
     let open Let.Lwt in
     let* () = Cache.add cache ~key value in

@@ -6,5 +6,6 @@ let () = Alcotest.run "ReWebTest" [
   HeaderTest.StrictTransportSecurityTest.s;
   RequestTest.s;
   ResponseTest.s;
+  TopicTest.s;
 ]
 
