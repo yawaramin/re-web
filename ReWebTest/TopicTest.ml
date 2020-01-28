@@ -5,7 +5,7 @@ module Let = ReWeb__Let
 module Topic = ReWeb.Topic.Make(struct type t = int end)
 
 let s = "ReWeb.Topic", [
-  Alcotest_lwt.test_case "make, subscribe, publish, stream, close" `Quick begin fun _ () ->
+  Alcotest_lwt.test_case "make, subscribe, publish, stream, unsubscribe, close" `Quick begin fun _ () ->
     let msg = 0 in
     let topic = Topic.make () in
     let open Let.Lwt in
@@ -18,9 +18,12 @@ let s = "ReWeb.Topic", [
 
     (* While the topic is streaming out data, check we got what we
        expected *)
-    subscription |> Topic.stream |> Lwt_stream.iter (check int "" msg) |> ignore;
+    subscription
+    |> Topic.stream
+    |> Lwt_stream.iter (check int "" msg)
+    |> ignore;
 
-    (* Close the topic to close the stream *)
+    let* () = Topic.unsubscribe subscription in
     Topic.close topic
   end;
 
