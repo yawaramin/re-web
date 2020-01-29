@@ -4,7 +4,7 @@
   "description": "ReasonML web framework",
   "license": "MIT",
   "esy": {
-    "build": "dune build --only-packages #{self.name}",
+    "build": "dune build -p #{self.name}",
     "NOTE": "Optional release Section. Customizes result of `esy release`",
     "release": {
       "bin": [
@@ -39,11 +39,11 @@
     "@opam/uri": ">= 3.1.0 < 4.0.0",
     "@opam/websocketaf": "*",
     "@opam/websocketaf-lwt-unix": "*",
-    "@opam/yojson": ">= 1.7.0 < 2.0.0",
-    "@opam/alcotest": ">= 0.8.5 < 1.0.0",
-    "@opam/alcotest-lwt": ">= 0.8.5 < 1.0.0"
+    "@opam/yojson": ">= 1.7.0 < 2.0.0"
   },
   "devDependencies": {
+    "@opam/alcotest": ">= 0.8.5 < 1.0.0",
+    "@opam/alcotest-lwt": ">= 0.8.5 < 1.0.0",
     "@opam/merlin": "*",
     "ocaml": "~4.8.1000",
     "@opam/odoc": "*",
