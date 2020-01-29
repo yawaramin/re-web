@@ -4,7 +4,8 @@
   "description": "ReasonML web framework",
   "license": "MIT",
   "esy": {
-    "build": "dune build --only-packages #{self.name}",
+    "build": "dune build -p #{self.name}",
+    "buildDev": "dune build --only-packages #{self.name}",
     "NOTE": "Optional release Section. Customizes result of `esy release`",
     "release": {
       "bin": [
@@ -29,7 +30,7 @@
   "dependencies": {
     "@esy-ocaml/reason": ">= 3.4.0 < 3.6.0",
     "@opam/base64": ">= 3.2.0 < 4.0.0",
-    "@opam/dune": "< 2.0.0",
+    "@opam/dune": "< 3.0.0",
     "@opam/httpaf": "*",
     "@opam/httpaf-lwt-unix": "*",
     "@opam/lwt": ">= 5.1.0 < 6.0.0",
@@ -63,7 +64,7 @@
         }
       }
     },
-    "@opam/ssl": "savonet/ocaml-ssl:ssl.opam#fbffa9b",
+    "@opam/ssl": "savonet/ocaml-ssl:ssl.opam#6b75fa",
     "@opam/websocketaf": "anmonteiro/websocketaf:websocketaf.opam#8318e44",
     "@opam/websocketaf-lwt-unix": {
       "source": "anmonteiro/websocketaf:websocketaf-lwt-unix.opam#8318e44",
