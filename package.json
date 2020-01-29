@@ -29,7 +29,7 @@
   "dependencies": {
     "@esy-ocaml/reason": ">= 3.4.0 < 3.6.0",
     "@opam/base64": ">= 3.2.0 < 4.0.0",
-    "@opam/dune": "< 2.0.0",
+    "@opam/dune": "< 3.0.0",
     "@opam/httpaf": "*",
     "@opam/httpaf-lwt-unix": "*",
     "@opam/lwt": ">= 5.1.0 < 6.0.0",
@@ -63,8 +63,8 @@
         }
       }
     },
-    "@opam/ssl": "savonet/ocaml-ssl:ssl.opam#fbffa9b",
-    "@opam/websocketaf": "anmonteiro/websocketaf:websocketaf.opam#8318e44",
+    "@opam/ssl": "savonet/ocaml-ssl:ssl.opam#6b75fa",
+    "@opam/websocketaf": "anmonteiro/websocketaf:websocketaf.opam#bf0acbf",
     "@opam/websocketaf-lwt-unix": {
       "source": "anmonteiro/websocketaf:websocketaf-lwt-unix.opam#8318e44",
       "override": {
