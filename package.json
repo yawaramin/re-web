@@ -5,6 +5,7 @@
   "license": "MIT",
   "esy": {
     "build": "dune build -p #{self.name}",
+    "buildDev": "dune build --only-packages #{self.name}",
     "NOTE": "Optional release Section. Customizes result of `esy release`",
     "release": {
       "bin": [
