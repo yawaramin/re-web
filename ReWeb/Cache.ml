@@ -5,6 +5,7 @@ module type S = sig
 
   val access : 'a t -> ('a Table.t -> 'b) -> 'b Lwt.t
   val add : 'a t -> key:key -> 'a -> unit Lwt.t
+  val find : 'a t -> key:key -> 'a Lwt.t
   val find_opt : 'a t -> key:key -> 'a option Lwt.t
   val iter : 'a t -> f:(key -> 'a -> unit) -> unit Lwt.t
   val make : unit -> 'a t
@@ -25,6 +26,8 @@ module Make(T : Hashtbl.SeededS) = struct
 
   let add t ~key value = access t @@ fun table ->
     Table.add table key value
+
+  let find t ~key = access t @@ fun table -> Table.find table key
 
   let find_opt t ~key = access t @@ fun table ->
     Table.find_opt table key
