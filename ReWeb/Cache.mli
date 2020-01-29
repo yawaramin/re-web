@@ -35,12 +35,24 @@ end
     interface are similar to the ones in [Hashtbl], so you can use those
     as a reference. *)
 
+module Ephemeral(Key : Hashtbl.SeededHashedType) : S with type key = Key.t
+(** [Ephemeral(Key)] is a module that manages an ephemeral concurrent
+    cache. An ephemeral cache is one whose bindings are deleted as soon
+    as its keys go out of scope. *)
+
 module InMemory(Key : Hashtbl.SeededHashedType) : S with type key = Key.t
-(** Create a module to manage a concurrent in-memory cache. *)
+(** [InMemory(Key)] is a module that manages a concurrent in-memory
+    cache. *)
 
 module IntKey : Hashtbl.SeededHashedType with type t = int
-(** Use this to create a cache module for caches with [int] keys. *)
+(** [IntKey] is a module that can be used to create a cache with [int]
+    keys. *)
+
+module Make(T : Hashtbl.SeededS) : S with type key = T.key
+(** [Make(T)] is a module that manages a concurrent cache with the
+    persistence characteristics offered by the [Table] module. *)
 
 module StringKey : Hashtbl.SeededHashedType with type t = string
-(** Use this to create a cache module for caches with [string] keys. *)
+(** [StringKey] is a module that can be used to create a cache with
+    [string] keys. *)
 

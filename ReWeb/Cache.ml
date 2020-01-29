@@ -13,10 +13,9 @@ module type S = sig
   val reset : 'a t -> unit Lwt.t
 end
 
-module InMemory(Key : Hashtbl.SeededHashedType) = struct
-  module Table = Hashtbl.MakeSeeded(Key)
-
-  type key = Key.t
+module Make(T : Hashtbl.SeededS) = struct
+  module Table = T
+  type key = Table.key
   type 'a t = 'a Table.t * Lwt_mutex.t
 
   let make () = Table.create ~random:true 32, Lwt_mutex.create ()
@@ -35,6 +34,12 @@ module InMemory(Key : Hashtbl.SeededHashedType) = struct
   let remove t ~key = access t @@ fun table -> Table.remove table key
   let reset t = access t Table.reset
 end
+
+module Ephemeral(Key : Hashtbl.SeededHashedType) =
+  Make(Ephemeron.K1.MakeSeeded(Key))
+
+module InMemory(Key : Hashtbl.SeededHashedType) =
+  Make(Hashtbl.MakeSeeded(Key))
 
 module SimpleKey = struct
   let equal = (=)
