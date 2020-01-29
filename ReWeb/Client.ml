@@ -21,7 +21,9 @@ let config = Piaf.Config.default
 
 let convert_response result =
   let open Let.Result in
-  let+ { Piaf.Response.status; headers; version; _ }, body = result in
+  let+ { Piaf.Response.message = { status; headers; version }; body } =
+    result
+  in
   let status = status |> Piaf.Status.to_code |> H.Status.of_code in
   let headers = Piaf.Headers.to_list headers in
   body |> Body.of_piaf |> Response.of_http ~status ~headers
