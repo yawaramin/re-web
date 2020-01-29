@@ -65,7 +65,7 @@
       }
     },
     "@opam/ssl": "savonet/ocaml-ssl:ssl.opam#6b75fa",
-    "@opam/websocketaf": "anmonteiro/websocketaf:websocketaf.opam#bf0acbf",
+    "@opam/websocketaf": "anmonteiro/websocketaf:websocketaf.opam#8318e44",
     "@opam/websocketaf-lwt-unix": {
       "source": "anmonteiro/websocketaf:websocketaf-lwt-unix.opam#8318e44",
       "override": {
