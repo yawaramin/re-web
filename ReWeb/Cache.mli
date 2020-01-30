@@ -24,6 +24,7 @@ module type S = sig
   val find : 'a t -> key:key -> 'a Lwt.t
   val find_opt : 'a t -> key:key -> 'a option Lwt.t
   val iter : 'a t -> f:(key -> 'a -> unit) -> unit Lwt.t
+  val length : 'a t -> int Lwt.t
 
   val make : unit -> 'a t
   (** [make()] allocates a new cache value. *)
@@ -39,7 +40,10 @@ end
 module Ephemeral(Key : Hashtbl.SeededHashedType) : S with type key = Key.t
 (** [Ephemeral(Key)] is a module that manages an ephemeral concurrent
     cache. An ephemeral cache is one whose bindings are deleted as soon
-    as its keys go out of scope. *)
+    as its keys go out of scope.
+
+    {i Note} that this module overrides [length] to count {i live} items
+    only. That is, only items whose keys are referred to by some value. *)
 
 module InMemory(Key : Hashtbl.SeededHashedType) : S with type key = Key.t
 (** [InMemory(Key)] is a module that manages a concurrent in-memory

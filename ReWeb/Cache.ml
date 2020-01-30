@@ -8,6 +8,7 @@ module type S = sig
   val find : 'a t -> key:key -> 'a Lwt.t
   val find_opt : 'a t -> key:key -> 'a option Lwt.t
   val iter : 'a t -> f:(key -> 'a -> unit) -> unit Lwt.t
+  val length : 'a t -> int Lwt.t
   val make : unit -> 'a t
   val mem : 'a t -> key:key -> bool Lwt.t
   val remove : 'a t -> key:key -> unit Lwt.t
@@ -33,13 +34,21 @@ module Make(T : Hashtbl.SeededS) = struct
     Table.find_opt table key
 
   let iter t ~f = access t @@ fun table -> Table.iter f table
+  let length t = access t Table.length
   let mem t ~key = access t @@ fun table -> Table.mem table key
   let remove t ~key = access t @@ fun table -> Table.remove table key
   let reset t = access t Table.reset
 end
 
-module Ephemeral(Key : Hashtbl.SeededHashedType) =
-  Make(Ephemeron.K1.MakeSeeded(Key))
+module Ephemeral(Key : Hashtbl.SeededHashedType) = struct
+  module EphemeralHashtbl = Ephemeron.K1.MakeSeeded(Key)
+  include Make(EphemeralHashtbl)
+
+  let length t = access t begin fun table ->
+    EphemeralHashtbl.clean table;
+    EphemeralHashtbl.length table
+  end
+end
 
 module InMemory(Key : Hashtbl.SeededHashedType) =
   Make(Hashtbl.MakeSeeded(Key))

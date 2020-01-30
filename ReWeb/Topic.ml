@@ -1,11 +1,19 @@
-module Cache = Cache.Ephemeral(Cache.IntKey)
+type key = Key of int
+
+module Cache = Cache.Ephemeral(struct
+  type t = key
+  let equal (Key k1) (Key k2) = k1 = k2
+  let hash = Hashtbl.seeded_hash
+end)
 
 type 'a t = ('a Lwt_stream.t * ('a option -> unit)) Cache.t
 
 (* A pair of (subscription key, topic) *)
-type 'a subscription = int * 'a t
+type 'a subscription = key * 'a t
 
 let make = Cache.make
+
+let num_subscribers = Cache.length
 
 let publish topic ~msg =
   Cache.iter topic ~f:(fun _ (_, push) -> push (Some msg))
@@ -20,7 +28,7 @@ let pull (key, topic) ~timeout =
 
 let make_key () =
   Random.self_init ();
-  Random.bits ()
+  Key (Random.bits ())
 
 let subscribe topic =
   let stream_push = Lwt_stream.create () in

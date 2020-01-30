@@ -20,5 +20,21 @@ let s = "ReWeb.Topic", [
     let+ msg_option = Topic.pull subscription ~timeout:1. in
     check (option int) "" (Some msg) msg_option
   end;
+
+  Alcotest_lwt.test_case "subscriptions are automatically unsubscribed" `Quick begin fun _ () ->
+    let topic = Topic.make () in
+    let open Let.Lwt in
+    let* num = Topic.num_subscribers topic in
+    check int "before any subscriptions" 0 num;
+    let subscribe () =
+      let* subscription = Topic.subscribe topic in
+      let+ num = Topic.num_subscribers topic in
+      check int "after subscribing" 1 num
+    in
+    let* () = subscribe () in
+    Gc.full_major ();
+    let+ num = Topic.num_subscribers topic in
+    check int "after subscription goes out of scope" 0 num
+  end;
 ]
 
