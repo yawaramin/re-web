@@ -48,7 +48,7 @@ module Ephemeral(Key : Hashtbl.SeededHashedType) = struct
      probabilistically clean 1/8 times. *)
   let should_clean () =
     Random.self_init ();
-    Random.bool () && Random.bool () && Random.bool ()
+    Random.int 8 = 0
 
   let find t ~key = access t begin fun table ->
     if should_clean () then begin EphemeralHashtbl.clean table end;
