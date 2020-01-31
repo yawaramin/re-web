@@ -44,10 +44,15 @@ module Ephemeral(Key : Hashtbl.SeededHashedType) = struct
   module EphemeralHashtbl = Ephemeron.K1.MakeSeeded(Key)
   include Make(EphemeralHashtbl)
 
-  (* This makes sure we don't try to work with dead bindings. *)
-  let iter t ~f = access t begin fun table ->
-    EphemeralHashtbl.clean table;
-    EphemeralHashtbl.iter f table
+  (* Instead of keeping a counter and cleaning exactly every 8 times, we
+     probabilistically clean 1/8 times. *)
+  let should_clean () =
+    Random.self_init ();
+    Random.bool () && Random.bool () && Random.bool ()
+
+  let find t ~key = access t begin fun table ->
+    if should_clean () then EphemeralHashtbl.clean table;
+    EphemeralHashtbl.find table key
   end
 
   let length t = access t begin fun table ->

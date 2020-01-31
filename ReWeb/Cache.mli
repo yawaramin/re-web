@@ -42,9 +42,11 @@ module Ephemeral(Key : Hashtbl.SeededHashedType) : S with type key = Key.t
     cache. An ephemeral cache is one whose bindings are deleted as soon
     as its keys go out of scope.
 
-    {i Note} that this module overrides [length] and [iter] to count
-    {i live} items only. That is, only items whose keys are referred to
-    by some value. *)
+    {i Note} that this module overrides a couple of functions to clean
+    the cache i.e. remove dead bindings (modulo a full GC cycle):
+
+    - [length] always cleans the cache
+    - [find] probabilistically cleans the cache with a 1/8 likelihood *)
 
 module InMemory(Key : Hashtbl.SeededHashedType) : S with type key = Key.t
 (** [InMemory(Key)] is a module that manages a concurrent in-memory
