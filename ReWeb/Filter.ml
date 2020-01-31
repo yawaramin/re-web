@@ -134,13 +134,15 @@ module Make(R : Request.S) : S
       | credentials ->
         begin match String.split_on_char ':' credentials with
         | [username; password] ->
-          next {
-            request with R.ctx = object
-              method username = username
-              method password = password
-              method prev = request.ctx
-            end
-          }
+          let ctx = object
+            method username = username
+            method password = password
+            method prev = R.context request
+          end
+          in
+          request
+          |> R.set_context ctx
+          |> next
         | _ -> unauthorized
         end
       | exception _ -> unauthorized
@@ -149,12 +151,14 @@ module Make(R : Request.S) : S
 
   let bearer_auth next request = match get_auth request with
     | Some ("Bearer", token) ->
-      next {
-        request with R.ctx = object
-          method bearer_token = token
-          method prev = request.ctx
-        end
-      }
+      let ctx = object
+        method bearer_token = token
+        method prev = R.context request
+      end
+      in
+      request
+      |> R.set_context ctx
+      |> next
     | _ -> unauthorized
 
   let body_json next request =
@@ -162,18 +166,18 @@ module Make(R : Request.S) : S
     let open Let.Lwt in
     let* json = Body.to_json body in
     match json with
-    | Ok ctx -> next { request with ctx }
+    | Ok ctx -> request |> R.set_context ctx |> next
     | Error string -> bad_request ("ReWeb.Filter.body_json: " ^ string)
 
   let body_json_decode decoder next request =
-    match decoder request.R.ctx with
-    | Ok ctx -> next { request with ctx }
+    match request |> R.context |> decoder with
+    | Ok ctx -> request |> R.set_context ctx |> next
     | Error string -> bad_request string
 
   let body_string next request =
     let open Let.Lwt in
     let* ctx = R.body_string request in
-    next { request with ctx }
+    request |> R.set_context ctx |> next
 
   let body_form typ next request =
     match R.header "content-type" request with
@@ -181,7 +185,7 @@ module Make(R : Request.S) : S
       let open Let.Lwt in
       let* body = R.body_string request in
       begin match Form.decoder typ body with
-      | Ok ctx -> next { request with ctx }
+      | Ok ctx -> request |> R.set_context ctx |> next
       | Error string -> bad_request string
       end
     | _ ->
@@ -268,7 +272,7 @@ module Make(R : Request.S) : S
         let* () = cleanup () in
         let fields = List.map (fun (k, v) -> k, [v]) fields in
         match Form.decode typ fields with
-        | Ok ctx -> next { request with ctx }
+        | Ok ctx -> request |> R.set_context ctx |> next
         | Error string -> bad_request string
       in
       Lwt.try_bind f g begin fun exn ->
@@ -289,14 +293,14 @@ module Make(R : Request.S) : S
       bad_request "ReWeb.Filter.multipart_form: request is not well-formed"
 
   let query_form typ next request =
-    match Form.decoder typ request.R.query with
+    match request |> R.query |> Form.decoder typ with
     | Ok obj ->
-      next {
-        request with R.ctx = object
-          method query = obj
-          method prev = request.R.ctx
-        end
-      }
+      let ctx = object
+        method query = obj
+        method prev = R.context request
+      end
+      in
+      request |> R.set_context ctx |> next
     | Error string -> bad_request string
 end
 

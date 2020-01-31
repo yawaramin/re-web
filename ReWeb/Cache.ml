@@ -51,7 +51,7 @@ module Ephemeral(Key : Hashtbl.SeededHashedType) = struct
     Random.bool () && Random.bool () && Random.bool ()
 
   let find t ~key = access t begin fun table ->
-    if should_clean () then EphemeralHashtbl.clean table;
+    if should_clean () then begin EphemeralHashtbl.clean table end;
     EphemeralHashtbl.find table key
   end
 

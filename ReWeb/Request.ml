@@ -22,18 +22,12 @@ module type S = sig
   module Config : Config.S
   module Reqd : REQD
 
-  type 'ctx t = {
-    ctx : 'ctx;
-    (** Any value. Can be changed by filters. Most useful if it's an
-        object type so that filters can arbitrarily put named values of
-        any type in the request-response pipeline. *)
-
-    query : string;
-    (** Either the query string (anything following the [?] in the path)
-        or empty string. *)
-
-    reqd : (Lwt_unix.file_descr, unit Lwt.t) Reqd.t;
-  }
+  type 'ctx t
+  (** A request. ['ctx] is the type of the request context which can be
+      updated by setting a new context. It is recommended to do so in a
+      way that preserves the old context (if there is one), e.g. inside
+      an OCaml object with a [prev] method that points to the old
+      context. *)
 
   val body : unit t -> Body.t
   (** [body(request)] gets the [request] body. There is a chance that
@@ -69,7 +63,13 @@ module type S = sig
   (** [meth(request)] gets the request method ([`GET], [`POST], etc.). *)
 
   val query : _ t -> string
-  (** [query(request)] gets the query string of the [request]. *)
+  (** [query(request)] gets the query string of the [request]. This is
+      anything following the [?] in the request path, otherwise an empty
+      string. *)
+
+  val set_context : 'ctx2 -> 'ctx1 t -> 'ctx2 t
+  (** [set_context(ctx, request)] is an updated [request] with the given
+      context [ctx]. *)
 end
 
 module H = Httpaf
@@ -143,5 +143,6 @@ module Make
   let make query reqd = { ctx = (); query; reqd }
   let meth { reqd; _ } = (Reqd.request reqd).H.Request.meth
   let query { query; _ } = query
+  let set_context ctx request = { request with ctx }
 end
 
