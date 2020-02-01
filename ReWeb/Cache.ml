@@ -44,14 +44,12 @@ module Ephemeral(Key : Hashtbl.SeededHashedType) = struct
   module EphemeralHashtbl = Ephemeron.K1.MakeSeeded(Key)
   include Make(EphemeralHashtbl)
 
-  (* Instead of keeping a counter and cleaning exactly every 8 times, we
-     probabilistically clean 1/8 times. *)
-  let should_clean () =
-    Random.self_init ();
-    Random.int 8 = 0
+  let () = Random.self_init ()
 
   let find t ~key = access t begin fun table ->
-    if should_clean () then begin EphemeralHashtbl.clean table end;
+    (* Instead of keeping a counter and cleaning exactly every 8 times,
+       we probabilistically clean 1/8 times. *)
+    if Random.int 8 = 0 then begin EphemeralHashtbl.clean table end;
     EphemeralHashtbl.find table key
   end
 

@@ -26,13 +26,11 @@ let pull (key, topic) ~timeout =
     timeout |> Lwt_unix.sleep |> Lwt.map @@ fun () -> None;
   ]
 
-let make_key () =
-  Random.self_init ();
-  Key (Random.bits ())
+let () = Random.self_init ()
 
 let subscribe topic =
   let stream_push = Lwt_stream.create () in
-  let key = make_key () in
+  let key = Key (Random.bits ()) in
   let open Let.Lwt in
   let+ () = Cache.add topic ~key stream_push in
   key, topic
