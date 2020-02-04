@@ -17,6 +17,8 @@ steps:
   - script: "esy test"
     displayName: "Run tests"
   - task: PublishTestResults@2
+    # Publish only one set of test results
+    condition: eq(variables['AGENT.OS'], 'Linux')
     inputs:
       testResultsFormat: 'JUnit'
       testResultsFiles: './junit.xml'
