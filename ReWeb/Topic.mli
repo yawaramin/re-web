@@ -16,6 +16,11 @@ val publish : 'a t -> msg:'a -> unit Lwt.t
 (** [publish(topic, ~msg)] publishes [msg] onto the [topic]. This
     broadcasts the [msg] to all subscribers of the [topic]. *)
 
+val publish_from : 'a subscription -> msg:'a -> unit Lwt.t
+(** [publish_from(subscription, ~msg)] publishes [msg] to the topic that
+    [subscription] subscribes to, ensuring the message is sent to all
+    subscribers {i except} the sender [subscription]. *)
+
 val pull : 'a subscription -> timeout:float -> 'a option Lwt.t
 (** [pull(subscription, ~timeout)] is a message from the topic
     subscribed to by [subscription] if there is one within the

@@ -18,6 +18,10 @@ let num_subscribers = Cache.length
 let publish topic ~msg =
   Cache.iter topic ~f:(fun _ (_, push) -> push (Some msg))
 
+let publish_from (Key key, topic) ~msg =
+  Cache.iter topic ~f:(fun (Key cache_key) (_, push) ->
+    if key <> cache_key then push (Some msg))
+
 let pull (key, topic) ~timeout =
   let open Let.Lwt in
   let* stream, _ = Cache.find topic ~key in
