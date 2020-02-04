@@ -25,7 +25,7 @@
     "check": "esy b dune build @check",
     "doc": "esy dune build @doc",
     "doc-path": "esy echo #{self.target_dir}/default/_doc/_html",
-    "test": "esy b dune runtest"
+    "test": "esy x dune exec ReWebTest/ReWebTest.exe"
   },
   "dependencies": {
     "@esy-ocaml/reason": ">= 3.4.0 < 3.6.0",
@@ -33,6 +33,7 @@
     "@opam/dune": "< 3.0.0",
     "@opam/httpaf": "*",
     "@opam/httpaf-lwt-unix": "*",
+    "@opam/junit_alcotest": "*",
     "@opam/lwt": ">= 5.1.0 < 6.0.0",
     "@opam/lwt_ppx": ">= 2.0.0 < 3.0.0",
     "@opam/multipart-form-data": "*",
@@ -55,6 +56,7 @@
     "@opam/httpaf": "anmonteiro/httpaf:httpaf.opam#9308e34",
     "@opam/httpaf-lwt": "anmonteiro/httpaf:httpaf-lwt.opam#9308e34",
     "@opam/httpaf-lwt-unix": "anmonteiro/httpaf:httpaf-lwt-unix.opam#9308e34",
+    "@opam/junit_alcotest": "Khady/ocaml-junit:junit_alcotest.opam#5e28acc",
     "@opam/multipart-form-data": "cryptosense/multipart-form-data:multipart-form-data.opam#d49fd89",
     "@opam/piaf": {
       "source": "anmonteiro/piaf:piaf.opam#e99ae27",

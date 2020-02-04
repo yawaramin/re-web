@@ -7,4 +7,5 @@ _release
 *.native
 *.install
 .DS_Store
+junit.xml
 

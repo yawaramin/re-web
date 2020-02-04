@@ -17,7 +17,8 @@ representation.  It is specified in RFC 4648.
 depends: [
   "ocaml" {>="4.03.0"}
   "base-bytes"
-  "dune" {>= "1.0.1"}
+  "dune-configurator"
+  "dune" {>= "2.0"}
   "bos" {with-test}
   "rresult" {with-test}
   "alcotest" {with-test}
@@ -29,6 +30,9 @@ build: [
 ]
 url {
   src:
-    "https://github.com/mirage/ocaml-base64/releases/download/v3.2.0/base64-v3.2.0.tbz"
-  checksum: "md5=8ac1d6145277cee57d36611d1c420f05"
+    "https://github.com/mirage/ocaml-base64/releases/download/v3.3.0/base64-v3.3.0.tbz"
+  checksum: [
+    "sha256=3ae91334f029ccd96690b598010f94e55811095d14a37d52f1724e5eca0f35cc"
+    "sha512=818103de0ac03b9a04f5aafc119341522bf69e57dfbd038b321f92ab8cbf7fc7084ca3012086baece12da94d4d5448eb927f70b741025a13d49e93ca6ea27d41"
+  ]
 }

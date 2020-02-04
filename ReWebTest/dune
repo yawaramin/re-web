@@ -1,6 +1,6 @@
 (test
   (name ReWebTest)
   (flags (-w -40 -w +26))
-  (libraries HeaderTest ReWeb alcotest alcotest-lwt)
+  (libraries HeaderTest ReWeb alcotest alcotest-lwt junit_alcotest)
   (action (run %{test})))
 
