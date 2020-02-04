@@ -1,7 +1,7 @@
 ## ReWeb - a type-safe ergonomic ReasonML and OCaml web framework (WIP)
 
 [![Build Status](https://dev.azure.com/yawaramin/re-web/_apis/build/status/yawaramin.re-web?branchName=master)](https://dev.azure.com/yawaramin/re-web/_build/latest?definitionId=1?branchName=master)
-[![Test Status](https://img.shields.io/azure-devops/tests/yawaramin/re-web/1?compact_message)](https://img.shields.io/azure-devops/tests/yawaramin/re-web/1?compact_message)
+[![Test Status](https://img.shields.io/azure-devops/tests/yawaramin/re-web/1?compact_message)](https://dev.azure.com/yawaramin/re-web/_test/analytics?definitionId=1&contextType=build)
 
 ReWeb is a web framework based on several foundations:
 
