@@ -33,7 +33,6 @@
     "@opam/dune": "< 3.0.0",
     "@opam/httpaf": "*",
     "@opam/httpaf-lwt-unix": "*",
-    "@opam/junit_alcotest": "*",
     "@opam/lwt": ">= 5.1.0 < 6.0.0",
     "@opam/lwt_ppx": ">= 2.0.0 < 3.0.0",
     "@opam/multipart-form-data": "*",
@@ -46,6 +45,7 @@
   "devDependencies": {
     "@opam/alcotest": ">= 0.8.5 < 1.0.0",
     "@opam/alcotest-lwt": ">= 0.8.5 < 1.0.0",
+    "@opam/junit_alcotest": "*",
     "@opam/merlin": "*",
     "ocaml": "~4.8.1000",
     "@opam/odoc": "*",
