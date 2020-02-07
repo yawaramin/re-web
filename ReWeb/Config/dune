@@ -1,5 +1,5 @@
 (library
   (name Config)
-  (public_name re-web.Z_internal_Config)
+  (public_name re-web.ReWeb.Config)
   (libraries lwt.unix))
 
