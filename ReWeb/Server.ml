@@ -5,7 +5,9 @@ module Reqd = struct
   include H.Reqd
 end
 
-module Request = Request.Make(Config.Default)(H.Body)(Reqd)
+module Config = ReWeb__Config
+module Header = ReWeb__Header
+module Request = Request.Make(ReWeb__Config.Default)(H.Body)(Reqd)
 module Service = Service.Make(Request)
 module Filter = Filter.Make(Request)
 module Wsd = Websocketaf.Wsd

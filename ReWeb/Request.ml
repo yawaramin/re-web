@@ -19,7 +19,7 @@ end
 (** This interface abstracts away the Httpaf request descriptor. *)
 
 module type S = sig
-  module Config : Config.S
+  module Config : ReWeb__Config.S
   module Reqd : REQD
 
   type 'ctx t
@@ -75,7 +75,7 @@ end
 module H = Httpaf
 
 module Make
-  (C : Config.S)
+  (C : ReWeb__Config.S)
   (B : BODY)
   (R : REQD with type 'rw Body.t = 'rw B.t) = struct
   module Config = C

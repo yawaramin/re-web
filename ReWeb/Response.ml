@@ -1,4 +1,5 @@
 module H = Httpaf
+module Header = ReWeb__Header
 
 type headers = (string * string) list
 type status = Httpaf.Status.t

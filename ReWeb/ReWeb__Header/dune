@@ -1,6 +1,6 @@
 (library
-  (name Header)
+  (name ReWeb__Header)
   (synopsis "See ReWeb.Filter.cache_control")
   (public_name re-web.ReWeb.Header)
-  (libraries Config))
+  (libraries ReWeb__Config))
 

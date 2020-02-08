@@ -4,6 +4,8 @@
     therefore a chance of duplication which you will have to watch out
     for. *)
 
+module Header = ReWeb__Header
+
 type headers = (string * string) list
 (** a header [X-Client-Id: 1] is represented as:
     [[("x-client-id", "1")]]. *)

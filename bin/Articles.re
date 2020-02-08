@@ -134,7 +134,9 @@ let viewId = (view, id, _) =>
 let tenMinutes = 600;
 
 let show = id =>
-  Filter.cache_control(Header.CacheControl.public(~max_age=tenMinutes, ())) @@
+  Filter.cache_control(
+    ReWeb__Header.CacheControl.public(~max_age=tenMinutes, ()),
+  ) @@
   viewId(View.article, id);
 
 /* Due to the value restriction in OCaml we write the resource as a

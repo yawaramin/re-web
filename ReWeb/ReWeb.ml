@@ -13,14 +13,14 @@ module Cache = Cache
 module Client = Client
 (** Make web requests. *)
 
-module Config = Config
+module Config = ReWeb__Config
 (** Configure and override the behaviour of ReWeb and applications built
     with it. *)
 
 module Form = Form
 (** Encode and decode web forms to/from specified types. *)
 
-module Header = Header
+module Header = ReWeb__Header
 (** Create correct response headers. *)
 
 module Response = Response

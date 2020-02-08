@@ -1,5 +1,7 @@
+module Header = ReWeb__Header
+
 module type S = sig
-  module Config : Config.S
+  module Config : ReWeb__Config.S
   module Service : Service.S
 
   type ('ctx1, 'ctx2, 'resp) t =

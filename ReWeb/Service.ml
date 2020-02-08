@@ -1,5 +1,5 @@
 module type S = sig
-  module Config : Config.S
+  module Config : ReWeb__Config.S
   module Request : Request.S
 
   type ('ctx, 'resp) t = 'ctx Request.t -> 'resp Lwt.t

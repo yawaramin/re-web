@@ -3,8 +3,8 @@
   (public_name re-web)
   (flags (-w -40 -w +26))
   (libraries
-    Config
-    Header
+    ReWeb__Config
+    ReWeb__Header
     base64
     httpaf
     httpaf-lwt-unix
