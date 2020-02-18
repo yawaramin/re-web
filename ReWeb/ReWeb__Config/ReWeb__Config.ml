@@ -46,6 +46,7 @@ module type S = sig
   (** Buffer size for internal string/bigstring handling. *)
 
   val port : int
+  (** Server port--default 8080 *)
 end
 (** The known ReWeb configuration settings. *)
 
