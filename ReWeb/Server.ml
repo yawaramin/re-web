@@ -204,7 +204,7 @@ let serve ~port server =
     ~request_handler
     ~error_handler
   in
-  let listen_addr = Unix.(ADDR_INET (inet_addr_loopback, port)) in
+  let listen_addr = Unix.(ADDR_INET (inet_addr_any, port)) in
   let open Let.Lwt in
   let* _ =
     Lwt_io.establish_server_with_client_socket listen_addr conn_handler
@@ -213,5 +213,5 @@ let serve ~port server =
   let forever, _ = Lwt.wait () in
   forever
 
-let serve ?(port=8080) server = server |> serve ~port |> Lwt_main.run
+let serve ?(port=Config.Default.port) server = server |> serve ~port |> Lwt_main.run
 

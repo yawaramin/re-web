@@ -44,6 +44,9 @@ module type S = sig
 
   val buf_size : int
   (** Buffer size for internal string/bigstring handling. *)
+
+  val port : int
+  (** Server port--default 8080 *)
 end
 (** The known ReWeb configuration settings. *)
 
@@ -58,6 +61,10 @@ module Default : S = struct
   let buf_size = "buf_size"
     |> int
     |> Option.value ~default:(Lwt_io.default_buffer_size ())
+
+  let port = "port"
+    |> int
+    |> Option.value ~default:8080
 end
 (** Default values for ReWeb configuration settings. *)
 
