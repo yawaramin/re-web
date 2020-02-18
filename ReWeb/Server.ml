@@ -213,5 +213,5 @@ let serve ~port server =
   let forever, _ = Lwt.wait () in
   forever
 
-let serve ?(port=8080) server = server |> serve ~port |> Lwt_main.run
+let serve ?(port=Config.Default.port) server = server |> serve ~port |> Lwt_main.run
 
