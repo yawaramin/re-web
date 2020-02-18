@@ -63,7 +63,7 @@ module Default : S = struct
 
   let port = "port"
     |> int
-    |> Option.value ~default:(8080)
+    |> Option.value ~default:8080
 end
 (** Default values for ReWeb configuration settings. *)
 
