@@ -12,9 +12,9 @@
     that reads values from the system environment, by using the
     (type-safe) functions below. *)
 
-let string name = Sys.getenv_opt @@ name
+let string name = Sys.getenv_opt @@ "REWEB__" ^ name
 (** [string(name)] gets a value from the system environment variable
-    with the name [name]. The following functions all use the
+    with the name [REWEB__name]. The following functions all use the
     same name prefix and work for their specific types. *)
 
 let bool name = Option.bind (string name) bool_of_string_opt
@@ -23,7 +23,7 @@ let char name = Option.bind (string name) @@ function
   | "" -> None
   | string -> Some (String.unsafe_get string 0)
 (** [char(name)] gets the first character of the value of the system
-    environment variable named [name]. *)
+    environment variable named [REWEB__name]. *)
 
 let float name = Option.bind (string name) float_of_string_opt
 let int name = Option.bind (string name) int_of_string_opt
@@ -46,19 +46,18 @@ module type S = sig
   (** Buffer size for internal string/bigstring handling. *)
 
   val port : int
-  (** Server port--default 8080 *)
 end
 (** The known ReWeb configuration settings. *)
 
 module Default : S = struct
   module Filters = struct
-    let csp = "REWEB__filters__csp" |> bool |> Option.value ~default:true
-    let hsts = "REWEB__filters__hsts" |> bool |> Option.value ~default:true
+    let csp = "filters__csp" |> bool |> Option.value ~default:true
+    let hsts = "filters__hsts" |> bool |> Option.value ~default:true
   end
 
-  let secure = "REWEB__secure" |> bool |> Option.value ~default:true
+  let secure = "secure" |> bool |> Option.value ~default:true
 
-  let buf_size = "REWEB__buf_size"
+  let buf_size = "buf_size"
     |> int
     |> Option.value ~default:(Lwt_io.default_buffer_size ())
 
