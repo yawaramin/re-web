@@ -31,16 +31,17 @@
     "@esy-ocaml/reason": ">= 3.4.0 < 3.6.0",
     "@opam/base64": ">= 3.2.0 < 4.0.0",
     "@opam/dune": "< 3.0.0",
-    "@opam/httpaf": "*",
-    "@opam/httpaf-lwt-unix": "*",
     "@opam/lwt": ">= 5.1.0 < 6.0.0",
     "@opam/lwt_ppx": ">= 2.0.0 < 3.0.0",
     "@opam/multipart-form-data": "*",
-    "@opam/piaf": "*",
     "@opam/uri": ">= 3.1.0 < 4.0.0",
     "@opam/websocketaf": "*",
     "@opam/websocketaf-lwt-unix": "*",
-    "@opam/yojson": ">= 1.7.0 < 2.0.0"
+    "@opam/yojson": ">= 1.7.0 < 2.0.0",
+    "@reason-native-web/h1": ">= 1.0.0-alpha.1 < 2.0.0",
+    "@reason-native-web/h1-lwt-unix": ">= 1.0.0-alpha.1 < 2.0.0",
+    "@reason-native-web/piaf": ">= 1.0.0-alpha.1 < 2.0.0",
+    "@reason-native-web/ssl": ">= 0.5.9-dev.1 < 1.0.0"
   },
   "devDependencies": {
     "@opam/alcotest": ">= 0.8.5 < 1.0.0",
@@ -52,22 +53,16 @@
     "@opam/utop": "*"
   },
   "resolutions": {
-    "@opam/conf-libssl": "esy-packages/esy-openssl#648930f",
-    "@opam/httpaf": "anmonteiro/httpaf:httpaf.opam#9308e34",
-    "@opam/httpaf-lwt": "anmonteiro/httpaf:httpaf-lwt.opam#9308e34",
-    "@opam/httpaf-lwt-unix": "anmonteiro/httpaf:httpaf-lwt-unix.opam#9308e34",
     "@opam/junit_alcotest": "Khady/ocaml-junit:junit_alcotest.opam#5e28acc",
     "@opam/multipart-form-data": "cryptosense/multipart-form-data:multipart-form-data.opam#d49fd89",
-    "@opam/piaf": {
-      "source": "anmonteiro/piaf:piaf.opam#e99ae27",
+    "@opam/websocketaf": {
+      "source": "anmonteiro/websocketaf:websocketaf.opam#8318e44",
       "override": {
         "dependencies": {
-          "@opam/ocaml-syntax-shims": null
+          "@opam/httpaf": "anmonteiro/httpaf:httpaf.opam#9308e34"
         }
       }
     },
-    "@opam/ssl": "savonet/ocaml-ssl:ssl.opam#6b75fa",
-    "@opam/websocketaf": "anmonteiro/websocketaf:websocketaf.opam#8318e44",
     "@opam/websocketaf-lwt-unix": {
       "source": "anmonteiro/websocketaf:websocketaf-lwt-unix.opam#8318e44",
       "override": {
