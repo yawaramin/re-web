@@ -12,8 +12,11 @@ description: """
 This package provides an equal function on string in constant-time to avoid timing-attack with crypto stuff.
 """
 
-build: [ "dune" "build" "-p" name "-j" jobs ]
-run-test: [ "dune" "runtest" "-p" name "-j" "1" "--no-buffer" "--verbose" ]
+build: [
+  [ "dune" "subst" ] {pinned}
+  [ "dune" "build" "-p" name "-j" jobs ]
+  [ "dune" "runtest" "-p" name "-j" "1" "--no-buffer" "--verbose" ] {with-test}
+]
 
 depends: [
   "ocaml"          {>= "4.03.0"}
@@ -21,14 +24,20 @@ depends: [
   "alcotest"       {with-test}
   "crowbar"        {with-test}
 ]
+
 depopts: [
-  "cstruct" {>= "4.0.0"}
+  "cstruct"
   "bigarray-compat"
 ]
+
+conflicts: [
+  "cstruct" {< "4.0.0"}
+]
+
 url {
-  src: "https://github.com/mirage/eqaf/releases/download/v0.5/eqaf-v0.5.tbz"
+  src: "https://github.com/mirage/eqaf/releases/download/v0.6/eqaf-v0.6.tbz"
   checksum: [
-    "sha256=58ef81c110ee44669b1951df669cdc1f60ca34f0063cf0ae8b87568111af73f2"
-    "sha512=8a5761596bb8cbde8743161502900423f369d3de3b4b999a940b93d66b1830204fdb67165eff461f3eec0cdb1e169ebd6c9b80f5a8162bc12f359b606a0cbb17"
+    "sha256=09ebddd1789828354eb84253b679c6ca1be9a44e0b7fac2ebef52015c3101919"
+    "sha512=8c3dd3dbd53eb7ebd4b42e67b9798c407408a93e20b40d92a590b87674b095f70cef5b273cd0d8c7371dc946f0fbf47043b62eb51186648912bc499a162c6417"
   ]
 }

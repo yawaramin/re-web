@@ -14,16 +14,21 @@
       [
         "bash",
         "-c",
-        "#{os == 'windows' ? './configure mingw64 --prefix=$cur__install --cross-compile-prefix=x86_64-w64-mingw32-' : './config --prefix=$cur__install'}"
+        "#{os == 'windows' ? './configure mingw64 --prefix=$cur__install --openssldir=$cur__install/ssl --cross-compile-prefix=x86_64-w64-mingw32-' : './config --prefix=$cur__install --openssldir=$cur__install/ssl'}"
       ],
       [
-        "make"
+        "make", "-j4"
       ]
     ],
     "install": [
       [
         "make",
         "install"
+      ],
+      [
+        "bash",
+        "-c",
+        "mkdir -p #{self.install / 'ssl'}"
       ],
       [
         "bash",
