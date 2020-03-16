@@ -41,7 +41,7 @@
     "@reason-native-web/h1": ">= 1.0.0-alpha.1 < 2.0.0",
     "@reason-native-web/h1-lwt-unix": ">= 1.0.0-alpha.1 < 2.0.0",
     "@reason-native-web/piaf": ">= 1.0.0-alpha.1 < 2.0.0",
-    "@reason-native-web/ssl": ">= 0.5.9-dev.1 < 1.0.0"
+    "@reason-native-web/ssl": ">= 0.5.9002 < 1.0.0"
   },
   "devDependencies": {
     "@opam/alcotest": ">= 0.8.5 < 1.0.0",
@@ -53,7 +53,6 @@
     "@opam/utop": "*"
   },
   "resolutions": {
-    "@opam/conf-libssl": "esy-packages/esy-openssl#648930f",
     "@opam/junit_alcotest": "Khady/ocaml-junit:junit_alcotest.opam#5e28acc",
     "@opam/multipart-form-data": "cryptosense/multipart-form-data:multipart-form-data.opam#d49fd89",
     "@opam/websocketaf": {
