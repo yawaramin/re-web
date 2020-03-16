@@ -41,7 +41,7 @@
     "@reason-native-web/h1": ">= 1.0.0-alpha.1 < 2.0.0",
     "@reason-native-web/h1-lwt-unix": ">= 1.0.0-alpha.1 < 2.0.0",
     "@reason-native-web/piaf": ">= 1.0.0-alpha.1 < 2.0.0",
-    "@reason-native-web/ssl": "0.5.9002"
+    "@reason-native-web/ssl": ">= 0.5.9002 < 1.0.0"
   },
   "devDependencies": {
     "@opam/alcotest": ">= 0.8.5 < 1.0.0",
