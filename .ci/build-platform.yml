@@ -12,8 +12,10 @@ steps:
   - template: utils/use-node.yml
   - template: utils/use-esy.yml
   - template: utils/cache.yml
-  - script: "esy"
-    displayName: "Build project"
+  - script: "esy install"
+    displayName: "Install project"
+  - script: "esy build-test"
+    displayName: "Build tests"
   - script: "esy test"
     displayName: "Run tests"
   - task: PublishTestResults@2

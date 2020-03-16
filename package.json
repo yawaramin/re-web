@@ -25,7 +25,8 @@
     "check": "esy b dune build @check",
     "doc": "esy dune build @doc",
     "doc-path": "esy echo #{self.target_dir}/default/_doc/_html",
-    "test": "esy b dune exec ReWebTest/ReWebTest.exe"
+    "build-test": "esy b dune build ReWebTest/ReWebTest.exe",
+    "test": "esy x ReWebTest/ReWebTest.exe"
   },
   "dependencies": {
     "@esy-ocaml/reason": ">= 3.4.0 < 3.6.0",
