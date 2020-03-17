@@ -1,4 +1,4 @@
 steps:
-  - pwsh: Move-Item -Path $(ESY__CACHE_INSTALL_PATH) -Destination $(CACHE_FOLDER) 
+  - pwsh: Move-Item -Path $(ESY__CACHE_INSTALL_PATH) -Destination $(CACHE_FOLDER) 2>&1 | Write-Host
     displayName: '[Cache][Publish] Move builds to be cached'
 
