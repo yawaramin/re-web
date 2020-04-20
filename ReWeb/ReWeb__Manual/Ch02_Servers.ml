@@ -40,7 +40,7 @@
     - An HTTP method is a polymorphic variant type defined with the
       valid HTTP verbs, e.g. [`GET], [`POST], [`DELETE], and so on. You
       can see the
-      {{: https://docs.mirage.io/httpaf/Httpaf/Method/index.html} Httpaf.Method}
+      {{: https://b0-system.github.io/odig/doc@odoc.default/httpaf/Httpaf/Method/index.html} Httpaf.Method}
       module documentation for details.
     - A path segment list is a list of strings created by splitting up
       the request path into its segments: e.g. [/api/users/1] becomes

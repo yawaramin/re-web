@@ -11,8 +11,8 @@ type headers = (string * string) list
     [[("x-client-id", "1")]]. *)
 
 type status = Httpaf.Status.t
-(** See {{: https://docs.mirage.io/httpaf/Httpaf/Status/index.html}} for
-    valid statuses. *)
+(** See {{: https://b0-system.github.io/odig/doc@odoc.default/httpaf/Httpaf/Status/index.html} Httpaf.Status}
+    for valid statuses. *)
 
 type http = [`HTTP of Httpaf.Response.t * Body.t]
 

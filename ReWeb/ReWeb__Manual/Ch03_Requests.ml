@@ -1,5 +1,5 @@
 (** A ReWeb request data structure is a thin wrapper over an
-    {{: https://docs.mirage.io/httpaf/Httpaf/Reqd/index.html} Httpaf request descriptor}.
+    {{: https://b0-system.github.io/odig/doc@odoc.default/httpaf/Httpaf/Reqd/index.html} Httpaf request descriptor}.
     It additionally contains the request query string, and a generic
     'context' value. This makes the request itself generic--in other
     words, the request type exposes the type of context it contains.
