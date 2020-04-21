@@ -21,6 +21,7 @@ build: [
 depends: [
   "ocaml"          {>= "4.03.0"}
   "dune"
+  "base64"         {with-test}
   "alcotest"       {with-test}
   "crowbar"        {with-test}
 ]
@@ -33,11 +34,10 @@ depopts: [
 conflicts: [
   "cstruct" {< "4.0.0"}
 ]
-
 url {
-  src: "https://github.com/mirage/eqaf/releases/download/v0.6/eqaf-v0.6.tbz"
+  src: "https://github.com/mirage/eqaf/releases/download/v0.7/eqaf-v0.7.tbz"
   checksum: [
-    "sha256=09ebddd1789828354eb84253b679c6ca1be9a44e0b7fac2ebef52015c3101919"
-    "sha512=8c3dd3dbd53eb7ebd4b42e67b9798c407408a93e20b40d92a590b87674b095f70cef5b273cd0d8c7371dc946f0fbf47043b62eb51186648912bc499a162c6417"
+    "sha256=10e666aea9a413e63c5e9dd1c0566aed78a2bf0f4e09caa2bb3b88a021bf09e0"
+    "sha512=38a2687bafb5cd1d1deb51ceceba94fcff9ce88515fd2c61ec1182808c50c0e3373a4d71fe51a17a23c74616c5ab350a4cf7914de656886981538abf2b57ff61"
   ]
 }

@@ -1,23 +1,19 @@
 {
   "name": "esy-openssl",
-  "version": "0.1.0",
+  "version": "1.1.1g",
   "description": "Mirror of OpenSSL",
   "license": "Apache 2.0",
-  "source": "https://github.com/openssl/openssl/archive/OpenSSL_1_1_1d.tar.gz#df0ee4811c87c209ebadb4e6b203d1e560d00f9a",
+  "source": "https://github.com/openssl/openssl/archive/OpenSSL_1_1_1g.tar.gz#33324ff957edaae8ae575817b456320378da46ff",
   "override": {
     "build": [
-      [
-        "bash",
-        "-c",
-        "#{os == 'windows' ? 'patch -p1 < openssl-1.1.1d-mingw.patch' : 'true'}"
-      ],
       [
         "bash",
         "-c",
         "#{os == 'windows' ? './configure mingw64 --prefix=$cur__install --openssldir=$cur__install/ssl --cross-compile-prefix=x86_64-w64-mingw32-' : './config --prefix=$cur__install --openssldir=$cur__install/ssl'}"
       ],
       [
-        "make", "-j4"
+        "make",
+        "-j4"
       ]
     ],
     "install": [

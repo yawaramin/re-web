@@ -42,7 +42,7 @@
     "@reason-native-web/h1": ">= 1.0.0-alpha.1 < 2.0.0",
     "@reason-native-web/h1-lwt-unix": ">= 1.0.0-alpha.1 < 2.0.0",
     "@reason-native-web/piaf": ">= 1.0.0-alpha.1 < 2.0.0",
-    "@reason-native-web/ssl": ">= 0.5.9002 < 1.0.0"
+    "@reason-native-web/esy-openssl": "*"
   },
   "devDependencies": {
     "@opam/alcotest": ">= 0.8.5 < 1.0.0",
@@ -71,7 +71,8 @@
           "@opam/websocketaf-lwt": "anmonteiro/websocketaf:websocketaf-lwt.opam#8318e44"
         }
       }
-    }
+    },
+    "@reason-native-web/esy-openssl": "esy-packages/esy-openssl:package.json#a66d8d6"
   }
 }
 
