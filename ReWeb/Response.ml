@@ -101,24 +101,6 @@ let of_json ?(status=`OK) ?headers ?cookies body = body
   |> Yojson.Safe.to_string
   |> of_binary ~status ~content_type:"application/json" ?headers ?cookies
 
-let get_content_type file_name = match Filename.extension file_name with
-  | ".bmp" -> "image/bmp"
-  | ".css" -> "text/css"
-  | ".csv" -> "text/csv"
-  | ".gif" -> "image/gif"
-  | ".html" | ".htm" -> "text/html"
-  | ".ico" -> "image/x-icon"
-  | ".jpeg" | ".jpg" -> "image/jpeg"
-  | ".js" -> "text/javascript"
-  | ".json" -> "application/json"
-  | ".mp4" -> "video/mp4"
-  | ".png" -> "image/png"
-  | ".svg" -> "image/svg+xml"
-  | ".text" | ".txt" -> "text/plain"
-  | ".tiff" -> "image/tiff"
-  | ".webp" -> "image/webp"
-  | _ -> "application/octet-stream"
-
 let of_text ?(status=`OK) ?headers ?cookies =
   of_binary ~status ~content_type:"text/plain" ?headers ?cookies
 
@@ -157,7 +139,7 @@ let of_view ?(status=`OK) ?(content_type="text/html") ?headers ?cookies view =
 let of_file ?(status=`OK) ?content_type ?headers ?cookies file_name =
   let f () =
     let content_type =
-      Option.value content_type ~default:(get_content_type file_name)
+      Option.value content_type ~default:(Magic_mime.lookup file_name)
     in
     let open Let.Lwt in
     let* file_descr =

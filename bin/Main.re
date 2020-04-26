@@ -67,10 +67,7 @@ let getLoginQuery = request => {
 /** [getStatic(fileName, request)] is a service that returns the
     contents of [fileName] (if found). */
 let getStatic = (fileName, _) =>
-  fileName
-  |> String.concat("/")
-  |> (++)("/")
-  |> Response.of_file(~content_type="text/plain");
+  fileName |> String.concat("/") |> (++)("/") |> Response.of_file;
 
 /** [echoBody(request)] is a service that directly echoes the [request]
     body back to the client, without touching it at all. */

@@ -13,6 +13,9 @@ type config = Piaf.Config.t = {
   max_tls_version : Piaf.Versions.TLS.t;
   tcp_nodelay : bool;
   connect_timeout : float;
+  buffer_size : int;
+  body_buffer_size : int;
+  enable_http2_server_push : bool;
 }
 
 type headers = (string * string) list

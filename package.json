@@ -34,6 +34,7 @@
     "@opam/dune": "< 3.0.0",
     "@opam/lwt": ">= 5.1.0 < 6.0.0",
     "@opam/lwt_ppx": ">= 2.0.0 < 3.0.0",
+    "@opam/magic-mime": ">= 1.1.2 < 2.0.0",
     "@opam/multipart-form-data": "*",
     "@opam/uri": ">= 3.1.0 < 4.0.0",
     "@opam/websocketaf": "*",
@@ -60,7 +61,7 @@
       "source": "anmonteiro/websocketaf:websocketaf.opam#8318e44",
       "override": {
         "dependencies": {
-          "@opam/httpaf": "anmonteiro/httpaf:httpaf.opam#9308e34"
+          "@opam/httpaf": "anmonteiro/httpaf:httpaf.opam#eac806e"
         }
       }
     },

@@ -9,6 +9,7 @@
     httpaf
     httpaf-lwt-unix
     lwt.unix
+    magic-mime
     multipart-form-data
     piaf
     uri
