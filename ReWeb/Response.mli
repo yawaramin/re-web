@@ -93,9 +93,9 @@ val of_file :
   string ->
   [> http] Lwt.t
 (** [of_file(?status, ?content_type, ?headers, ?cookies, file_name)]
-    responds with the contents of [file_name] which must be an absolute
-    path in the filesystem, with HTTP response code [status] and
-    content-type header [content_type].
+    responds with the contents of [file_name], which is a relative or
+    absolute path, with HTTP response code [status] and content-type
+    header [content_type].
 
     If the file is not found, responds with a 404 Not Found status and
     an appropriate message.
