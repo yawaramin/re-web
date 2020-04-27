@@ -3,5 +3,5 @@
   (public_name main)
   (package re-web)
   (libraries ReWeb lwt str)
-  (modes byte exe)
-  (preprocess (pps lwt_ppx)))
+  (modes byte exe))
+

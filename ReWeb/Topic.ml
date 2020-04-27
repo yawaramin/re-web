@@ -23,7 +23,7 @@ let publish_from (Key key, topic) ~msg =
     if key <> cache_key then push (Some msg))
 
 let pull (key, topic) ~timeout =
-  let open Let.Lwt in
+  let open Lwt.Syntax in
   let* stream, _ = Cache.find topic ~key in
   Lwt.pick [
     Lwt_stream.get stream;
@@ -35,7 +35,7 @@ let () = Random.self_init ()
 let subscribe topic =
   let stream_push = Lwt_stream.create () in
   let key = Key (Random.bits ()) in
-  let open Let.Lwt in
+  let open Lwt.Syntax in
   let+ () = Cache.add topic ~key stream_push in
   key, topic
 

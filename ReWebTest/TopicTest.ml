@@ -1,6 +1,5 @@
 open Alcotest
 
-module Let = ReWeb__Let
 module Topic = ReWeb.Topic
 
 let msg = 0
@@ -10,7 +9,7 @@ let received_msg = option int
 let s = "ReWeb.Topic", [
   Alcotest_lwt.test_case "make, subscribe, publish, pull" `Quick begin fun _ () ->
     let topic = Topic.make () in
-    let open Let.Lwt in
+    let open Lwt.Syntax in
 
     (* First 'we' subscribe to the topic *)
     let* subscription = Topic.subscribe topic in
@@ -26,7 +25,7 @@ let s = "ReWeb.Topic", [
 
   Alcotest_lwt.test_case "subscribe - subscriptions are automatically unsubscribed" `Quick begin fun _ () ->
     let topic = Topic.make () in
-    let open Let.Lwt in
+    let open Lwt.Syntax in
     let* num = Topic.num_subscribers topic in
     check int "before any subscriptions" 0 num;
     let subscribe () =
@@ -42,7 +41,7 @@ let s = "ReWeb.Topic", [
 
   Alcotest_lwt.test_case "publish_from - publishes to subscribers other than sender" `Quick begin fun _ () ->
     let topic = Topic.make () in
-    let open Let.Lwt in
+    let open Lwt.Syntax in
     let* sender_subscription = Topic.subscribe topic in
     let* receiver_subscription = Topic.subscribe topic in
     let* () = Topic.publish_from sender_subscription ~msg in

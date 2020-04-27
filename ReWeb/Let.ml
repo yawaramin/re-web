@@ -13,8 +13,3 @@ module Result = struct
     | Error e -> Error e
 end
 
-module Lwt = struct
-  let (let*) = Lwt.bind
-  let (let+) lwt f = Lwt.map f lwt
-end
-

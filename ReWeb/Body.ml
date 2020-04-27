@@ -45,7 +45,7 @@ let to_string = function
   | String string -> Lwt.return string
 
 let to_json body =
-  let open Let.Lwt in
+  let open Lwt.Syntax in
   let+ body_string = to_string body in
   match Yojson.Safe.from_string body_string with
   | body -> Ok body

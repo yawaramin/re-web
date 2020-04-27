@@ -105,10 +105,12 @@
     [Lwt.return(x)] is like JavaScript's [Promise.resolve(x)]
 
     {[let getInfo = productId => {
-        let%lwt inventory = getInventory(productId);
-        let%lwt price = getPrice(productId);
+        open Lwt.Syntax;
 
-        Lwt.return(mergeInventoryPrice(inventory, price));
+        let* inventory = getInventory(productId);
+        let+ price = getPrice(productId);
+
+        mergeInventoryPrice(inventory, price);
       };]}
 
     ...is like JavaScript's

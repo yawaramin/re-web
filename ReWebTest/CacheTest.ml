@@ -2,7 +2,6 @@ open Alcotest
 open ReWeb.Cache
 
 module Cache = InMemory(StringKey)
-module Let = ReWeb__Let
 
 let key = "key"
 let value = "value"
@@ -11,7 +10,7 @@ let cache_value = option string
 let s = "ReWeb.Cache", [
   Alcotest_lwt.test_case "make, add, find_opt" `Quick begin fun _ () ->
     let cache = Cache.make () in
-    let open Let.Lwt in
+    let open Lwt.Syntax in
     let+ result = Cache.access cache begin fun table ->
       let open Cache.Table in
       add table key value;
@@ -23,7 +22,7 @@ let s = "ReWeb.Cache", [
 
   Alcotest_lwt.test_case "make, add, remove, find_opt" `Quick begin fun _ () ->
     let cache = Cache.make () in
-    let open Let.Lwt in
+    let open Lwt.Syntax in
     let+ result = Cache.access cache begin fun table ->
       let open Cache.Table in
       add table key value;
@@ -36,7 +35,7 @@ let s = "ReWeb.Cache", [
 
   Alcotest_lwt.test_case "concurrent operations are serialized" `Slow begin fun _ () ->
     let cache = Cache.make () in
-    let open Let.Lwt in
+    let open Lwt.Syntax in
     let* () = Cache.add cache ~key value in
 
     (* Start this access thread concurrently *)

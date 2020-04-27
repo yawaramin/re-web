@@ -99,7 +99,9 @@ let internalServerError = message =>
     headers from the source. You can test this by running the command:
     [curl -i localhost:8080/todos/1] and checking the headers. */
 let getTodo = (id, _) => {
-  let%lwt response =
+  open Lwt.Syntax;
+
+  let* response =
     Client.New.get("https://jsonplaceholder.typicode.com/todos/" ++ id);
 
   switch (response) {
@@ -112,8 +114,10 @@ let getTodo = (id, _) => {
     JSON Placeholder API, and extracts and returns only the title of the
     todo item. */
 let getTodoTitle = (id, request) => {
-  let%lwt response = getTodo(id, request);
-  let%lwt json = response |> Response.body |> Body.to_json;
+  open Lwt.Syntax;
+
+  let* response = getTodo(id, request);
+  let* json = response |> Response.body |> Body.to_json;
 
   /* We are manually pattern-matching against the JSON body here. You
      can also use [ppx_deriving_yojson] to auto-derive JSON decoders
@@ -152,11 +156,12 @@ let getEchoWS = _ => {
       push("Welcome to getEchoWS!\n");
     };
 
+    open Lwt.Syntax;
     /* Use the provided [pull] function to asynchronously get a message.
        Note that this is under your control, you decide when to get the
        next message. Have to pass in an explicit timeout in seconds to
        all pulls. */
-    let%lwt message = pull(2.);
+    let* message = pull(2.);
     let message = Option.map(String.trim, message);
 
     switch (message) {

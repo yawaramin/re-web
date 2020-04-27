@@ -141,7 +141,7 @@ let of_file ?(status=`OK) ?content_type ?headers ?cookies file_name =
     let content_type =
       Option.value content_type ~default:(Magic_mime.lookup file_name)
     in
-    let open Let.Lwt in
+    let open Lwt.Syntax in
     let* file_descr =
       Lwt_unix.openfile file_name Unix.[O_RDONLY; O_NONBLOCK] 0o400
     in

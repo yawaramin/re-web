@@ -165,7 +165,7 @@ module Make(R : Request.S) : S
 
   let body_json next request =
     let body = R.body request in
-    let open Let.Lwt in
+    let open Lwt.Syntax in
     let* json = Body.to_json body in
     match json with
     | Ok ctx -> request |> R.set_context ctx |> next
@@ -177,14 +177,14 @@ module Make(R : Request.S) : S
     | Error string -> bad_request string
 
   let body_string next request =
-    let open Let.Lwt in
+    let open Lwt.Syntax in
     let* ctx = R.body_string request in
     request |> R.set_context ctx |> next
 
   let body_form typ next request =
     match R.header "content-type" request with
     | Some "application/x-www-form-urlencoded" ->
-      let open Let.Lwt in
+      let open Lwt.Syntax in
       let* body = R.body_string request in
       begin match Form.decoder typ body with
       | Ok ctx -> request |> R.set_context ctx |> next
@@ -241,7 +241,7 @@ module Make(R : Request.S) : S
         |> Lwt_stream.map chunk_to_string
       in
       let files = Hashtbl.create ~random:true 5 in
-      let open Let.Lwt in
+      let open Lwt.Syntax in
       let close _ file prev =
         let* () = prev in
         Lwt_unix.close file

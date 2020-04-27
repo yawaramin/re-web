@@ -29,11 +29,10 @@
     "test": "#{self.target_dir}/default/ReWebTest/ReWebTest.exe"
   },
   "dependencies": {
-    "@esy-ocaml/reason": ">= 3.4.0 < 3.6.0",
+    "@esy-ocaml/reason": ">= 3.6.0 < 4.0.0",
     "@opam/base64": ">= 3.2.0 < 4.0.0",
     "@opam/dune": "< 3.0.0",
-    "@opam/lwt": ">= 5.1.0 < 6.0.0",
-    "@opam/lwt_ppx": ">= 2.0.0 < 3.0.0",
+    "@opam/lwt": ">= 5.3.0 < 6.0.0",
     "@opam/magic-mime": ">= 1.1.2 < 2.0.0",
     "@opam/multipart-form-data": "*",
     "@opam/uri": ">= 3.1.0 < 4.0.0",

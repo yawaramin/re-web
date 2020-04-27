@@ -191,7 +191,8 @@
     For example:
 
     {[let rec handler = (pull, push) => {
-        let%lwt message = pull(2.);
+        open Lwt.Syntax;
+        let* message = pull(2.);
 
         switch (Option.map(String.trim, message)) {
         | Some("close") => Lwt.return_unit
@@ -221,7 +222,10 @@
         if (doTimes == 0) {
           Lwt.return_unit;
         } else {
-          switch%lwt (pull(2.)) {
+          open Lwt.Syntax;
+          let* message = pull(2.);
+
+          switch (message) {
           | Some(message) =>
             push(message);
             handler(~doTimes=pred(doTimes), pull, push);
@@ -236,10 +240,5 @@
     maintains its own internal state by using the recursive call to pass
     in a different value of [doTimes]. [pred] is a built-in standard
     library function; it returns the 'predecessor' (i.e. one less) of
-    the integer passed to it.
-
-    {i Note} some new Lwt syntax introduced here,
-    [switch%lwt (promise) { ... }] allows you to switch directly on the
-    value of a promise. It's a syntax sugar for [let%lwt x = promise]
-    and then [switch (x) { ... }]. *)
+    the integer passed to it. *)
 
