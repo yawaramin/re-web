@@ -42,7 +42,7 @@
     "@reason-native-web/h1": ">= 1.0.0-alpha.1 < 2.0.0",
     "@reason-native-web/h1-lwt-unix": ">= 1.0.0-alpha.1 < 2.0.0",
     "@reason-native-web/piaf": ">= 1.0.0-alpha.1 < 2.0.0",
-    "@reason-native-web/esy-openssl": "*"
+    "@reason-native-web/esy-openssl": ">= 1.1.1006 < 2.0.0"
   },
   "devDependencies": {
     "@opam/alcotest": ">= 0.8.5 < 1.0.0",
@@ -54,6 +54,7 @@
     "@opam/utop": "*"
   },
   "resolutions": {
+    "@opam/angstrom": "inhabitedtype/angstrom:angstrom.opam#a5d9661",
     "@opam/junit_alcotest": "Khady/ocaml-junit:junit_alcotest.opam#5e28acc",
     "@opam/multipart-form-data": "cryptosense/multipart-form-data:multipart-form-data.opam#d49fd89",
     "@opam/websocketaf": {
@@ -71,8 +72,7 @@
           "@opam/websocketaf-lwt": "anmonteiro/websocketaf:websocketaf-lwt.opam#8318e44"
         }
       }
-    },
-    "@reason-native-web/esy-openssl": "esy-packages/esy-openssl:package.json#a66d8d6"
+    }
   }
 }
 

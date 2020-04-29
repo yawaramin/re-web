@@ -1,5 +1,5 @@
 {
-  "checksum": "96d703f01f5ead3c2870d32e09a245bf",
+  "checksum": "c305df5f9682b1e2e8e267710631e005",
   "root": "re-web@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -32,7 +32,7 @@
         "@reason-native-web/piaf@1.0.2000@d41d8cd9",
         "@reason-native-web/h1-lwt-unix@1.1.1002@d41d8cd9",
         "@reason-native-web/h1@1.1.1001@d41d8cd9",
-        "@reason-native-web/esy-openssl@archive:https://github.com/openssl/openssl/archive/OpenSSL_1_1_1g.tar.gz#sha1:33324ff957edaae8ae575817b456320378da46ff@18d44c8a",
+        "@reason-native-web/esy-openssl@1.1.1006@d41d8cd9",
         "@opam/yojson@opam:1.7.0@7056d985",
         "@opam/websocketaf-lwt-unix@github:anmonteiro/websocketaf:websocketaf-lwt-unix.opam#8318e44@51e7a4e1",
         "@opam/websocketaf@github:anmonteiro/websocketaf:websocketaf.opam#8318e44@d2f846c5",
@@ -44,7 +44,7 @@
         "@esy-ocaml/reason@3.6.0@d41d8cd9"
       ],
       "devDependencies": [
-        "ocaml@4.8.1000@d41d8cd9", "@opam/utop@opam:2.4.3@5dd230c9",
+        "ocaml@4.8.1000@d41d8cd9", "@opam/utop@opam:2.5.0@e1664c74",
         "@opam/odoc@opam:1.5.0@35218f5f", "@opam/merlin@opam:3.3.4@5fcabf21",
         "@opam/junit_alcotest@github:Khady/ocaml-junit:junit_alcotest.opam#5e28acc@d41d8cd9",
         "@opam/alcotest-lwt@opam:0.8.5@b44c6920",
@@ -81,6 +81,20 @@
       "dependencies": [],
       "devDependencies": []
     },
+    "esy-autoconf@github:esy-packages/esy-autoconf#fb93edf@d41d8cd9": {
+      "id": "esy-autoconf@github:esy-packages/esy-autoconf#fb93edf@d41d8cd9",
+      "name": "esy-autoconf",
+      "version": "github:esy-packages/esy-autoconf#fb93edf",
+      "source": {
+        "type": "install",
+        "source": [ "github:esy-packages/esy-autoconf#fb93edf" ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "esy-help2man@github:esy-packages/esy-help2man#c8e6931d1dcf58a81bd801145a777fd3b115c443@d41d8cd9"
+      ],
+      "devDependencies": []
+    },
     "@reason-native-web/ssl@0.5.9007@d41d8cd9": {
       "id": "@reason-native-web/ssl@0.5.9007@d41d8cd9",
       "name": "@reason-native-web/ssl",
@@ -94,7 +108,7 @@
       "overrides": [],
       "dependencies": [
         "ocaml@4.8.1000@d41d8cd9",
-        "@reason-native-web/esy-openssl@archive:https://github.com/openssl/openssl/archive/OpenSSL_1_1_1g.tar.gz#sha1:33324ff957edaae8ae575817b456320378da46ff@18d44c8a",
+        "@reason-native-web/esy-openssl@1.1.1006@d41d8cd9",
         "@opam/dune-configurator@opam:2.5.1@aeb9d8d5",
         "@opam/dune@opam:2.5.1@a0c1e658",
         "@opam/conf-pkg-config@opam:1.1@55d8e330",
@@ -202,7 +216,7 @@
         "@opam/dune@opam:2.5.1@a0c1e658",
         "@opam/bigstringaf@opam:0.6.1@35f5e6d1",
         "@opam/base64@opam:3.4.0@f5b9ad9b",
-        "@opam/angstrom@opam:0.13.0@cf460a5e"
+        "@opam/angstrom@github:inhabitedtype/angstrom:angstrom.opam#a5d9661@d41d8cd9"
       ],
       "devDependencies": []
     },
@@ -260,45 +274,41 @@
         "@opam/faraday@opam:0.7.1@19546ee5",
         "@opam/dune@opam:2.5.1@a0c1e658",
         "@opam/bigstringaf@opam:0.6.1@35f5e6d1",
-        "@opam/angstrom@opam:0.13.0@cf460a5e"
+        "@opam/angstrom@github:inhabitedtype/angstrom:angstrom.opam#a5d9661@d41d8cd9"
       ],
       "devDependencies": []
     },
-    "@reason-native-web/esy-openssl@archive:https://github.com/openssl/openssl/archive/OpenSSL_1_1_1g.tar.gz#sha1:33324ff957edaae8ae575817b456320378da46ff@18d44c8a": {
-      "id":
-        "@reason-native-web/esy-openssl@archive:https://github.com/openssl/openssl/archive/OpenSSL_1_1_1g.tar.gz#sha1:33324ff957edaae8ae575817b456320378da46ff@18d44c8a",
+    "@reason-native-web/esy-openssl@1.1.1006@d41d8cd9": {
+      "id": "@reason-native-web/esy-openssl@1.1.1006@d41d8cd9",
       "name": "@reason-native-web/esy-openssl",
-      "version":
-        "archive:https://github.com/openssl/openssl/archive/OpenSSL_1_1_1g.tar.gz#sha1:33324ff957edaae8ae575817b456320378da46ff",
+      "version": "1.1.1006",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://github.com/openssl/openssl/archive/OpenSSL_1_1_1g.tar.gz#sha1:33324ff957edaae8ae575817b456320378da46ff"
+          "archive:https://registry.npmjs.org/@reason-native-web/esy-openssl/-/esy-openssl-1.1.1006.tgz#sha1:4154a9b17d9ebdc1c983a3075513b5cd276873ac"
         ]
       },
-      "overrides": [
-        "esy.lock/overrides/18d44c8a7bc9982b015675e59d7a2fbf/package.json"
-      ],
+      "overrides": [],
       "dependencies": [
         "@opam/conf-pkg-config@opam:1.1@55d8e330",
-        "@opam/conf-autoconf@github:esy-packages/esy-autoconf:package.json#fb93edf@d41d8cd9"
+        "@opam/conf-autoconf@opam:0.1@27b3f7cf"
       ],
       "devDependencies": []
     },
-    "@opam/zed@opam:2.0.7@5978011f": {
-      "id": "@opam/zed@opam:2.0.7@5978011f",
+    "@opam/zed@opam:3.0.1@44b41979": {
+      "id": "@opam/zed@opam:3.0.1@44b41979",
       "name": "@opam/zed",
-      "version": "opam:2.0.7",
+      "version": "opam:3.0.1",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://opam.ocaml.org/cache/md5/a8/a84bfb0171181e171643f494f00c0ae2#md5:a84bfb0171181e171643f494f00c0ae2",
-          "archive:https://github.com/ocaml-community/zed/releases/download/2.0.7/zed-2.0.7.tbz#md5:a84bfb0171181e171643f494f00c0ae2"
+          "archive:https://opam.ocaml.org/cache/md5/df/dfe0261fc35346518555bad0e3c12b8b#md5:dfe0261fc35346518555bad0e3c12b8b",
+          "archive:https://github.com/ocaml-community/zed/archive/3.0.1.tar.gz#md5:dfe0261fc35346518555bad0e3c12b8b"
         ],
         "opam": {
           "name": "zed",
-          "version": "2.0.7",
-          "path": "esy.lock/opam/zed.2.0.7"
+          "version": "3.0.1",
+          "path": "esy.lock/opam/zed.3.0.1"
         }
       },
       "overrides": [],
@@ -437,7 +447,7 @@
         "@opam/dune@opam:2.5.1@a0c1e658",
         "@opam/bigstringaf@opam:0.6.1@35f5e6d1",
         "@opam/base64@opam:3.4.0@f5b9ad9b",
-        "@opam/angstrom@opam:0.13.0@cf460a5e",
+        "@opam/angstrom@github:inhabitedtype/angstrom:angstrom.opam#a5d9661@d41d8cd9",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
@@ -446,7 +456,7 @@
         "@opam/faraday@opam:0.7.1@19546ee5",
         "@opam/bigstringaf@opam:0.6.1@35f5e6d1",
         "@opam/base64@opam:3.4.0@f5b9ad9b",
-        "@opam/angstrom@opam:0.13.0@cf460a5e"
+        "@opam/angstrom@github:inhabitedtype/angstrom:angstrom.opam#a5d9661@d41d8cd9"
       ]
     },
     "@opam/uutf@opam:1.0.2@4440868f": {
@@ -504,20 +514,20 @@
       ],
       "devDependencies": [ "ocaml@4.8.1000@d41d8cd9" ]
     },
-    "@opam/utop@opam:2.4.3@5dd230c9": {
-      "id": "@opam/utop@opam:2.4.3@5dd230c9",
+    "@opam/utop@opam:2.5.0@e1664c74": {
+      "id": "@opam/utop@opam:2.5.0@e1664c74",
       "name": "@opam/utop",
-      "version": "opam:2.4.3",
+      "version": "opam:2.5.0",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://opam.ocaml.org/cache/sha256/4e/4e30ba6e224bea5776bc1a6ac3fee7f7548a35acf41d35e59c45913e28a0ea80#sha256:4e30ba6e224bea5776bc1a6ac3fee7f7548a35acf41d35e59c45913e28a0ea80",
-          "archive:https://github.com/ocaml-community/utop/releases/download/2.4.3/utop-2.4.3.tbz#sha256:4e30ba6e224bea5776bc1a6ac3fee7f7548a35acf41d35e59c45913e28a0ea80"
+          "archive:https://opam.ocaml.org/cache/sha256/f1/f1a5380f9220212747b36e4d9c3e4eed40f2cc24d641a1c4db282842c2a44ccc#sha256:f1a5380f9220212747b36e4d9c3e4eed40f2cc24d641a1c4db282842c2a44ccc",
+          "archive:https://github.com/ocaml-community/utop/releases/download/2.5.0/utop-2.5.0.tbz#sha256:f1a5380f9220212747b36e4d9c3e4eed40f2cc24d641a1c4db282842c2a44ccc"
         ],
         "opam": {
           "name": "utop",
-          "version": "2.4.3",
-          "path": "esy.lock/opam/utop.2.4.3"
+          "version": "2.5.0",
+          "path": "esy.lock/opam/utop.2.5.0"
         }
       },
       "overrides": [],
@@ -526,7 +536,7 @@
         "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
         "@opam/lwt_react@opam:1.1.3@72987fcf",
         "@opam/lwt@opam:5.3.0@6519bffc",
-        "@opam/lambda-term@opam:2.0.3@9465cf1c",
+        "@opam/lambda-term@opam:3.0.0@50f5dee6",
         "@opam/dune@opam:2.5.1@a0c1e658", "@opam/cppo@opam:1.6.6@f4f83858",
         "@opam/camomile@opam:1.0.2@51b42ad8",
         "@opam/base-unix@opam:base@87d0b2eb",
@@ -538,7 +548,7 @@
         "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
         "@opam/lwt_react@opam:1.1.3@72987fcf",
         "@opam/lwt@opam:5.3.0@6519bffc",
-        "@opam/lambda-term@opam:2.0.3@9465cf1c",
+        "@opam/lambda-term@opam:3.0.0@50f5dee6",
         "@opam/dune@opam:2.5.1@a0c1e658",
         "@opam/camomile@opam:1.0.2@51b42ad8",
         "@opam/base-unix@opam:base@87d0b2eb",
@@ -621,6 +631,31 @@
         "ocaml@4.8.1000@d41d8cd9", "@opam/uutf@opam:1.0.2@4440868f",
         "@opam/seq@opam:base@d8d7de1d", "@opam/re@opam:1.9.0@d4d5e13d",
         "@opam/dune@opam:2.5.1@a0c1e658"
+      ]
+    },
+    "@opam/trie@opam:1.0.0@d2efc587": {
+      "id": "@opam/trie@opam:1.0.0@d2efc587",
+      "name": "@opam/trie",
+      "version": "opam:1.0.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://opam.ocaml.org/cache/md5/84/84519b5f8bd92490bfc68a52f706ba14#md5:84519b5f8bd92490bfc68a52f706ba14",
+          "archive:https://github.com/kandu/trie/archive/1.0.0.tar.gz#md5:84519b5f8bd92490bfc68a52f706ba14"
+        ],
+        "opam": {
+          "name": "trie",
+          "version": "1.0.0",
+          "path": "esy.lock/opam/trie.1.0.0"
+        }
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658"
       ]
     },
     "@opam/topkg@opam:1.0.1@a42c631e": {
@@ -1122,6 +1157,60 @@
         "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.5.1@a0c1e658"
       ]
     },
+    "@opam/mew_vi@opam:0.3.0@bf3ebe06": {
+      "id": "@opam/mew_vi@opam:0.3.0@bf3ebe06",
+      "name": "@opam/mew_vi",
+      "version": "opam:0.3.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://opam.ocaml.org/cache/md5/07/07a8da83a13d9ec7c92bc7c367c7a4ff#md5:07a8da83a13d9ec7c92bc7c367c7a4ff",
+          "archive:https://github.com/kandu/mew_vi/archive/0.3.0.tar.gz#md5:07a8da83a13d9ec7c92bc7c367c7a4ff"
+        ],
+        "opam": {
+          "name": "mew_vi",
+          "version": "0.3.0",
+          "path": "esy.lock/opam/mew_vi.0.3.0"
+        }
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/react@opam:1.2.1@0e11855f",
+        "@opam/mew@opam:0.1.0@a74f69d6", "@opam/dune@opam:2.5.1@a0c1e658",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/react@opam:1.2.1@0e11855f",
+        "@opam/mew@opam:0.1.0@a74f69d6", "@opam/dune@opam:2.5.1@a0c1e658"
+      ]
+    },
+    "@opam/mew@opam:0.1.0@a74f69d6": {
+      "id": "@opam/mew@opam:0.1.0@a74f69d6",
+      "name": "@opam/mew",
+      "version": "opam:0.1.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://opam.ocaml.org/cache/md5/22/2298149d1415cd804ab4e01f01ea10a0#md5:2298149d1415cd804ab4e01f01ea10a0",
+          "archive:https://github.com/kandu/mew/archive/0.1.0.tar.gz#md5:2298149d1415cd804ab4e01f01ea10a0"
+        ],
+        "opam": {
+          "name": "mew",
+          "version": "0.1.0",
+          "path": "esy.lock/opam/mew.0.1.0"
+        }
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/trie@opam:1.0.0@d2efc587",
+        "@opam/result@opam:1.4@dc720aef", "@opam/dune@opam:2.5.1@a0c1e658",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
+      "devDependencies": [
+        "ocaml@4.8.1000@d41d8cd9", "@opam/trie@opam:1.0.0@d2efc587",
+        "@opam/result@opam:1.4@dc720aef", "@opam/dune@opam:2.5.1@a0c1e658"
+      ]
+    },
     "@opam/merlin-extend@opam:0.5@a5dd7d4b": {
       "id": "@opam/merlin-extend@opam:0.5@a5dd7d4b",
       "name": "@opam/merlin-extend",
@@ -1434,26 +1523,27 @@
       ],
       "devDependencies": [ "ocaml@4.8.1000@d41d8cd9" ]
     },
-    "@opam/lambda-term@opam:2.0.3@9465cf1c": {
-      "id": "@opam/lambda-term@opam:2.0.3@9465cf1c",
+    "@opam/lambda-term@opam:3.0.0@50f5dee6": {
+      "id": "@opam/lambda-term@opam:3.0.0@50f5dee6",
       "name": "@opam/lambda-term",
-      "version": "opam:2.0.3",
+      "version": "opam:3.0.0",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://opam.ocaml.org/cache/md5/90/903b6cc234598d67c7c905dfb5230209#md5:903b6cc234598d67c7c905dfb5230209",
-          "archive:https://github.com/ocaml-community/lambda-term/releases/download/2.0.3/lambda-term-2.0.3.tbz#md5:903b6cc234598d67c7c905dfb5230209"
+          "archive:https://opam.ocaml.org/cache/md5/3e/3ee0d8b6cb31f20a07fcbf34990f8a4b#md5:3ee0d8b6cb31f20a07fcbf34990f8a4b",
+          "archive:https://github.com/ocaml-community/lambda-term/archive/3.0.0.tar.gz#md5:3ee0d8b6cb31f20a07fcbf34990f8a4b"
         ],
         "opam": {
           "name": "lambda-term",
-          "version": "2.0.3",
-          "path": "esy.lock/opam/lambda-term.2.0.3"
+          "version": "3.0.0",
+          "path": "esy.lock/opam/lambda-term.3.0.0"
         }
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.8.1000@d41d8cd9", "@opam/zed@opam:2.0.7@5978011f",
+        "ocaml@4.8.1000@d41d8cd9", "@opam/zed@opam:3.0.1@44b41979",
         "@opam/react@opam:1.2.1@0e11855f",
+        "@opam/mew_vi@opam:0.3.0@bf3ebe06",
         "@opam/lwt_react@opam:1.1.3@72987fcf",
         "@opam/lwt_log@opam:1.1.1@2d7a797f", "@opam/lwt@opam:5.3.0@6519bffc",
         "@opam/dune@opam:2.5.1@a0c1e658",
@@ -1461,8 +1551,9 @@
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "ocaml@4.8.1000@d41d8cd9", "@opam/zed@opam:2.0.7@5978011f",
+        "ocaml@4.8.1000@d41d8cd9", "@opam/zed@opam:3.0.1@44b41979",
         "@opam/react@opam:1.2.1@0e11855f",
+        "@opam/mew_vi@opam:0.3.0@bf3ebe06",
         "@opam/lwt_react@opam:1.1.3@72987fcf",
         "@opam/lwt_log@opam:1.1.1@2d7a797f", "@opam/lwt@opam:5.3.0@6519bffc",
         "@opam/dune@opam:2.5.1@a0c1e658",
@@ -1530,7 +1621,7 @@
         "@opam/faraday@opam:0.7.1@19546ee5",
         "@opam/dune@opam:2.5.1@a0c1e658",
         "@opam/bigstringaf@opam:0.6.1@35f5e6d1",
-        "@opam/angstrom@opam:0.13.0@cf460a5e",
+        "@opam/angstrom@github:inhabitedtype/angstrom:angstrom.opam#a5d9661@d41d8cd9",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
@@ -1538,7 +1629,7 @@
         "@opam/faraday@opam:0.7.1@19546ee5",
         "@opam/dune@opam:2.5.1@a0c1e658",
         "@opam/bigstringaf@opam:0.6.1@35f5e6d1",
-        "@opam/angstrom@opam:0.13.0@cf460a5e"
+        "@opam/angstrom@github:inhabitedtype/angstrom:angstrom.opam#a5d9661@d41d8cd9"
       ]
     },
     "@opam/hpack@opam:0.2.0@9f3eae78": {
@@ -1561,13 +1652,13 @@
       "dependencies": [
         "ocaml@4.8.1000@d41d8cd9", "@opam/faraday@opam:0.7.1@19546ee5",
         "@opam/dune@opam:2.5.1@a0c1e658",
-        "@opam/angstrom@opam:0.13.0@cf460a5e",
+        "@opam/angstrom@github:inhabitedtype/angstrom:angstrom.opam#a5d9661@d41d8cd9",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
         "ocaml@4.8.1000@d41d8cd9", "@opam/faraday@opam:0.7.1@19546ee5",
         "@opam/dune@opam:2.5.1@a0c1e658",
-        "@opam/angstrom@opam:0.13.0@cf460a5e"
+        "@opam/angstrom@github:inhabitedtype/angstrom:angstrom.opam#a5d9661@d41d8cd9"
       ]
     },
     "@opam/fpath@opam:0.7.2@45477b93": {
@@ -1971,18 +2062,28 @@
       "dependencies": [ "@esy-ocaml/substs@0.0.1@d41d8cd9" ],
       "devDependencies": []
     },
-    "@opam/conf-autoconf@github:esy-packages/esy-autoconf:package.json#fb93edf@d41d8cd9": {
-      "id":
-        "@opam/conf-autoconf@github:esy-packages/esy-autoconf:package.json#fb93edf@d41d8cd9",
+    "@opam/conf-autoconf@opam:0.1@27b3f7cf": {
+      "id": "@opam/conf-autoconf@opam:0.1@27b3f7cf",
       "name": "@opam/conf-autoconf",
-      "version": "github:esy-packages/esy-autoconf:package.json#fb93edf",
+      "version": "opam:0.1",
       "source": {
         "type": "install",
-        "source": [ "github:esy-packages/esy-autoconf:package.json#fb93edf" ]
+        "source": [ "no-source:" ],
+        "opam": {
+          "name": "conf-autoconf",
+          "version": "0.1",
+          "path": "esy.lock/opam/conf-autoconf.0.1"
+        }
       },
-      "overrides": [],
+      "overrides": [
+        {
+          "opamoverride":
+            "esy.lock/overrides/opam__s__conf_autoconf_opam__c__0.1_opam_override"
+        }
+      ],
       "dependencies": [
-        "esy-help2man@github:esy-packages/esy-help2man#c8e6931d1dcf58a81bd801145a777fd3b115c443@d41d8cd9"
+        "esy-autoconf@github:esy-packages/esy-autoconf#fb93edf@d41d8cd9",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": []
     },
@@ -2255,21 +2356,14 @@
         "ocaml@4.8.1000@d41d8cd9", "@opam/base-bytes@opam:base@19d0c2ff"
       ]
     },
-    "@opam/angstrom@opam:0.13.0@cf460a5e": {
-      "id": "@opam/angstrom@opam:0.13.0@cf460a5e",
+    "@opam/angstrom@github:inhabitedtype/angstrom:angstrom.opam#a5d9661@d41d8cd9": {
+      "id":
+        "@opam/angstrom@github:inhabitedtype/angstrom:angstrom.opam#a5d9661@d41d8cd9",
       "name": "@opam/angstrom",
-      "version": "opam:0.13.0",
+      "version": "github:inhabitedtype/angstrom:angstrom.opam#a5d9661",
       "source": {
         "type": "install",
-        "source": [
-          "archive:https://opam.ocaml.org/cache/md5/09/090267a7b843769d319073564fb3bb9a#md5:090267a7b843769d319073564fb3bb9a",
-          "archive:https://github.com/inhabitedtype/angstrom/archive/0.13.0.tar.gz#md5:090267a7b843769d319073564fb3bb9a"
-        ],
-        "opam": {
-          "name": "angstrom",
-          "version": "0.13.0",
-          "path": "esy.lock/opam/angstrom.0.13.0"
-        }
+        "source": [ "github:inhabitedtype/angstrom:angstrom.opam#a5d9661" ]
       },
       "overrides": [],
       "dependencies": [
