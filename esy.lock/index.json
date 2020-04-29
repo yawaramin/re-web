@@ -1,5 +1,5 @@
 {
-  "checksum": "c305df5f9682b1e2e8e267710631e005",
+  "checksum": "a5acfdb23c3fab9d72eebdebe56a3e83",
   "root": "re-web@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -41,6 +41,7 @@
         "@opam/magic-mime@opam:1.1.2@980f82fb",
         "@opam/lwt@opam:5.3.0@6519bffc", "@opam/dune@opam:2.5.1@a0c1e658",
         "@opam/base64@opam:3.4.0@f5b9ad9b",
+        "@opam/angstrom@opam:0.13.0@cf460a5e",
         "@esy-ocaml/reason@3.6.0@d41d8cd9"
       ],
       "devDependencies": [
@@ -216,7 +217,7 @@
         "@opam/dune@opam:2.5.1@a0c1e658",
         "@opam/bigstringaf@opam:0.6.1@35f5e6d1",
         "@opam/base64@opam:3.4.0@f5b9ad9b",
-        "@opam/angstrom@github:inhabitedtype/angstrom:angstrom.opam#a5d9661@d41d8cd9"
+        "@opam/angstrom@opam:0.13.0@cf460a5e"
       ],
       "devDependencies": []
     },
@@ -274,7 +275,7 @@
         "@opam/faraday@opam:0.7.1@19546ee5",
         "@opam/dune@opam:2.5.1@a0c1e658",
         "@opam/bigstringaf@opam:0.6.1@35f5e6d1",
-        "@opam/angstrom@github:inhabitedtype/angstrom:angstrom.opam#a5d9661@d41d8cd9"
+        "@opam/angstrom@opam:0.13.0@cf460a5e"
       ],
       "devDependencies": []
     },
@@ -447,7 +448,7 @@
         "@opam/dune@opam:2.5.1@a0c1e658",
         "@opam/bigstringaf@opam:0.6.1@35f5e6d1",
         "@opam/base64@opam:3.4.0@f5b9ad9b",
-        "@opam/angstrom@github:inhabitedtype/angstrom:angstrom.opam#a5d9661@d41d8cd9",
+        "@opam/angstrom@opam:0.13.0@cf460a5e",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
@@ -456,7 +457,7 @@
         "@opam/faraday@opam:0.7.1@19546ee5",
         "@opam/bigstringaf@opam:0.6.1@35f5e6d1",
         "@opam/base64@opam:3.4.0@f5b9ad9b",
-        "@opam/angstrom@github:inhabitedtype/angstrom:angstrom.opam#a5d9661@d41d8cd9"
+        "@opam/angstrom@opam:0.13.0@cf460a5e"
       ]
     },
     "@opam/uutf@opam:1.0.2@4440868f": {
@@ -1621,7 +1622,7 @@
         "@opam/faraday@opam:0.7.1@19546ee5",
         "@opam/dune@opam:2.5.1@a0c1e658",
         "@opam/bigstringaf@opam:0.6.1@35f5e6d1",
-        "@opam/angstrom@github:inhabitedtype/angstrom:angstrom.opam#a5d9661@d41d8cd9",
+        "@opam/angstrom@opam:0.13.0@cf460a5e",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
@@ -1629,7 +1630,7 @@
         "@opam/faraday@opam:0.7.1@19546ee5",
         "@opam/dune@opam:2.5.1@a0c1e658",
         "@opam/bigstringaf@opam:0.6.1@35f5e6d1",
-        "@opam/angstrom@github:inhabitedtype/angstrom:angstrom.opam#a5d9661@d41d8cd9"
+        "@opam/angstrom@opam:0.13.0@cf460a5e"
       ]
     },
     "@opam/hpack@opam:0.2.0@9f3eae78": {
@@ -1652,13 +1653,13 @@
       "dependencies": [
         "ocaml@4.8.1000@d41d8cd9", "@opam/faraday@opam:0.7.1@19546ee5",
         "@opam/dune@opam:2.5.1@a0c1e658",
-        "@opam/angstrom@github:inhabitedtype/angstrom:angstrom.opam#a5d9661@d41d8cd9",
+        "@opam/angstrom@opam:0.13.0@cf460a5e",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
         "ocaml@4.8.1000@d41d8cd9", "@opam/faraday@opam:0.7.1@19546ee5",
         "@opam/dune@opam:2.5.1@a0c1e658",
-        "@opam/angstrom@github:inhabitedtype/angstrom:angstrom.opam#a5d9661@d41d8cd9"
+        "@opam/angstrom@opam:0.13.0@cf460a5e"
       ]
     },
     "@opam/fpath@opam:0.7.2@45477b93": {
@@ -2356,14 +2357,21 @@
         "ocaml@4.8.1000@d41d8cd9", "@opam/base-bytes@opam:base@19d0c2ff"
       ]
     },
-    "@opam/angstrom@github:inhabitedtype/angstrom:angstrom.opam#a5d9661@d41d8cd9": {
-      "id":
-        "@opam/angstrom@github:inhabitedtype/angstrom:angstrom.opam#a5d9661@d41d8cd9",
+    "@opam/angstrom@opam:0.13.0@cf460a5e": {
+      "id": "@opam/angstrom@opam:0.13.0@cf460a5e",
       "name": "@opam/angstrom",
-      "version": "github:inhabitedtype/angstrom:angstrom.opam#a5d9661",
+      "version": "opam:0.13.0",
       "source": {
         "type": "install",
-        "source": [ "github:inhabitedtype/angstrom:angstrom.opam#a5d9661" ]
+        "source": [
+          "archive:https://opam.ocaml.org/cache/md5/09/090267a7b843769d319073564fb3bb9a#md5:090267a7b843769d319073564fb3bb9a",
+          "archive:https://github.com/inhabitedtype/angstrom/archive/0.13.0.tar.gz#md5:090267a7b843769d319073564fb3bb9a"
+        ],
+        "opam": {
+          "name": "angstrom",
+          "version": "0.13.0",
+          "path": "esy.lock/opam/angstrom.0.13.0"
+        }
       },
       "overrides": [],
       "dependencies": [

@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "@esy-ocaml/reason": ">= 3.6.0 < 4.0.0",
+    "@opam/angstrom": "0.13.0",
     "@opam/base64": ">= 3.2.0 < 4.0.0",
     "@opam/dune": "< 3.0.0",
     "@opam/lwt": ">= 5.3.0 < 6.0.0",
@@ -54,7 +55,6 @@
     "@opam/utop": "*"
   },
   "resolutions": {
-    "@opam/angstrom": "inhabitedtype/angstrom:angstrom.opam#a5d9661",
     "@opam/junit_alcotest": "Khady/ocaml-junit:junit_alcotest.opam#5e28acc",
     "@opam/multipart-form-data": "cryptosense/multipart-form-data:multipart-form-data.opam#d49fd89",
     "@opam/websocketaf": {
