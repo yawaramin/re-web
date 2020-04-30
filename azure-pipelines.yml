@@ -27,15 +27,15 @@ stages:
     - template: .ci/build-platform.yml
     - template: .ci/utils/prepare-cache.yml
 
-  - job: Windows
-    pool:
-      vmImage: windows-2019
-    timeoutInMinutes: 120
-    variables:
-      CACHE_FOLDER: $(Pipeline.Workspace)/cache
-    steps:
-    - template: .ci/build-platform.yml
-    - template: .ci/utils/prepare-cache.yml
+#  - job: Windows
+#    pool:
+#      vmImage: windows-2019
+#    timeoutInMinutes: 120
+#    variables:
+#      CACHE_FOLDER: $(Pipeline.Workspace)/cache
+#    steps:
+#    - template: .ci/build-platform.yml
+#    - template: .ci/utils/prepare-cache.yml
 
 - stage: Publish_docs
   displayName: Publish documentation
