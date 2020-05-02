@@ -16,7 +16,8 @@ type status = Httpaf.Status.t
 
 type http = [`HTTP of Httpaf.Response.t * Body.t]
 
-type pull = float -> string option Lwt.t
+type pull_error = [`Empty | `Timeout | `Connection_close]
+type pull = float -> (string, pull_error) result Lwt.t
 type push = string -> unit
 type handler = pull -> push -> unit Lwt.t
 

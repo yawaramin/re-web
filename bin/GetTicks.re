@@ -12,14 +12,17 @@ let rec handler = (pull, push) => {
 
   switch (message) {
   // Shut down the WS if the client actually sends a message
-  | Some(_) =>
+  | Ok(_) =>
     "this WebSocket does not accept incoming messages"
     |> errorToJson
     |> push
     |> Lwt.return
 
+  // Shut down if client wants to
+  | Error(`Connection_close) => Lwt.return_unit
+
   // Otherwise carry on
-  | None =>
+  | _ =>
     let* response = Client.New.get("http://localhost:8080/hello");
 
     switch (response) {

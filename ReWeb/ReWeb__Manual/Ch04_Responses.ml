@@ -161,9 +161,9 @@
     message for a long time, if ever. Hence the [pull] function actually
     needs you to tell it how long to wait for a
     message--[pull(floatSeconds)], and returns a
-    promise--[Lwt.t(option(string))], representing the fact that it's
-    asynchronous and that it might have timed out and hence it didn't
-    get a message.
+    promise--[Lwt.t(result(string, Response.pull_error))], representing
+    the fact that it's asynchronous and that it might have timed out and
+    hence it didn't get a message.
 
     Here's an example of pulling:
 
@@ -171,15 +171,15 @@
         1.
         |> pull
         |> Lwt.map(fun
-            | Some(string) => print_endline(string)
-            | None => print_endline("(None)")
+            | Ok(string) => print_endline(string)
+            | _ => print_endline("(Timed out or connection closed)")
           );]}
 
     This handler pulls a message from the connection, waiting for one
     second maximum. Then, because it gets back a promise, it maps over
     the promise to return the required type, [Lwt.t(unit)], by just
-    printing out whatever string it got (or none). By doing so it exits
-    and closes the WS.
+    printing out whatever string it got (or an error message). By doing
+    so it exits and closes the WS.
 
     {2 Continuously-running handlers}
 
@@ -194,11 +194,12 @@
         open Lwt.Syntax;
         let* message = pull(2.);
 
-        switch (Option.map(String.trim, message)) {
-        | Some("close") => Lwt.return_unit
-        | Some(message) =>
+        switch (Stdlib.Result.map(String.trim, message)) {
+        | Ok("close") | Error(`Connection_close) => Lwt.return_unit
+        | Ok(message) =>
           push(message);
           handler(pull, push);
+        | Error(_) => handler(pull, push)
         };
       };
 
@@ -207,8 +208,9 @@
     In this example, [handler] is recursive (defined with [let rec]) and
     calls itself to keep the promise running continuously. The promise
     polls for a new message every two seconds, checks if the message is
-    'close' and if so closes the connection. Otherwise it echoes the
-    message and keeps going.
+    'close' (or if the client unexpectedly just closed the connection)
+    and if so, exits the handler. Otherwise it echoes the message and
+    keeps going.
 
     {2 Handlers with internal state}
 
@@ -226,19 +228,22 @@
           let* message = pull(2.);
 
           switch (message) {
-          | Some(message) =>
+          | Ok(message) =>
             push(message);
             handler(~doTimes=pred(doTimes), pull, push);
-          | None => handler(doTimes, pull, push)
+          | Error(`Connection_close) => Lwt.return_unit
+          | Error(_) => handler(doTimes, pull, push)
           };
         };
 
       let ws = Response.of_websocket(handler(~doTimes=5));]}
 
     In this example we just echo incoming messages but only 5 times,
-    after which we close the connection. Notice how the handler
-    maintains its own internal state by using the recursive call to pass
-    in a different value of [doTimes]. [pred] is a built-in standard
-    library function; it returns the 'predecessor' (i.e. one less) of
-    the integer passed to it. *)
+    after which we close the connection. We also exit the handler, like
+    before, if the client unexpectedly closes the connection.
+
+    Notice how the handler maintains its own internal state by using the
+    recursive call to pass in a different value of [doTimes]. [pred] is
+    a built-in standard library function; it returns the 'predecessor'
+    (i.e. one less) of the integer passed to it. *)
 

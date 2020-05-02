@@ -77,19 +77,27 @@ let websocket_handler handler resolver _ wsd =
     | `Continuation
     | `Text
     | `Binary ->
-      bigstring
-      |> Bigstringaf.substring ~off ~len
-      |> Option.some
-      |> queue_incoming
-    | `Connection_close -> eof ()
+      queue_incoming (Some (Ok (Bigstringaf.substring ~off ~len bigstring)))
+    | `Connection_close ->
+      queue_incoming (Some (Error `Connection_close));
+      queue_incoming None;
+      eof ()
     | `Ping -> Wsd.send_pong wsd
     | `Pong
     | `Other _ -> ()
   in
-  let pull timeout_s = Lwt.pick [
-    Lwt_stream.get incoming;
-    timeout_s |> Lwt_unix.sleep |> Lwt.map @@ fun () -> None;
-  ]
+  let pull timeout_s =
+    let open Lwt.Syntax in
+    let msg = incoming
+      |> Lwt_stream.get
+      |> Lwt.map @@ function
+        | Some msg -> msg
+        | None -> Error `Empty
+    in
+    Lwt.pick [
+      msg;
+      timeout_s |> Lwt_unix.sleep |> Lwt.map @@ fun () -> Error `Timeout;
+    ]
   in
   let push string =
     let off = 0 in
