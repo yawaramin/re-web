@@ -6,6 +6,7 @@
     ReWeb__Config
     ReWeb__Header
     base64
+    digestif.ocaml
     httpaf
     httpaf-lwt-unix
     lwt.unix
@@ -14,6 +15,5 @@
     piaf
     uri
     websocketaf
-    websocketaf-lwt-unix
     yojson))
 

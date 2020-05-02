@@ -22,8 +22,8 @@
   },
   "dependencies": {
     "@esy-ocaml/reason": ">= 3.6.0 < 4.0.0",
-    "@opam/angstrom": ">= 0.14.0 < 1.0.0",
     "@opam/base64": ">= 3.2.0 < 4.0.0",
+    "@opam/digestif": ">= 0.1.6 < 1.0.0",
     "@opam/dune": "< 3.0.0",
     "@opam/ezgzip": ">= 0.2.3 < 1.0.0",
     "@opam/lwt": ">= 5.3.0 < 6.0.0",
@@ -31,7 +31,6 @@
     "@opam/multipart-form-data": ">= 0.3.0 < 1.0.0",
     "@opam/uri": ">= 3.1.0 < 4.0.0",
     "@opam/websocketaf": "*",
-    "@opam/websocketaf-lwt-unix": "*",
     "@opam/yojson": ">= 1.7.0 < 2.0.0",
     "@reason-native-web/esy-openssl": ">= 1.1.1006 < 2.0.0",
     "@reason-native-web/gluten-lwt-unix": ">= 1.2.0 < 2.0.0",
@@ -51,9 +50,6 @@
   "resolutions": {
     "@opam/httpaf": "anmonteiro/httpaf:httpaf.opam#d7fcccc",
     "@opam/junit_alcotest": "Khady/ocaml-junit:junit_alcotest.opam#5e28acc",
-    "@opam/websocketaf": "anmonteiro/websocketaf:websocketaf.opam#05f3b25",
-    "@opam/websocketaf-lwt": "anmonteiro/websocketaf:websocketaf-lwt.opam#05f3b25",
-    "@opam/websocketaf-lwt-unix":
-      "anmonteiro/websocketaf:websocketaf-lwt-unix.opam#05f3b25"
+    "@opam/websocketaf": "anmonteiro/websocketaf:websocketaf.opam#05f3b25"
   }
 }

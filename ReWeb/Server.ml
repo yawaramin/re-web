@@ -113,7 +113,7 @@ let error_handler wsd (`Exn exn) =
 
   Wsd.close wsd
 
-let upgrade_handler ?headers addr upgrade handler () =
+let upgrade_handler addr upgrade handler () =
   let promise, resolver = Lwt.wait () in
   let ws_conn = Websocketaf.Server_connection.create_websocket
     ~error_handler
@@ -121,7 +121,15 @@ let upgrade_handler ?headers addr upgrade handler () =
   in
   ws_conn
   |> Gluten.make (module Websocketaf.Server_connection)
-  |> upgrade
+  |> upgrade;
+
+  Lwt.on_success promise @@ fun result ->
+    print_endline @@ match result with
+      | Ok () ->
+        addr
+        |> string_of_unix_addr
+        |> ((^) "ReWeb.Server: WebSocket closed ")
+      | Error string -> string
 
 let error_handler _ ?request:_ error handle =
   let message = match error with
@@ -182,9 +190,10 @@ let serve ~port server =
           print_string " ";
           client_addr |> string_of_unix_addr |> print_endline;
           begin match Websocketaf.Handshake.respond_with_upgrade
+            ?headers
             ~sha1
             reqd
-            (upgrade_handler ?headers client_addr upgrade handler) with
+            (upgrade_handler client_addr upgrade handler) with
             | Ok () -> ()
             | Error str -> Reqd.report_exn reqd (Failure str)
           end
