@@ -113,22 +113,15 @@ let error_handler wsd (`Exn exn) =
 
   Wsd.close wsd
 
-let websocket_upgrader ?headers reqd client_addr handler =
+let upgrade_handler ?headers addr upgrade handler () =
   let promise, resolver = Lwt.wait () in
-  let upgrade_result = client_addr
-    |> Websocketaf_lwt_unix.Server.create_upgraded_connection_handler
-      ~error_handler
-      ~websocket_handler:(websocket_handler handler resolver)
-    |> Websocketaf_lwt_unix.Server.respond_with_upgrade ?headers reqd
+  let ws_conn = Websocketaf.Server_connection.create_websocket
+    ~error_handler
+    (websocket_handler handler resolver addr)
   in
-  Lwt.on_success promise @@ fun result ->
-    print_endline @@ match result with
-      | Ok () ->
-        Lwt.cancel upgrade_result;
-        client_addr
-        |> string_of_unix_addr
-        |> ((^) "ReWeb.Server: WebSocket closed ")
-      | Error string -> string
+  ws_conn
+  |> Gluten.make (module Websocketaf.Server_connection)
+  |> upgrade
 
 let error_handler _ ?request:_ error handle =
   let message = match error with
@@ -141,25 +134,26 @@ let error_handler _ ?request:_ error handle =
   H.Body.close_writer body
 
 let two_years = 2 * 365 * 24 * 60 * 60
-let id x = x
 
 let filter server route =
   begin
     if Config.Default.Filters.csp
     then [] |> Header.ContentSecurityPolicy.make |> Filter.csp
-    else id
+    else Fun.id
   end
   @@
   begin
     if Config.Default.Filters.hsts
     then two_years |> Header.StrictTransportSecurity.make |> Filter.hsts
-    else id
+    else Fun.id
   end
   @@
   server route
 
+let sha1 string = Digestif.SHA1.(string |> digest_string |> to_raw_string)
+
 let serve ~port server =
-  let request_handler client_addr reqd =
+  let request_handler client_addr { Gluten.Reqd.reqd; upgrade } =
     let f () =
       let send = function
         | `HTTP (resp, body) ->
@@ -187,9 +181,12 @@ let serve ~port server =
         | `WebSocket (headers, handler) ->
           print_string " ";
           client_addr |> string_of_unix_addr |> print_endline;
-          begin
-            try websocket_upgrader ?headers reqd client_addr handler with
-            | exn -> Reqd.report_exn reqd exn
+          begin match Websocketaf.Handshake.respond_with_upgrade
+            ~sha1
+            reqd
+            (upgrade_handler ?headers client_addr upgrade handler) with
+            | Ok () -> ()
+            | Error str -> Reqd.report_exn reqd (Failure str)
           end
       in
       let meth, path, query = reqd |> H.Reqd.request |> parse_route in

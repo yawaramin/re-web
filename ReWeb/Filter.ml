@@ -109,7 +109,7 @@ end
 module H = Httpaf
 
 module Make(R : Request.S) : S
-  with type ('fd, 'io) Service.Request.Reqd.t = ('fd, 'io) R.Reqd.t
+  with type Service.Request.Reqd.t = R.Reqd.t
   and type 'ctx Service.Request.t = 'ctx R.t = struct
   module Service = Service.Make(R)
   module Config = Service.Config

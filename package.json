@@ -7,18 +7,10 @@
     "build": "dune build -p #{self.name}",
     "buildDev": "dune build --only-packages #{self.name}",
     "NOTE": "Optional release Section. Customizes result of `esy release`",
-    "release": {
-      "bin": [
-        "Main"
-      ]
-    },
-    "buildEnv": {
-      "ODOC_SYNTAX": "re"
-    }
+    "release": { "bin": [ "Main" ] },
+    "buildEnv": { "ODOC_SYNTAX": "re" }
   },
-  "repository": {
-    "url": "https://github.com/yawaramin/re-web"
-  },
+  "repository": { "url": "https://github.com/yawaramin/re-web" },
   "scripts": {
     "bin": "esy b dune exec bin/Main.bc",
     "run-example": "esy b dune exec",
@@ -30,20 +22,22 @@
   },
   "dependencies": {
     "@esy-ocaml/reason": ">= 3.6.0 < 4.0.0",
-    "@opam/angstrom": "0.13.0",
+    "@opam/angstrom": ">= 0.14.0 < 1.0.0",
     "@opam/base64": ">= 3.2.0 < 4.0.0",
     "@opam/dune": "< 3.0.0",
+    "@opam/ezgzip": ">= 0.2.3 < 1.0.0",
     "@opam/lwt": ">= 5.3.0 < 6.0.0",
     "@opam/magic-mime": ">= 1.1.2 < 2.0.0",
-    "@opam/multipart-form-data": "*",
+    "@opam/multipart-form-data": ">= 0.3.0 < 1.0.0",
     "@opam/uri": ">= 3.1.0 < 4.0.0",
     "@opam/websocketaf": "*",
     "@opam/websocketaf-lwt-unix": "*",
     "@opam/yojson": ">= 1.7.0 < 2.0.0",
+    "@reason-native-web/esy-openssl": ">= 1.1.1006 < 2.0.0",
+    "@reason-native-web/gluten-lwt-unix": ">= 1.2.0 < 2.0.0",
     "@reason-native-web/h1": ">= 1.0.0-alpha.1 < 2.0.0",
     "@reason-native-web/h1-lwt-unix": ">= 1.0.0-alpha.1 < 2.0.0",
-    "@reason-native-web/piaf": ">= 1.0.0-alpha.1 < 2.0.0",
-    "@reason-native-web/esy-openssl": ">= 1.1.1006 < 2.0.0"
+    "@reason-native-web/piaf": ">= 1.0.0-alpha.1 < 2.0.0"
   },
   "devDependencies": {
     "@opam/alcotest": ">= 0.8.5 < 1.0.0",
@@ -55,24 +49,11 @@
     "@opam/utop": "*"
   },
   "resolutions": {
+    "@opam/httpaf": "anmonteiro/httpaf:httpaf.opam#d7fcccc",
     "@opam/junit_alcotest": "Khady/ocaml-junit:junit_alcotest.opam#5e28acc",
-    "@opam/multipart-form-data": "cryptosense/multipart-form-data:multipart-form-data.opam#d49fd89",
-    "@opam/websocketaf": {
-      "source": "anmonteiro/websocketaf:websocketaf.opam#8318e44",
-      "override": {
-        "dependencies": {
-          "@opam/httpaf": "anmonteiro/httpaf:httpaf.opam#eac806e"
-        }
-      }
-    },
-    "@opam/websocketaf-lwt-unix": {
-      "source": "anmonteiro/websocketaf:websocketaf-lwt-unix.opam#8318e44",
-      "override": {
-        "dependencies": {
-          "@opam/websocketaf-lwt": "anmonteiro/websocketaf:websocketaf-lwt.opam#8318e44"
-        }
-      }
-    }
+    "@opam/websocketaf": "anmonteiro/websocketaf:websocketaf.opam#05f3b25",
+    "@opam/websocketaf-lwt": "anmonteiro/websocketaf:websocketaf-lwt.opam#05f3b25",
+    "@opam/websocketaf-lwt-unix":
+      "anmonteiro/websocketaf:websocketaf-lwt-unix.opam#05f3b25"
   }
 }
-

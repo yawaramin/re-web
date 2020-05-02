@@ -24,7 +24,7 @@ end
 
 module Reqd = struct
   module Body = ReqdBody
-  type (_, _) t = H.Request.t * [`read] Body.t
+  type t = H.Request.t * [`read] Body.t
 
   let request = fst
   let request_body = snd

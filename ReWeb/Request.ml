@@ -11,10 +11,10 @@ end
 
 module type REQD = sig
   module Body : BODY
-  type ('fd, 'io) t
+  type t
 
-  val request : _ t -> Httpaf.Request.t
-  val request_body : _ t -> [`read] Body.t
+  val request : t -> Httpaf.Request.t
+  val request_body : t -> [`read] Body.t
 end
 (** This interface abstracts away the Httpaf request descriptor. *)
 
@@ -52,10 +52,7 @@ module type S = sig
   (** [headers(name, request)] gets all the values corresponding to the
       given header. *)
 
-  val make :
-    string ->
-    (Lwt_unix.file_descr, unit Lwt.t) Reqd.t ->
-    unit t
+  val make : string -> Reqd.t -> unit t
   (** [make(query, reqd)] returns a new request containing the given
       [query] and Httpaf [reqd]. *)
 
@@ -81,11 +78,7 @@ module Make
   module Config = C
   module Reqd = R
 
-  type 'ctx t = {
-    ctx : 'ctx;
-    query : string;
-    reqd : (Lwt_unix.file_descr, unit Lwt.t) Reqd.t;
-  }
+  type 'ctx t = { ctx : 'ctx; query : string; reqd : Reqd.t }
 
   let body request =
     let request_body = Reqd.request_body request.reqd in

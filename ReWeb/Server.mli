@@ -1,12 +1,11 @@
-module Request : Request.S
-  with type ('fd, 'io) Reqd.t = ('fd, 'io) Httpaf.Reqd.t
+module Request : Request.S with type Reqd.t = Httpaf.Reqd.t
 
 module Service : Service.S
-  with type ('fd, 'io) Request.Reqd.t = ('fd, 'io) Httpaf.Reqd.t
+  with type Request.Reqd.t = Httpaf.Reqd.t
   and type 'ctx Request.t = 'ctx Request.t
 
 module Filter : Filter.S
-  with type ('fd, 'io) Service.Request.Reqd.t = ('fd, 'io) Httpaf.Reqd.t
+  with type Service.Request.Reqd.t = Httpaf.Reqd.t
   and type 'ctx Service.Request.t = 'ctx Request.t
   and type ('ctx, 'resp) Service.t = ('ctx, 'resp) Service.t
 
