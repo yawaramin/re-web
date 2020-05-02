@@ -169,7 +169,7 @@ let getEchoWS = _ => {
       /* Close the connection by just returning a 'unit' promise. This
          is a convenience value that's like saying [Promise.resolve()]
          (i.e. resolve with an empty value) in JavaScript. */
-      Lwt.return_unit
+      Lwt_io.printf("Connection closed by client!\n")
     | Ok(string) =>
       // Echo the message back by pushing it
       push(string);
