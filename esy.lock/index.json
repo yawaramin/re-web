@@ -1,7 +1,23 @@
 {
-  "checksum": "16003e3f28a491c3aff262f7fbcae20a",
+  "checksum": "66ea350f2206864a86f269a4a64fb2de",
   "root": "re-web@link-dev:./package.json",
   "node": {
+    "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
+      "id":
+        "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9",
+      "name": "yarn-pkg-config",
+      "version":
+        "github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79",
+      "source": {
+        "type": "install",
+        "source": [
+          "github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [],
+      "devDependencies": []
+    },
     "re-web@link-dev:./package.json": {
       "id": "re-web@link-dev:./package.json",
       "name": "re-web",
@@ -26,6 +42,7 @@
         "@opam/lwt@opam:5.3.0@6519bffc", "@opam/ezgzip@opam:0.2.3@08ae0839",
         "@opam/dune@opam:2.5.1@a0c1e658",
         "@opam/digestif@opam:0.8.0-1@063c8a05",
+        "@opam/conf-pkg-config@opam:1.1@55d8e330",
         "@opam/base64@opam:3.4.0@f5b9ad9b",
         "@esy-ocaml/reason@3.6.0@d41d8cd9"
       ],
@@ -113,7 +130,7 @@
         "@reason-native-web/esy-openssl@1.1.1006@d41d8cd9",
         "@opam/dune-configurator@opam:2.5.1@aeb9d8d5",
         "@opam/dune@opam:2.5.1@a0c1e658",
-        "@opam/conf-pkg-config@opam:1.2@9d4c7d7b",
+        "@opam/conf-pkg-config@opam:1.1@55d8e330",
         "@opam/base-unix@opam:base@87d0b2eb"
       ],
       "devDependencies": []
@@ -353,7 +370,7 @@
       },
       "overrides": [],
       "dependencies": [
-        "@opam/conf-pkg-config@opam:1.2@9d4c7d7b",
+        "@opam/conf-pkg-config@opam:1.1@55d8e330",
         "@opam/conf-autoconf@opam:0.1@27b3f7cf"
       ],
       "devDependencies": []
@@ -2128,26 +2145,34 @@
       ],
       "dependencies": [
         "esy-zlib@github:esy-packages/esy-zlib#404929fd8b7ed83ed6a528d751840faff957b4b3@d41d8cd9",
-        "@opam/conf-pkg-config@opam:1.2@9d4c7d7b",
+        "@opam/conf-pkg-config@opam:1.1@55d8e330",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": []
     },
-    "@opam/conf-pkg-config@opam:1.2@9d4c7d7b": {
-      "id": "@opam/conf-pkg-config@opam:1.2@9d4c7d7b",
+    "@opam/conf-pkg-config@opam:1.1@55d8e330": {
+      "id": "@opam/conf-pkg-config@opam:1.1@55d8e330",
       "name": "@opam/conf-pkg-config",
-      "version": "opam:1.2",
+      "version": "opam:1.1",
       "source": {
         "type": "install",
         "source": [ "no-source:" ],
         "opam": {
           "name": "conf-pkg-config",
-          "version": "1.2",
-          "path": "esy.lock/opam/conf-pkg-config.1.2"
+          "version": "1.1",
+          "path": "esy.lock/opam/conf-pkg-config.1.1"
         }
       },
-      "overrides": [],
-      "dependencies": [ "@esy-ocaml/substs@0.0.1@d41d8cd9" ],
+      "overrides": [
+        {
+          "opamoverride":
+            "esy.lock/overrides/opam__s__conf_pkg_config_opam__c__1.1_opam_override"
+        }
+      ],
+      "dependencies": [
+        "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9",
+        "@esy-ocaml/substs@0.0.1@d41d8cd9"
+      ],
       "devDependencies": []
     },
     "@opam/conf-m4@opam:1@3b2b148a": {
