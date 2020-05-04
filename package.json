@@ -51,6 +51,6 @@
   "resolutions": {
     "@opam/httpaf": "anmonteiro/httpaf:httpaf.opam#d7fcccc",
     "@opam/junit_alcotest": "Khady/ocaml-junit:junit_alcotest.opam#5e28acc",
-    "@opam/websocketaf": "anmonteiro/websocketaf:websocketaf.opam#05f3b25"
+    "@opam/websocketaf": "anmonteiro/websocketaf:websocketaf.opam#c002201"
   }
 }
