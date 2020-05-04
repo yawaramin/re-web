@@ -1,5 +1,5 @@
 {
-  "checksum": "66ea350f2206864a86f269a4a64fb2de",
+  "checksum": "c018e5ddaac92236e0e3810e716d6eb7",
   "root": "re-web@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -35,7 +35,7 @@
         "@reason-native-web/gluten-lwt-unix@1.2.0@d41d8cd9",
         "@reason-native-web/esy-openssl@1.1.1006@d41d8cd9",
         "@opam/yojson@opam:1.7.0@7056d985",
-        "@opam/websocketaf@github:anmonteiro/websocketaf:websocketaf.opam#05f3b25@d41d8cd9",
+        "@opam/websocketaf@github:anmonteiro/websocketaf:websocketaf.opam#c002201@d41d8cd9",
         "@opam/uri@opam:3.1.0@d38ac0ae",
         "@opam/multipart-form-data@opam:0.3.0@375eb487",
         "@opam/magic-mime@opam:1.1.2@980f82fb",
@@ -436,15 +436,15 @@
         "@opam/dune@opam:2.5.1@a0c1e658", "@opam/biniou@opam:1.2.1@d7570399"
       ]
     },
-    "@opam/websocketaf@github:anmonteiro/websocketaf:websocketaf.opam#05f3b25@d41d8cd9": {
+    "@opam/websocketaf@github:anmonteiro/websocketaf:websocketaf.opam#c002201@d41d8cd9": {
       "id":
-        "@opam/websocketaf@github:anmonteiro/websocketaf:websocketaf.opam#05f3b25@d41d8cd9",
+        "@opam/websocketaf@github:anmonteiro/websocketaf:websocketaf.opam#c002201@d41d8cd9",
       "name": "@opam/websocketaf",
-      "version": "github:anmonteiro/websocketaf:websocketaf.opam#05f3b25",
+      "version": "github:anmonteiro/websocketaf:websocketaf.opam#c002201",
       "source": {
         "type": "install",
         "source": [
-          "github:anmonteiro/websocketaf:websocketaf.opam#05f3b25"
+          "github:anmonteiro/websocketaf:websocketaf.opam#c002201"
         ]
       },
       "overrides": [],
