@@ -16,13 +16,39 @@ type status = Httpaf.Status.t
 
 type http = [`HTTP of Httpaf.Response.t * Body.t]
 
-type pull_error = [`Empty | `Timeout | `Connection_close]
+type pull_error = [
+| `Empty
+  (** The incoming message stream is empty. *)
+| `Timeout
+  (** Could not get a message from the stream within the given timeout. *)
+| `Connection_close
+  (** Connection was closed by the client. {b Warning:} you must exit
+      the WebSocket handler as soon as possible when this happens.
+      Otherwise, you will be in an infinite loop waiting for messages
+      that will never arrive. *)
+]
+(** Possible issues with pulling a message from the incoming messages
+    stream. *)
+
 type pull = float -> (string, pull_error) result Lwt.t
+(** [pull(timeout_s)] asynchronously gets the next message from the
+    WebSocket if there is any, with a timeout in seconds of [timeout_s].
+    If it doesn't time out it returns [Some string], otherwise [None]. *)
+
 type push = string -> unit
+(** [push(response)] pushes the string [response] to the WebSocket
+    client. *)
+
 type handler = pull -> push -> unit Lwt.t
+(** [handler(pull, push)] is an asynchronous callback that manages the
+    WS from the server side. The WS will shut down from the server side
+    as soon as [handler] exits, so if you want to keep it open you need
+    to make it call itself recursively. Because the call will be
+    tail-recursive, OCaml's tail-call elimination takes care of stack
+    memory use. *)
 
 type websocket = [`WebSocket of Httpaf.Headers.t option * handler]
-(** See {!of_websocket} for an explanation of these types. *)
+(** A WebSocket response. *)
 
 type 'resp t = [> http | websocket] as 'resp
 (** Response type, can be an HTTP or a WebSocket response. Many of the
@@ -174,22 +200,13 @@ val of_view :
     as it is streamed out. *)
 
 val of_websocket : ?headers:headers -> handler -> [> websocket]
-(** [of_websocket(?headers, handler)] responds with an open WebSocket.
+(** [of_websocket(?headers, handler)] is an open WebSocket response.
     Optionally you can pass along extra [headers] which will be sent to
     the client when opening the WS.
 
-    [handler(pull, push)] is an asynchronous callback that manages the
-    WS from the server side. The WS will shut down from the server side
-    as soon as [handler] exits, so if you want to keep it open you need
-    to make it call itself recursively. Because the call will be
-    tail-recursive, OCaml's tail-call elimination takes care of stack
-    memory use.
-
-    [pull(timeout_s)] asynchronously gets the next message from the WS
-    if there is any, with a timeout in seconds of [timeout_s]. If it
-    doesn't time out it returns [Some string], otherwise [None].
-
-    [push(response)] pushes the string [response] to the WS client.
+    {i Warning} it can be a little tricky to write a completely
+    asynchronous WebSocket handler correctly. Be sure to read the
+    reference documentation above, and the manual, carefully.
 
     {i Note} OCaml strings are un-encoded byte arrays, and ReWeb treats
     all incoming and outgoing WebSocket data as such--even if the client

@@ -242,6 +242,13 @@
     after which we close the connection. We also exit the handler, like
     before, if the client unexpectedly closes the connection.
 
+    {i Warning:} it's extremely important to let the handler exit as
+    soon as possible from the [| Error(`Connection_close) => ...] branch.
+    This error message is meant to specifically allow some cleanup
+    before exiting the handler, but you definitely don't want to keep
+    looping and send the handler into an infinite loop once the
+    connection is closed.
+
     Notice how the handler maintains its own internal state by using the
     recursive call to pass in a different value of [doTimes]. [pred] is
     a built-in standard library function; it returns the 'predecessor'
