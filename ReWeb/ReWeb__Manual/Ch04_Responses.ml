@@ -24,8 +24,8 @@
 
     HTTP responses are defined as an 'envelope' and a body. The envelope
     specifies the response headers and status. The body is the same body
-    type we came across in {!Manual.Ch03_Requests}--all HTTP
-    bodies in ReWeb are handled with the same data type.
+    type we came across in Chapter 3--all HTTP bodies in ReWeb are
+    handled with the same data type.
 
     {2 Creation}
 

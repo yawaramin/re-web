@@ -35,11 +35,11 @@
 
     {1 Request bodies}
 
-    Request bodies are modelled by a variant type {!ReWeb.Body.t}. In
-    fact this type is used for both request {i and} response bodies in
-    ReWeb and as such contains operations for converting between
-    different forms of bodies (streams, single strings) used in
-    different parts of ReWeb.
+    Request bodies are modelled by the type [Piaf.Body.t] in Antonio
+    Monteiro's excellent web library,
+    {{: https://github.com/anmonteiro/piaf/} Piaf}. See its
+    {{: https://github.com/anmonteiro/piaf/blob/830d238360f255ae465436744861c36c7c6b2504/lib/piaf.mli#L152} interface declaration}
+    to get an idea of what you can do what request bodies.
 
     You will mostly not need to care about dealing with request bodies
     directly if you use one of the provided filters which read and store
