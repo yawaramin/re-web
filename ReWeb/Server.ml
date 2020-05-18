@@ -191,7 +191,10 @@ let serve ~port server =
             reqd
             (upgrade_handler client_addr upgrade handler) with
             | Ok () -> ()
-            | Error str -> Reqd.report_exn reqd (Failure str)
+            | Error string ->
+              let headers = H.Headers.of_list ["connection", "close"] in
+              let response = H.Response.create ~headers `Bad_request in
+              Reqd.respond_with_string reqd response string
           end
       in
       let meth, path, query = reqd |> H.Reqd.request |> parse_route in
