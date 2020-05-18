@@ -59,10 +59,6 @@ let string_of_unix_addr = function
 let schedule_chunk writer { H.IOVec.off; len; buffer } =
   H.Body.schedule_bigstring writer ~off ~len buffer
 
-let to_stream body = body
-  |> Piaf.Body.to_stream
-  |> Lwt_stream.map Body.make_chunk
-
 let websocket_handler handler resolver _ wsd =
   let resolve () =
     try Lwt.wakeup_later resolver (Ok ())
@@ -178,21 +174,13 @@ let serve ~port server =
           |> string_of_unix_addr
           |> Printf.printf " %d %s\n%!" code;
 
-          let send stream =
-            let writer = H.Reqd.respond_with_streaming reqd resp in
-            let fully_written =
-              Lwt_stream.iter (schedule_chunk writer) stream
-            in
-            Lwt.on_success fully_written @@ fun _ ->
+          let writer = H.Reqd.respond_with_streaming reqd resp in
+          let result = Piaf.Body.iter (schedule_chunk writer) body in
+          Lwt.on_success result begin function
+            | Ok () -> H.Body.close_writer writer
+            | Error error ->
+              Reqd.report_exn reqd (Failure (Piaf.Error.to_string error));
               H.Body.close_writer writer
-          in
-          begin match body with
-          | Body.Bigstring bigstring ->
-            H.Reqd.respond_with_bigstring reqd resp bigstring
-          | Body.Chunks stream -> send stream
-          | Body.Piaf body -> body |> to_stream |> send
-          | Body.String string ->
-            H.Reqd.respond_with_string reqd resp string
           end
         | `WebSocket (headers, handler) ->
           print_string " ";

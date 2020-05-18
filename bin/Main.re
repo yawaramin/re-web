@@ -117,20 +117,26 @@ let getTodoTitle = (id, request) => {
   open Lwt.Syntax;
 
   let* response = getTodo(id, request);
-  let* json = response |> Response.body |> Body.to_json;
+  let* result = response |> Response.body |> Piaf.Body.to_string;
 
-  /* We are manually pattern-matching against the JSON body here. You
-     can also use [ppx_deriving_yojson] to auto-derive JSON decoders
-     for your types. */
-  switch (json) {
-  | Ok(`Assoc(props)) =>
-    switch (List.assoc("title", props)) {
-    | `String(title) => title |> Response.of_text |> Lwt.return
+  switch (result) {
+  | Ok(string) =>
+    /* We are manually pattern-matching against the JSON body here. You
+       can also use [ppx_deriving_yojson] to auto-derive JSON decoders
+       for your types. */
+    switch (Yojson.Safe.from_string(string)) {
+    | `Assoc(props) =>
+      switch (List.assoc("title", props)) {
+      | `String(title) => title |> Response.of_text |> Lwt.return
+      | _
+      | exception Not_found =>
+        internalServerError("getTodo: malformed JSON response")
+      }
     | _
-    | exception Not_found =>
-      internalServerError("getTodo: malformed JSON response")
+    | exception _ => internalServerError("getTodo: malformed JSON response")
     }
-  | _ => internalServerError("getTodo: malformed JSON response")
+  | Error(_) =>
+    internalServerError("getTodo: error reading upstream response body")
   };
 };
 
@@ -155,7 +161,6 @@ let getEchoWS = _ => {
     if (greet) {
       push("Welcome to getEchoWS!\n");
     };
-
     open Lwt.Syntax;
     /* Use the provided [pull] function to asynchronously get a message.
        Note that this is under your control, you decide when to get the
@@ -165,7 +170,8 @@ let getEchoWS = _ => {
     let message = Stdlib.Result.map(String.trim, message);
 
     switch (message) {
-    | Ok("close") | Error(`Connection_close) =>
+    | Ok("close")
+    | Error(`Connection_close) =>
       /* Close the connection by just returning a 'unit' promise. This
          is a convenience value that's like saying [Promise.resolve()]
          (i.e. resolve with an empty value) in JavaScript. */

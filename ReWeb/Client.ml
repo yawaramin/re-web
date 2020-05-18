@@ -22,14 +22,12 @@ type headers = (string * string) list
 
 let config = Piaf.Config.default
 
-let convert_response result =
-  let open Let.Result in
-  let+ { Piaf.Response.message = { status; headers; version }; body } =
-    result
-  in
-  let status = status |> Piaf.Status.to_code |> H.Status.of_code in
-  let headers = Piaf.Headers.to_list headers in
-  body |> Body.of_piaf |> Response.of_http ~status ~headers
+let convert_response = function
+  | Ok { Piaf.Response.status; headers; version; body } ->
+    let status = status |> Piaf.Status.to_code |> H.Status.of_code in
+    let headers = Piaf.Headers.to_list headers in
+    Ok (Response.of_http ~status ~headers body)
+  | Error error -> Error (Piaf.Error.to_string error)
 
 module New = struct
   module Client = Piaf.Client.Oneshot
@@ -37,7 +35,7 @@ module New = struct
   type 'resp request_body =
     ?config:config ->
     ?headers:headers ->
-    ?body:Body.t ->
+    ?body:Piaf.Body.t ->
     string ->
     ([> Response.http] as 'resp, string) Lwt_result.t
 
@@ -52,9 +50,7 @@ module New = struct
     |> meth ?config ?headers
     |> Lwt.map convert_response
 
-  let request_body ?config ?headers ?body meth url =
-    let body = Option.map Body.to_piaf body in
-    url
+  let request_body ?config ?headers ?body meth url = url
     |> Uri.of_string
     |> meth ?config ?headers ?body
     |> Lwt.map convert_response
@@ -77,9 +73,7 @@ module New = struct
   let put ?config ?headers ?body url =
     request_body ?config ?headers ?body Client.put url
 
-  let request ?config ?headers ?body ~meth url =
-    let body = Option.map Body.to_piaf body in
-    url
+  let request ?config ?headers ?body ~meth url = url
     |> Uri.of_string
     |> Client.request ?config ?headers ?body ~meth
     |> Lwt.map convert_response

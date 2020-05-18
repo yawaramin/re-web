@@ -163,13 +163,20 @@ module Make(R : Request.S) : S
       |> next
     | _ -> unauthorized
 
+  let body_json_bad string =
+    bad_request ("ReWeb.Filter.body_json: " ^ string)
+
   let body_json next request =
     let body = R.body request in
     let open Lwt.Syntax in
-    let* json = Body.to_json body in
-    match json with
-    | Ok ctx -> request |> R.set_context ctx |> next
-    | Error string -> bad_request ("ReWeb.Filter.body_json: " ^ string)
+    let* body_string = Piaf.Body.to_string body in
+    match body_string with
+    | Ok body_string ->
+      begin match Yojson.Safe.from_string body_string with
+      | ctx -> request |> R.set_context ctx |> next
+      | exception Yojson.Json_error string -> body_json_bad string
+      end
+    | Error _ -> body_json_bad "could not read request body"
 
   let body_json_decode decoder next request =
     match request |> R.context |> decoder with
@@ -235,11 +242,7 @@ module Make(R : Request.S) : S
     | `POST, Some content_type
       when String.length content_type > multipart_ct_length
       && String.sub content_type 0 multipart_ct_length = "multipart/form-data; boundary=" ->
-      let stream = request
-        |> R.body
-        |> Body.to_stream
-        |> Lwt_stream.map chunk_to_string
-      in
+      let stream, promise = request |> R.body |> Piaf.Body.to_string_stream in
       let files = Hashtbl.create ~random:true 5 in
       let open Lwt.Syntax in
       let close _ file prev =
@@ -272,12 +275,18 @@ module Make(R : Request.S) : S
       in
       let g fields =
         let* () = cleanup () in
-        let fields = List.map (fun (k, v) -> k, [v]) fields in
-        match Form.decode typ fields with
-        | Ok ctx -> request |> R.set_context ctx |> next
-        | Error string -> bad_request string
+        let* result = promise in
+        match result with
+        | Ok () ->
+          let fields = List.map (fun (k, v) -> k, [v]) fields in
+          begin match Form.decode typ fields with
+          | Ok ctx -> request |> R.set_context ctx |> next
+          | Error string -> bad_request string
+          end
+        | Error _ ->
+          bad_request "ReWeb.Filter.multipart_form: could not read request body"
       in
-      Lwt.try_bind f g begin fun exn ->
+      Lwt.try_bind f g @@ fun exn ->
         let* () = cleanup () in
         begin match exn with
           | Unix.Unix_error (Unix.EPERM, _, _) -> unauthorized
@@ -289,7 +298,6 @@ module Make(R : Request.S) : S
             `Internal_server_error
             |> Response.of_status ~message
             |> Lwt.return
-        end
       end
     | _ ->
       bad_request "ReWeb.Filter.multipart_form: request is not well-formed"

@@ -14,7 +14,7 @@ type status = Httpaf.Status.t
 (** See {{: https://b0-system.github.io/odig/doc@odoc.default/httpaf/Httpaf/Status/index.html} Httpaf.Status}
     for valid statuses. *)
 
-type http = [`HTTP of Httpaf.Response.t * Body.t]
+type http = [`HTTP of Httpaf.Response.t * Piaf.Body.t]
 
 type pull_error = [
 | `Empty
@@ -92,7 +92,7 @@ val add_headers_multi :
     [headers_multi] added to the end of the original [response]'s header
     list. *)
 
-val body : [< http] -> Body.t
+val body : [< http] -> Piaf.Body.t
 
 val cookies : [< http | websocket] -> Header.SetCookie.t list
 
@@ -140,7 +140,7 @@ val of_html :
 val of_http :
   status:status ->
   headers:(string * string) list ->
-  Body.t ->
+  Piaf.Body.t ->
   [> http]
 (** [of_http(~status, ~headers, body)] responds with an HTTP response
     composed of [status], [headers], and [body]. *)

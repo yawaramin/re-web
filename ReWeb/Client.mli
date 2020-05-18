@@ -33,7 +33,7 @@ module New : sig
   type 'resp request_body =
     ?config:config ->
     ?headers:headers ->
-    ?body:Body.t ->
+    ?body:Piaf.Body.t ->
     string ->
     ([> Response.http] as 'resp, string) Lwt_result.t
   (** The type of request functions which send a request body. *)
@@ -55,7 +55,7 @@ module New : sig
   val request :
     ?config:config->
     ?headers:headers ->
-    ?body:Body.t ->
+    ?body:Piaf.Body.t ->
     meth:Piaf.Method.t ->
     string ->
     ([> Response.http], string) Lwt_result.t

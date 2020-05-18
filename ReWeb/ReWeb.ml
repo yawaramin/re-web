@@ -4,9 +4,6 @@
     
     See {{: https://github.com/yawaramin/re-web/}} for sources. *)
 
-module Body = Body
-(** Handle request and response bodies. *)
-
 module Cache = Cache
 (** Concurrent safe caching. *)
 

@@ -57,30 +57,30 @@ let cookies = list (pair string string)
 
 let s = "ReWeb.Request", [
   Alcotest_lwt.test_case "body - empty" `Quick begin fun _ () ->
-    [||]
-    |> request 
-    |> Request.body
-    |> ReWeb.Body.to_stream
+    let stream, _ = [||] |> request |> Request.body |> Piaf.Body.to_stream in
+    stream
     |> Lwt_stream.is_empty
     |> Lwt.map @@ check bool "" true
   end;
 
   Alcotest_lwt.test_case "body - single chunk" `Quick begin fun _ () ->
     let value = "a" in
-    [|value|]
-    |> request
-    |> Request.body
-    |> ReWeb.Body.to_stream
+    let stream, _ =
+      [|value|] |> request |> Request.body |> Piaf.Body.to_stream
+    in
+    stream
     |> Lwt_stream.to_list
     |> Lwt.map @@ fun values ->
       values |> List.map to_string |> check (list string) "" [value]
   end;
 
   Alcotest_lwt.test_case "body - multiple chunks" `Quick begin fun _ () ->
-    [|"a"; "b"; "c"|]
-    |> request
-    |> Request.body
-    |> ReWeb.Body.to_stream
+    let stream, _ = [|"a"; "b"; "c"|]
+      |> request
+      |> Request.body
+      |> Piaf.Body.to_stream
+    in
+    stream
     |> Lwt_stream.to_list
     |> Lwt.map @@ fun values ->
       values

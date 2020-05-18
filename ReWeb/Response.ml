@@ -3,7 +3,7 @@ module Header = ReWeb__Header
 
 type headers = (string * string) list
 type status = Httpaf.Status.t
-type http = [`HTTP of Httpaf.Response.t * Body.t]
+type http = [`HTTP of Httpaf.Response.t * Piaf.Body.t]
 type pull_error = [`Empty | `Timeout | `Connection_close]
 type pull = float -> (string, pull_error) result Lwt.t
 type push = string -> unit
@@ -59,8 +59,8 @@ let headers name response =
   H.Headers.get_multi (get_headers response) name
 
 let of_http ~status ~headers body =
-  let headers = match body with
-    | Body.Chunks _ -> ("transfer-encoding", "chunked") :: headers
+  let headers = match Piaf.Body.length body with
+    | `Chunked -> ("transfer-encoding", "chunked") :: headers
     | _ -> headers
   in
   `HTTP (
@@ -93,7 +93,7 @@ let of_binary
     ~content_length:(String.length body)
     content_type
   in
-  of_http ~status ~headers (Body.of_string body)
+  of_http ~status ~headers (Piaf.Body.of_string body)
 
 let of_html ?(status=`OK) ?headers ?cookies =
   of_binary ~status ~content_type:"text/html" ?headers ?cookies
@@ -120,7 +120,7 @@ let of_redirect ?(content_type="text/plain") ?(body="") location =
   of_http
     ~status:`Moved_permanently
     ~headers:["location", location; "content-type", content_type]
-    (Body.of_string body)
+    (Piaf.Body.of_string body)
 
 let make_chunk line =
   let off = 0 in
@@ -134,7 +134,7 @@ let of_view ?(status=`OK) ?(content_type="text/html") ?headers ?cookies view =
   push_to_stream None;
 
   stream
-  |> Body.of_stream
+  |> Piaf.Body.of_stream
   |> of_http ~status ~headers:(make_headers ?headers ?cookies content_type)
 
 let of_file ?(status=`OK) ?content_type ?headers ?cookies file_name =
@@ -151,7 +151,7 @@ let of_file ?(status=`OK) ?content_type ?headers ?cookies file_name =
     let bigstring = Lwt_bytes.map_file ~fd ~shared:false () in
     let+ () = Lwt_unix.close file_descr in
     let headers = make_headers ?headers ?cookies content_type in
-    let body = Body.of_bigstring bigstring in
+    let body = Piaf.Body.of_bigstring bigstring in
     of_http ~status ~headers body
   in
   Lwt.catch f @@ fun exn ->

@@ -27,15 +27,21 @@ let rec handler = (pull, push) => {
 
     switch (response) {
     | Ok(response) =>
-      let* tick = response |> Response.body |> Body.to_string;
+      let* result = response |> Response.body |> Piaf.Body.to_string;
 
-      // Put the tick response in a JSON data structure and send it
-      tick |> tickToJson |> push;
-      handler(pull, push);
+      switch (result) {
+      | Ok(tick) =>
+        // Put the tick response in a JSON data structure and send it
+        tick |> tickToJson |> push;
+        handler(pull, push);
+      | Error(error) =>
+        error |> Piaf.Error.to_string |> errorToJson |> push;
+        handler(pull, push);
+      };
     | Error(message) =>
       message |> errorToJson |> push;
       handler(pull, push);
-    }
+    };
   };
 };
 

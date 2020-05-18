@@ -29,7 +29,7 @@ module type S = sig
       an OCaml object with a [prev] method that points to the old
       context. *)
 
-  val body : unit t -> Body.t
+  val body : unit t -> Piaf.Body.t
   (** [body(request)] gets the [request] body. There is a chance that
       the body may already have been read, in which case trying to read
       it again will error. However in a normal request pipeline as
@@ -93,7 +93,7 @@ module Make
       B.schedule_read request_body ~on_eof ~on_read
     in
     B.schedule_read request_body ~on_eof ~on_read;
-    Body.of_stream stream
+    Piaf.Body.of_stream stream
 
   let body_string ?(buf_size=Config.buf_size) request =
     let request_body = Reqd.request_body request.reqd in
