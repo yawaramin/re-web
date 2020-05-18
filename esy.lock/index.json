@@ -1,5 +1,5 @@
 {
-  "checksum": "05adcd0f37b6e46d402d147d9924bbd7",
+  "checksum": "0a114e878f2542e816c2b5d6e85a8e53",
   "root": "re-web@link-dev:./package.json",
   "node": {
     "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
@@ -41,14 +41,13 @@
         "@opam/lwt@opam:5.3.0@6519bffc", "@opam/ezgzip@opam:0.2.3@08ae0839",
         "@opam/dune@opam:2.5.1@a0c1e658",
         "@opam/digestif@opam:0.8.0-1@063c8a05",
-        "@opam/conf-pkg-config@opam:1.1@a703693a",
         "@opam/base64@opam:3.4.0@f5b9ad9b",
         "@esy-ocaml/reason@3.6.0@d41d8cd9"
       ],
       "devDependencies": [
         "ocaml@4.8.1000@d41d8cd9", "@opam/utop@opam:2.5.0@e1664c74",
         "@opam/odoc@opam:1.5.0@35218f5f", "@opam/merlin@opam:3.3.4@5fcabf21",
-        "@opam/junit_alcotest@github:Khady/ocaml-junit:junit_alcotest.opam#5e28acc@d41d8cd9",
+        "@opam/junit_alcotest@opam:2.0.2@6922b233",
         "@opam/alcotest-lwt@opam:0.8.5@b44c6920",
         "@opam/alcotest@opam:0.8.5@4bc922ed"
       ]
@@ -152,7 +151,7 @@
         "@reason-native-web/esy-openssl@1.1.1006@d41d8cd9",
         "@opam/dune-configurator@opam:2.5.1@aeb9d8d5",
         "@opam/dune@opam:2.5.1@a0c1e658",
-        "@opam/conf-pkg-config@opam:1.1@a703693a",
+        "@opam/conf-pkg-config@opam:1.2@d86c8f53",
         "@opam/base-unix@opam:base@87d0b2eb"
       ],
       "devDependencies": []
@@ -391,7 +390,7 @@
       },
       "overrides": [],
       "dependencies": [
-        "@opam/conf-pkg-config@opam:1.1@a703693a",
+        "@opam/conf-pkg-config@opam:1.2@d86c8f53",
         "@opam/conf-autoconf@opam:0.1@27b3f7cf"
       ],
       "devDependencies": []
@@ -1590,14 +1589,21 @@
         "@opam/camomile@opam:1.0.2@51b42ad8"
       ]
     },
-    "@opam/junit_alcotest@github:Khady/ocaml-junit:junit_alcotest.opam#5e28acc@d41d8cd9": {
-      "id":
-        "@opam/junit_alcotest@github:Khady/ocaml-junit:junit_alcotest.opam#5e28acc@d41d8cd9",
+    "@opam/junit_alcotest@opam:2.0.2@6922b233": {
+      "id": "@opam/junit_alcotest@opam:2.0.2@6922b233",
       "name": "@opam/junit_alcotest",
-      "version": "github:Khady/ocaml-junit:junit_alcotest.opam#5e28acc",
+      "version": "opam:2.0.2",
       "source": {
         "type": "install",
-        "source": [ "github:Khady/ocaml-junit:junit_alcotest.opam#5e28acc" ]
+        "source": [
+          "archive:https://opam.ocaml.org/cache/sha256/fd/fda941b653613a4a5731f9b3557364b12baa341daa13c01676c9eb8d64e96b01#sha256:fda941b653613a4a5731f9b3557364b12baa341daa13c01676c9eb8d64e96b01",
+          "archive:https://github.com/Khady/ocaml-junit/releases/download/2.0.2/junit-2.0.2.tbz#sha256:fda941b653613a4a5731f9b3557364b12baa341daa13c01676c9eb8d64e96b01"
+        ],
+        "opam": {
+          "name": "junit_alcotest",
+          "version": "2.0.2",
+          "path": "esy.lock/opam/junit_alcotest.2.0.2"
+        }
       },
       "overrides": [],
       "dependencies": [
@@ -1606,7 +1612,7 @@
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "@opam/junit@opam:2.0.2@0b7bd730",
+        "@opam/junit@opam:2.0.2@0b7bd730", "@opam/dune@opam:2.5.1@a0c1e658",
         "@opam/alcotest@opam:0.8.5@4bc922ed"
       ]
     },
@@ -2076,28 +2082,28 @@
       ],
       "dependencies": [
         "esy-zlib@github:esy-packages/esy-zlib#404929fd8b7ed83ed6a528d751840faff957b4b3@d41d8cd9",
-        "@opam/conf-pkg-config@opam:1.1@a703693a",
+        "@opam/conf-pkg-config@opam:1.2@d86c8f53",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": []
     },
-    "@opam/conf-pkg-config@opam:1.1@a703693a": {
-      "id": "@opam/conf-pkg-config@opam:1.1@a703693a",
+    "@opam/conf-pkg-config@opam:1.2@d86c8f53": {
+      "id": "@opam/conf-pkg-config@opam:1.2@d86c8f53",
       "name": "@opam/conf-pkg-config",
-      "version": "opam:1.1",
+      "version": "opam:1.2",
       "source": {
         "type": "install",
         "source": [ "no-source:" ],
         "opam": {
           "name": "conf-pkg-config",
-          "version": "1.1",
-          "path": "esy.lock/opam/conf-pkg-config.1.1"
+          "version": "1.2",
+          "path": "esy.lock/opam/conf-pkg-config.1.2"
         }
       },
       "overrides": [
         {
           "opamoverride":
-            "esy.lock/overrides/opam__s__conf_pkg_config_opam__c__1.1_opam_override"
+            "esy.lock/overrides/opam__s__conf_pkg_config_opam__c__1.2_opam_override"
         }
       ],
       "dependencies": [

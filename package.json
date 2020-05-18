@@ -1,6 +1,6 @@
 {
   "name": "re-web",
-  "version": "0.1.0",
+  "version": "0.5.0",
   "description": "ReasonML web framework",
   "license": "MIT",
   "esy": {
@@ -23,7 +23,6 @@
   "dependencies": {
     "@esy-ocaml/reason": ">= 3.6.0 < 4.0.0",
     "@opam/base64": ">= 3.2.0 < 4.0.0",
-    "@opam/conf-pkg-config": "1.1",
     "@opam/digestif": ">= 0.1.6 < 1.0.0",
     "@opam/dune": "< 3.0.0",
     "@opam/ezgzip": ">= 0.2.3 < 1.0.0",
@@ -42,13 +41,10 @@
   "devDependencies": {
     "@opam/alcotest": ">= 0.8.5 < 1.0.0",
     "@opam/alcotest-lwt": ">= 0.8.5 < 1.0.0",
-    "@opam/junit_alcotest": "*",
+    "@opam/junit_alcotest": ">= 2.0.2 < 3.0.0",
     "@opam/merlin": "*",
     "ocaml": "~4.8.1000",
     "@opam/odoc": "*",
     "@opam/utop": "*"
-  },
-  "resolutions": {
-    "@opam/junit_alcotest": "Khady/ocaml-junit:junit_alcotest.opam#5e28acc"
   }
 }
