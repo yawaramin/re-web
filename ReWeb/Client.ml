@@ -23,7 +23,7 @@ type headers = (string * string) list
 let config = Piaf.Config.default
 
 let convert_response = function
-  | Ok { Piaf.Response.status; headers; version; body } ->
+  | Ok { Piaf.Response.status; headers; body; _ } ->
     let status = status |> Piaf.Status.to_code |> H.Status.of_code in
     let headers = Piaf.Headers.to_list headers in
     Ok (Response.of_http ~status ~headers body)

@@ -83,7 +83,6 @@ let websocket_handler handler resolver _ wsd =
     | `Other _ -> ()
   in
   let pull timeout_s =
-    let open Lwt.Syntax in
     let msg = incoming
       |> Lwt_stream.get
       |> Lwt.map @@ function

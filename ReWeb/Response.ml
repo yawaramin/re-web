@@ -156,11 +156,12 @@ let of_file ?(status=`OK) ?content_type ?headers ?cookies file_name =
   in
   Lwt.catch f @@ fun exn ->
     Lwt.return @@ match exn with
-      | Unix.Unix_error (Unix.ENOENT, _, _) ->
-        let message =
-          "ReWeb.Response.of_file: file not found: " ^ file_name
-        in
-        of_status ~message `Not_found
+      | Unix.Unix_error (error, _, _) ->
+        begin [@warning "-4"] match error with
+        | Unix.ENOENT -> of_status `Not_found
+        | EACCES | EPERM -> of_status `Unauthorized
+        | _ -> of_status `Internal_server_error
+        end
       | _ -> of_status `Internal_server_error
 
 let of_websocket ?headers handler =

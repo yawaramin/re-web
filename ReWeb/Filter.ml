@@ -233,9 +233,6 @@ module Make(R : Request.S) : S
 
   let multipart_ct_length = 30
 
-  let chunk_to_string { H.IOVec.buffer; off; len } =
-    Bigstringaf.substring buffer ~off ~len
-
   (* Complex because we need to keep track of files being uploaded *)
   let multipart_form ~typ path next request =
     match R.meth request, R.header "content-type" request with
@@ -288,7 +285,7 @@ module Make(R : Request.S) : S
       in
       Lwt.try_bind f g @@ fun exn ->
         let* () = cleanup () in
-        begin match exn with
+        begin [@warning "-4"] match exn with
           | Unix.Unix_error (Unix.EPERM, _, _) -> unauthorized
           | _ ->
             let message = exn

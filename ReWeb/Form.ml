@@ -37,7 +37,7 @@ let rec decode :
   (string * string list) list ->
   (ty, string) result =
   fun { fields; ctor } fields_assoc ->
-    let open Field in
+    let open! Field in
     match fields with
     | [] -> Ok ctor
     | field :: fields ->
@@ -60,7 +60,7 @@ let rec decode :
 
 let decoder form string = string |> Uri.query_of_encoded |> decode form
 
-let empty = { fields = []; ctor = () }
+let empty = { fields = Field.[]; ctor = () }
 
 let encode fields value = value
   |> fields
