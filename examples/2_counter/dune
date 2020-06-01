@@ -2,4 +2,5 @@
   (name Main)
   (public_name 2_counter)
   (package re-web)
-  (libraries ReWeb lwt))
+  (libraries ReWeb lwt)
+  (modes byte exe))
