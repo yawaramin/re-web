@@ -30,7 +30,7 @@ type pull_error = [
 (** Possible issues with pulling a message from the incoming messages
     stream. *)
 
-type pull = float -> (string, pull_error) result Lwt.t
+type pull = float -> (string, pull_error) Lwt_result.t
 (** [pull(timeout_s)] asynchronously gets the next message from the
     WebSocket if there is any, with a timeout in seconds of [timeout_s].
     If it doesn't time out it returns [Some string], otherwise [None]. *)
