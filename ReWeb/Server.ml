@@ -88,11 +88,14 @@ let websocket_handler handler resolver _ wsd =
       |> Lwt.map @@ function
         | Some msg -> msg
         | None -> Error `Empty
-    in
-    Lwt.pick [
+    in [
       msg;
       timeout_s |> Lwt_unix.sleep |> Lwt.map @@ fun () -> Error `Timeout;
     ]
+    (* In case we get a message from the client exactly when the timeout
+       expires, pick the message, not the timeout error. *)
+    |> Lwt.npick
+    |> Lwt.map (List.find Stdlib.Result.is_ok)
   in
   let push string =
     let off = 0 in
