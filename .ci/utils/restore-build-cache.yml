@@ -2,11 +2,11 @@
 
 steps:
   - bash: 'mkdir -p $(STAGING_DIRECTORY_UNIX)'
-    condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
+    condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/main'))
     displayName: '[Cache][Publish] Create cache directory'
 
   - task: Bash@3
-    condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
+    condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/main'))
     displayName: '[Cache][Restore] Restoring build cache using REST API'
     continueOnError: true
     inputs:
@@ -17,10 +17,10 @@ steps:
         PROJ="$SYSTEM_TEAMPROJECT"
         ART_NAME="cache-${AGENT_OS}-install"
         fetchLatestBuild() {
-          MASTER='branchName=refs%2Fheads%2Fmaster'
+          MAIN='branchName=refs%2Fheads%2Fmain'
           FILTER='deletedFilter=excludeDeleted&statusFilter=completed&resultFilter=succeeded'
           LATEST='queryOrder=finishTimeDescending&$top=1'
-          REST_BUILDS="$REST_BASE/$PROJ/_apis/build/builds?${FILTER}&${MASTER}&${LATEST}&api-version=4.1"
+          REST_BUILDS="$REST_BASE/$PROJ/_apis/build/builds?${FILTER}&${MAIN}&${LATEST}&api-version=4.1"
           echo "Rest call for builds: $REST_BUILDS"
           REST_BUILDS_RESP=$(curl "$REST_BUILDS")
           if [[ $REST_BUILDS_RESP =~ (\"web\":\{\"href\":\")([^\"]*) ]]; then LATEST_BUILD_PAGE="${BASH_REMATCH[2]}"; else LATEST_BUILD_PAGE=""; fi
@@ -47,21 +47,21 @@ steps:
       
 
   - bash: 'mkdir -p $(ESY__CACHE_INSTALL_PATH)'
-    condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
+    condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/main'))
     displayName: '[Cache][Restore] Create esy cache directory'
 
   # - bash: 'cd $(ESY__NPM_ROOT) && tar -xf $(STAGING_DIRECTORY_UNIX)/cache-$(Agent.OS)-install/npm-cache.tar -C .'
   #   continueOnError: true
-  #   condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
+  #   condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/main'))
   #   displayName: '[Cache][Restore] Untar npm cache directory'
 
   - bash: 'cd $(ESY__CACHE_INSTALL_PATH) && tar -xf $(STAGING_DIRECTORY_UNIX)/cache-$(Agent.OS)-install/esy-cache.tar -C .'
     continueOnError: true
-    condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
+    condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/main'))
     displayName: '[Cache][Restore] Untar esy cache directory'
 
   - bash: 'rm -rf *'
     continueOnError: true
     workingDirectory: '$(STAGING_DIRECTORY)'
-    condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
+    condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/main'))
     displayName: '[Cache][Restore] Clean up'

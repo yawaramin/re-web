@@ -1,9 +1,9 @@
-name: Build master - $(Build.BuildId)
+name: Build main - $(Build.BuildId)
 
 trigger:
   branches:
     include:
-      - master
+      - main
 
 stages:
 - stage: Build
@@ -42,7 +42,7 @@ stages:
   dependsOn: [Build]
   jobs:
   - deployment: Publish_docs
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
     displayName: Publish docs to GitHub
     environment: gh-pages
     pool:
