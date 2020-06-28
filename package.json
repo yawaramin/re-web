@@ -1,13 +1,12 @@
 {
-  "name": "re-web",
-  "version": "0.5.0",
+  "name": "@yawaramin/re-web",
+  "version": "0.6.0",
   "description": "ReasonML web framework",
   "license": "MIT",
   "esy": {
-    "build": "dune build -p #{self.name}",
-    "buildDev": "dune build --only-packages #{self.name}",
+    "build": "dune build -p re-web",
+    "buildDev": "dune build --only-packages re-web",
     "NOTE": "Optional release Section. Customizes result of `esy release`",
-    "release": { "bin": [ "Main" ] },
     "buildEnv": { "ODOC_SYNTAX": "re" }
   },
   "repository": { "url": "https://github.com/yawaramin/re-web" },
