@@ -6,7 +6,7 @@ steps:
     displayName: "Clone GitHub pages repo"
 
   - script: |
-      rm -rf $(Build.StagingDirectory)/ReWeb || true
+      rm -rf $(Build.StagingDirectory)/re-web || true
       rm $(Build.StagingDirectory)/index.html || true
       rm $(Build.StagingDirectory)/odoc.css || true
       rm $(Build.StagingDirectory)/highlight.pack.js || true
