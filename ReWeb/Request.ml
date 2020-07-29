@@ -88,7 +88,7 @@ module Make
       push_to_stream (Some {
         H.IOVec.off;
         len;
-        buffer = Bigstringaf.copy buffer ~off ~len
+        buffer
       });
       B.schedule_read request_body ~on_eof ~on_read
     in
