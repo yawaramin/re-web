@@ -1,6 +1,6 @@
 ## ReWeb - a type-safe ergonomic ReasonML and OCaml web framework (WIP)
 
-[![npm](https://img.shields.io/npm/v/@yawaramin/re-web.svg)](https://npmjs.org/@yawaramin/re-web)
+[![npm](https://img.shields.io/npm/v/@yawaramin/re-web.svg)](https://npmjs.org/package/@yawaramin/re-web)
 [![Build Status](https://dev.azure.com/yawaramin/re-web/_apis/build/status/yawaramin.re-web?branchName=main)](https://dev.azure.com/yawaramin/re-web/_build/latest?definitionId=1&branchName=main)
 [![Test Status](https://img.shields.io/azure-devops/tests/yawaramin/re-web/4?compact_message)](https://dev.azure.com/yawaramin/re-web/_test/analytics?definitionId=4&contextType=build)
 
