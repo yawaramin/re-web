@@ -54,6 +54,7 @@ let to_string { H.IOVec.buffer; off; len } =
 open Alcotest
 
 let cookies = list (pair string string)
+let form_raw = result (list (pair string (list string))) string
 
 let s = "ReWeb.Request", [
   Alcotest_lwt.test_case "body - empty" `Quick begin fun _ () ->
@@ -108,6 +109,27 @@ let s = "ReWeb.Request", [
     |> request
     |> Request.body_string
     |> Lwt.map @@ check string "" "ab"
+  end;
+
+  Alcotest_lwt.test_case "body_form_raw - valid form" `Quick begin fun _ () ->
+    [|"a=1&b=c"|]
+    |> request ~headers:["content-type", "application/x-www-form-urlencoded"]
+    |> Request.body_form_raw
+    |> Lwt.map @@ check form_raw "" (Ok ["a", ["1"]; "b", ["c"]])
+  end;
+
+  Alcotest_lwt.test_case "body_form_raw - valid form with array field" `Quick begin fun _ () ->
+    [|"a=1,c"|]
+    |> request ~headers:["content-type", "application/x-www-form-urlencoded"]
+    |> Request.body_form_raw
+    |> Lwt.map @@ check form_raw "" (Ok ["a", ["1"; "c"]])
+  end;
+
+  Alcotest_lwt.test_case "body_form_raw - invalid form" `Quick begin fun _ () ->
+    [|"a=1"|]
+    |> request
+    |> Request.body_form_raw
+    |> Lwt.map @@ check form_raw "" (Error "request content-type is not form")
   end;
 
   test_case "cookies - single" `Quick begin fun () ->

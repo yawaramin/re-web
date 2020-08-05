@@ -35,6 +35,17 @@ module type S = sig
       it again will error. However in a normal request pipeline as
       bodies are read by filters, that should be minimized. *)
 
+  val body_form_raw :
+    ?buf_size:int ->
+    unit t ->
+    ((string * string list) list, string) Lwt_result.t
+  (** [body_form_raw(?buf_size, request)] returns the request body form
+      decoded into an association list, internally using a buffer of
+      size [buf_size] with a default configured by
+      {!ReWeb.Config.S.buf_size}.
+
+      @since 0.7.0 *)
+
   val body_string : ?buf_size:int -> unit t -> string Lwt.t
   (** [body_string(?buf_size, request)] returns the request body
       converted into a string, internally using a buffer of size
@@ -114,6 +125,16 @@ module Make
   let header name { reqd; _ } =
     let { H.Request.headers; _ } = Reqd.request reqd in
     H.Headers.get headers name
+
+  let body_form_raw ?buf_size request =
+    match header "content-type" request with
+    | Some "application/x-www-form-urlencoded" ->
+      (* TODO: implement a form query decoder that works more like what
+         one would expect, i.e. understanding repeated (array) fields
+         like [a[]=1&a[]=2], and erroring on invalid form data like [a]. *)
+      let ok body = Ok (Uri.query_of_encoded body) in
+      request |> body_string ?buf_size |> Lwt.map ok
+    | _ -> Lwt_result.fail "request content-type is not form"
 
   let headers name { reqd; _ } =
     let { H.Request.headers; _ } = Reqd.request reqd in

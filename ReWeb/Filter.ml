@@ -189,16 +189,16 @@ module Make(R : Request.S) : S
     request |> R.set_context ctx |> next
 
   let body_form typ next request =
-    match R.header "content-type" request with
-    | Some "application/x-www-form-urlencoded" ->
-      let open Lwt.Syntax in
-      let* body = R.body_string request in
-      begin match Form.decoder typ body with
+    let open Lwt.Syntax in
+    let* raw = R.body_form_raw request in
+    match raw with
+    | Ok raw ->
+      begin match Form.decode typ raw with
       | Ok ctx -> request |> R.set_context ctx |> next
       | Error string -> bad_request string
       end
-    | _ ->
-      bad_request "ReWeb.Filter.form: request content-type is not form"
+    | Error string ->
+      bad_request ("ReWeb.Filter.form: " ^ string)
 
   let cache_control policy next request = request
     |> next
