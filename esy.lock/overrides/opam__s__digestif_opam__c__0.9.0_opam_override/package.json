@@ -1,0 +1,12 @@
+{
+  "build": [
+    [
+      "dune",
+      "build",
+      "-p",
+      "digestif",
+      "-j",
+      "4"
+    ]
+  ]
+}
