@@ -71,15 +71,15 @@
 
     {[let validateSession = (next, request) =>
         switch (request |> Request.cookies |> List.assoc_opt("SESSION")) {
-        | Some(session) => next({...request, ctx: session})
+        | Some(session) =>
+          request |> Request.set_context(session) |> next
         | None => `Unauthorized |> Response.of_status |> Lwt.return
         };]}
 
     This filter updates the request's [ctx] field (immutably, i.e.
     creating a new request value) and feeds it to the [next] service.
-    The next service in the pipeline can now access the context by
-    simply accessing the [request.ctx] field or using the
-    {!ReWeb.Request.context} function.
+    The next service in the pipeline can now access the context by using
+    the {!ReWeb.Request.context} function.
 
     {3 Preserving existing context}
 
@@ -95,8 +95,12 @@
     {[let validateSession = (next, request) =>
         switch (request |> Request.cookies |> List.assoc_opt("SESSION")) {
         | Some(session) =>
-          let ctx = {as _; pub prev = request.ctx; pub session = session};
-          next({...request, ctx});
+          let ctx = {
+            as _;
+            pub prev = Request.context(request);
+            pub session = session;
+          };
+          request |> Request.set_context(ctx) |> next;
         | None => `Unauthorized |> Response.of_status |> Lwt.return
         };]}
 
@@ -150,11 +154,10 @@
 
     {[let setResponseTime = (next, request) => {
         let startTime = Unix.gettimeofday();
-        let addHeader =
-          Response.add_header(
-            ~name="x-response-time-s",
-            ~value=string_of_float(Unix.gettimeofday() -. startTime),
-          );
+        let addHeader = Response.add_header(
+          ~name="x-response-time-s",
+          ~value=string_of_float(Unix.gettimeofday() -. startTime),
+        );
 
         request |> next |> Lwt.map(addHeader);
       };]}
