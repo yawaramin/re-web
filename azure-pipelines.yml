@@ -61,7 +61,7 @@ stages:
   displayName: Publish release to npm
   jobs:
   - job: Publish_npm
-    condition: startsWith(variables['build.sourceBranch'], 'refs/tags/')
+    condition: startsWith(variables['build.sourceBranch'], 'refs/tags/v')
     steps:
     - task: Npm@1
       inputs:

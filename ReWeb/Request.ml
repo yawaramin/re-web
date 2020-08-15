@@ -84,8 +84,8 @@ module H = Httpaf
 
 module Make
   (C : ReWeb__Config.S)
-  (B : BODY)
-  (R : REQD with type 'rw Body.t = 'rw B.t) = struct
+  (R : REQD) = struct
+  module B = R.Body
   module Config = C
   module Reqd = R
 

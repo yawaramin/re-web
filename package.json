@@ -1,6 +1,6 @@
 {
   "name": "@yawaramin/re-web",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "ReasonML web framework",
   "license": "MIT",
   "esy": {

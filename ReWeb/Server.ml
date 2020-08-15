@@ -7,7 +7,7 @@ end
 
 module Config = ReWeb__Config
 module Header = ReWeb__Header
-module Request = Request.Make(ReWeb__Config.Default)(H.Body)(Reqd)
+module Request = Request.Make(ReWeb__Config.Default)(Reqd)
 module Service = Service.Make(Request)
 module Filter = Filter.Make(Request)
 module Wsd = Websocketaf.Wsd
