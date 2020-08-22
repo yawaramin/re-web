@@ -43,7 +43,7 @@ of all of these.
 ## Documentation
 
 - [API Reference](https://yawaramin.github.io/re-web/re-web/ReWeb/index.html)
-- [User's Manual](https://yawaramin.github.io/re-web/re-web/Manual/index.html)
+- [User's Manual](https://yawaramin.github.io/re-web/re-web/ReWeb__Manual/index.html)
 
 ## Examples
 
