@@ -1,29 +1,28 @@
 module H = Httpaf
 
-module ReqdBody = struct
-  type _ t = {
-    chunks : Bigstringaf.t H.IOVec.t array;
-    length : int;
-    mutable index : int;
-    mutable curr : Bigstringaf.t H.IOVec.t option;
-  }
-
-  (* We need to reuse the same buffer when we call [on_read] because
-     that's how Httpaf itself works. See
-     https://github.com/inhabitedtype/httpaf/issues/140#issuecomment-517072327 *)
-  let schedule_read body ~on_eof ~on_read =
-    if body.index = body.length then on_eof ()
-    else begin
-      body.curr <- Some body.chunks.(body.index);
-      body.index <- succ body.index;
-      match body.curr with
-      | Some { H.IOVec.buffer; off; len } -> on_read buffer ~off ~len
-      | None -> failwith "Unreachable branch"
-    end
-end
-
 module Reqd = struct
-  module Body = ReqdBody
+  module Body = struct
+    type _ t = {
+      chunks : Bigstringaf.t H.IOVec.t array;
+      length : int;
+      mutable index : int;
+      mutable curr : Bigstringaf.t H.IOVec.t option;
+    }
+
+    (* We need to reuse the same buffer when we call [on_read] because
+       that's how Httpaf itself works. See
+       https://github.com/inhabitedtype/httpaf/issues/140#issuecomment-517072327 *)
+    let schedule_read body ~on_eof ~on_read =
+      if body.index = body.length then on_eof ()
+      else begin
+        body.curr <- Some body.chunks.(body.index);
+        body.index <- succ body.index;
+        match body.curr with
+        | Some { H.IOVec.buffer; off; len } -> on_read buffer ~off ~len
+        | None -> failwith "Unreachable branch"
+      end
+  end
+
   type t = H.Request.t * [`read] Body.t
 
   let request = fst
