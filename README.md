@@ -47,6 +47,14 @@ of all of these.
 
 ## Examples
 
+Run the `1_hello_world` example server:
+
+    $ esy run-example 1_hello_world
+
+Run the `2_counter` example server:
+
+    $ esy run-example 2_counter
+
 ### Fullstack Reason
 
 Check out the demo repo which shows a fullstack Reason setup with ReWeb

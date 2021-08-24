@@ -40,7 +40,7 @@ let s = "ReWeb.Cache", [
 
     (* Start this access thread concurrently *)
     let thread1 = Cache.access cache begin fun table ->
-      Unix.sleep 1;
+      ignore(Lwt_unix.sleep 1.);
       Cache.Table.find_opt table key
     end
     in
