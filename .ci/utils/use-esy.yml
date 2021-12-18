@@ -1,6 +1,6 @@
 # steps to install esy globally
 
 steps:
-  - script: "npm install -g esy@0.6.4"
+  - script: "npm install -g esy@0.6.12"
     displayName: "install esy"
 
