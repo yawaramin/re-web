@@ -56,25 +56,28 @@ let cookies = list (pair string string)
 let form_raw = result (list (pair string (list string))) string
 
 let s = "ReWeb.Request", [
-  Alcotest_lwt.test_case "body - empty" `Quick begin fun _ () ->
+  test_case "body - empty" `Quick begin fun () ->
     let stream, _ = [||] |> request |> Request.body |> Piaf.Body.to_stream in
     stream
     |> Lwt_stream.is_empty
     |> Lwt.map @@ check bool "" true
+    |> Lwt_main.run
   end;
 
-  Alcotest_lwt.test_case "body - single chunk" `Quick begin fun _ () ->
+  test_case "body - single chunk" `Quick begin fun () ->
     let value = "a" in
     let stream, _ =
       [|value|] |> request |> Request.body |> Piaf.Body.to_stream
     in
     stream
     |> Lwt_stream.to_list
-    |> Lwt.map @@ fun values ->
+    |> Lwt.map begin fun values ->
       values |> List.map to_string |> check (list string) "" [value]
+    end
+    |> Lwt_main.run
   end;
 
-  Alcotest_lwt.test_case "body - multiple chunks" `Quick begin fun _ () ->
+  test_case "body - multiple chunks" `Quick begin fun () ->
     let stream, _ = [|"a"; "b"; "c"|]
       |> request
       |> Request.body
@@ -82,53 +85,61 @@ let s = "ReWeb.Request", [
     in
     stream
     |> Lwt_stream.to_list
-    |> Lwt.map @@ fun values ->
+    |> Lwt.map begin fun values ->
       values
       |> List.map to_string
       |> check (list string) "" ["a"; "b"; "c"]
+    end
+    |> Lwt_main.run
   end;
 
-  Alcotest_lwt.test_case "body_string - empty" `Quick begin fun _ () ->
+  test_case "body_string - empty" `Quick begin fun () ->
     [||]
     |> request
     |> Request.body_string
     |> Lwt.map @@ check string "" ""
+    |> Lwt_main.run
   end;
 
-  Alcotest_lwt.test_case "body_string - single chunk" `Quick begin fun _ () ->
+  test_case "body_string - single chunk" `Quick begin fun () ->
     let value = "a" in
     [|value|]
     |> request
     |> Request.body_string
     |> Lwt.map @@ check string "" value
+    |> Lwt_main.run
   end;
 
-  Alcotest_lwt.test_case "body_string - multiple chunks" `Quick begin fun _ () ->
+  test_case "body_string - multiple chunks" `Quick begin fun () ->
     [|"a"; "b"|]
     |> request
     |> Request.body_string
     |> Lwt.map @@ check string "" "ab"
+    |> Lwt_main.run
   end;
 
-  Alcotest_lwt.test_case "body_form_raw - valid form" `Quick begin fun _ () ->
+  test_case "body_form_raw - valid form" `Quick begin fun () ->
     [|"a=1&b=c"|]
     |> request ~headers:["content-type", "application/x-www-form-urlencoded"]
     |> Request.body_form_raw
     |> Lwt.map @@ check form_raw "" (Ok ["a", ["1"]; "b", ["c"]])
+    |> Lwt_main.run
   end;
 
-  Alcotest_lwt.test_case "body_form_raw - valid form with array field" `Quick begin fun _ () ->
+  test_case "body_form_raw - valid form with array field" `Quick begin fun () ->
     [|"a=1,c"|]
     |> request ~headers:["content-type", "application/x-www-form-urlencoded"]
     |> Request.body_form_raw
     |> Lwt.map @@ check form_raw "" (Ok ["a", ["1"; "c"]])
+    |> Lwt_main.run
   end;
 
-  Alcotest_lwt.test_case "body_form_raw - invalid form" `Quick begin fun _ () ->
+  test_case "body_form_raw - invalid form" `Quick begin fun () ->
     [|"a=1"|]
     |> request
     |> Request.body_form_raw
     |> Lwt.map @@ check form_raw "" (Error "request content-type is not form")
+    |> Lwt_main.run
   end;
 
   test_case "cookies - single" `Quick begin fun () ->
@@ -155,4 +166,3 @@ let s = "ReWeb.Request", [
     |> check cookies "" ["a", "b"; "c", "d"; "e", "f"]
   end;
 ]
-

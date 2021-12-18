@@ -1,13 +1,11 @@
 {
   "name": "@yawaramin/re-web",
-  "version": "0.7.3",
-  "description": "ReasonML web framework",
+  "version": "0.8.0",
+  "description": "OCaml/ReasonML web framework",
   "license": "MIT",
   "esy": {
     "build": "dune build -p re-web",
-    "buildDev": "dune build --only-packages re-web",
-    "NOTE": "Optional release Section. Customizes result of `esy release`",
-    "buildEnv": { "ODOC_SYNTAX": "re" }
+    "buildDev": "dune build --only-packages re-web"
   },
   "repository": { "url": "https://github.com/yawaramin/re-web" },
   "scripts": {
@@ -20,7 +18,6 @@
     "test": "#{self.target_dir}/default/ReWebTest/ReWebTest.exe"
   },
   "dependencies": {
-    "@esy-ocaml/reason": ">= 3.6.0 < 4.0.0",
     "@opam/base64": ">= 3.2.0 < 4.0.0",
     "@opam/digestif": ">= 0.1.6 < 1.0.0",
     "@opam/dune": ">= 2.6.2 < 3.0.0",
@@ -38,11 +35,10 @@
     "@reason-native-web/websocketaf": ">= 1.2.0 < 2.0.0"
   },
   "devDependencies": {
-    "@opam/alcotest": ">= 0.8.5 < 1.0.0",
-    "@opam/alcotest-lwt": ">= 0.8.5 < 1.0.0",
+    "@opam/alcotest": ">= 1.5.0 < 2.0.0",
     "@opam/junit_alcotest": ">= 2.0.2 < 3.0.0",
-    "@opam/merlin": "*",
-    "ocaml": "~4.9.1000",
+    "@opam/ocaml-lsp-server": "*",
+    "ocaml": "~4.13.1000",
     "@opam/odoc": "*",
     "@opam/utop": "*"
   }

@@ -55,11 +55,6 @@ https://github.com/yawaramin/fullstack-reason/
 
 This repo can be cloned and used right away for a new project.
 
-### Examples directory
-
-Check out the `examples/` directory for small, self-contained basic
-examples.
-
 ### Bin directory
 
 Finally, check out the example server in the `bin/` directory. The

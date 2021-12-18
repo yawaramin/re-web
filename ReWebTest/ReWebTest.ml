@@ -14,4 +14,3 @@ let junit = Junit.make [suite]
 let () =
   Junit.to_file junit "junit.xml";
   exit ()
-

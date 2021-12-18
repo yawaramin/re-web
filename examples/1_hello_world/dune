@@ -1,7 +1,0 @@
-(executable
-  (name Main)
-  (public_name 1_hello_world)
-  (package re-web)
-  (libraries ReWeb lwt)
-  (modes byte exe))
-
