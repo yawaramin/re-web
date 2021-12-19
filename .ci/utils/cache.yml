@@ -9,7 +9,7 @@ parameters:
 steps:
   - bash: |
       # COMPUTE THE ESY INSTALL CACHE LOCATION AHEAD OF TIME
-      DESIRED_LEN="86"
+      DESIRED_LEN="85"
       HOME_ESY3="$HOME/.esy/3"
       HOME_ESY3_LEN=${#HOME_ESY3}
       NUM_UNDERS=$(echo "$(($DESIRED_LEN-$HOME_ESY3_LEN))")
