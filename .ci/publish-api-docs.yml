@@ -36,4 +36,3 @@ steps:
       git push --force origin gh-pages
     workingDirectory: $(Build.StagingDirectory)
     displayName: "Push docs to Github pages"
-

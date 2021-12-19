@@ -50,7 +50,7 @@ stages:
     displayName: Publish docs to GitHub
     environment: gh-pages
     pool:
-      vmImage: ubuntu-16.04
+      vmImage: ubuntu-latest
     strategy:
       runOnce:
         deploy:
