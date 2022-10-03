@@ -81,29 +81,22 @@ module Make(R : REQD) = struct
 
   type 'ctx t = { ctx : 'ctx; query : string; reqd : Reqd.t }
 
-
-  let body_source reader : Eio.Flow.source = object
-    inherit Eio.Flow.source
-
-    method read_into dst =
-      let dst_off = ref 0 in
-      let read_bytes = ref 0 in
-      let dst_len = Cstruct.length dst in
-      let on_eof () = raise End_of_file in
-      let rec on_read buffer ~off ~len =
-        let len = min len (dst_len - !dst_off) in
-        let buf = Bigstringaf.copy buffer ~off ~len in
-        let src = Cstruct.of_bigarray ~len buf in
-        Cstruct.blit src 0 dst !dst_off len;
-        dst_off := !dst_off + len;
-        read_bytes := !read_bytes + len;
-        if !dst_off < dst_len then B.schedule_read reader ~on_eof ~on_read
-      in
-      B.schedule_read reader ~on_eof ~on_read;
-      !read_bytes
-  end
-
-  let body request = body_source @@ Reqd.request_body request.reqd
+  let body { reqd; _ } =
+    let reader = Reqd.request_body reqd in
+    let cstructs = ref [] in
+    let promise, resolver = Eio.Promise.create () in
+    let on_eof () = !cstructs
+      |> List.rev
+      |> Eio.Flow.cstruct_source
+      |> Eio.Promise.resolve resolver
+    in
+    let rec on_read buffer ~off ~len =
+      let buffer = Bigstringaf.copy buffer ~off ~len in
+      cstructs := Cstruct.of_bigarray ~len buffer :: !cstructs;
+      B.schedule_read reader ~on_eof ~on_read
+    in
+    B.schedule_read reader ~on_eof ~on_read;
+    Eio.Promise.await promise
 
   let body_string ?(buf_size=Reweb_cfg.buf_size) request =
     let bod = body request in

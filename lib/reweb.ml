@@ -61,7 +61,7 @@ let resource
 let segment path = path |> String.split_on_char '/' |> List.tl
 
 let parse_route { H.Request.meth; target; _ } =
-  Eio.traceln "REQ: %s %s%!" (H.Method.to_string meth) target;
+  Eio.traceln "REQ: %s %s" (H.Method.to_string meth) target;
   match String.split_on_char '?' target with
   | [path; query] -> meth, segment path, query
   | [path] -> meth, segment path, ""
