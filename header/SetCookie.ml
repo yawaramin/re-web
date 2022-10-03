@@ -3,7 +3,7 @@ type t = string * string
 
 let make
   ?max_age
-  ?(secure=ReWeb__Config.Default.secure)
+  ?(secure=Reweb_cfg.secure)
   ?(http_only=true)
   ?domain
   ?path
@@ -35,4 +35,3 @@ let of_header value = match String.split_on_char '=' value with
   | name :: value -> Some (name, String.concat "=" value)
 
 let value = snd
-

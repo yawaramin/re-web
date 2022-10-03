@@ -1,0 +1,4 @@
+(library
+  (name Reweb__Manual)
+  (public_name reweb.manual)
+  (libraries reweb))

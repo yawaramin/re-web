@@ -1,4 +1,4 @@
-open ReWeb
+open Reweb
 
 type t = { username : string; password : string }
 

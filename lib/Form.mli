@@ -61,4 +61,3 @@ val encode : ('ty -> (string * string) list) -> 'ty -> string
 val make : ('ctor, 'ty) Field.list -> 'ctor -> ('ctor, 'ty) t
 (** [make(fields, ctor)] allows creating a form that can be used to
     decode (with {!decoder}) www forms. *)
-

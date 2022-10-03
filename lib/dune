@@ -1,0 +1,14 @@
+(library
+  (name reweb)
+  (public_name reweb)
+  (flags (:standard -w +A-40-42-45-48-70 -warn-error +A-3-44))
+  (libraries
+    base64
+    reweb.cfg
+    digestif.ocaml
+    eio
+    reweb.header
+    httpaf-eio
+    magic-mime
+    uri
+    yojson))

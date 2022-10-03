@@ -1,31 +1,16 @@
 module H = Httpaf
-module Header = ReWeb__Header
+module Header = Reweb_header
 
 type headers = (string * string) list
-type status = Httpaf.Status.t
-type http = [`HTTP of Httpaf.Response.t * Piaf.Body.t]
-type pull_error = [`Empty | `Timeout | `Connection_close]
-type pull = float -> (string, pull_error) Lwt_result.t
-type push = string -> unit
-type handler = pull -> push -> unit Lwt.t
-type websocket = [`WebSocket of Httpaf.Headers.t option * handler]
-type 'resp t = [> http | websocket] as 'resp
+type status = H.Status.t
+type t = H.Response.t * Eio.Flow.source
 
-let get_headers = function
-  | `HTTP ({ H.Response.headers; _ }, _) -> headers
-  | `WebSocket (headers, _) ->
-    Option.value headers ~default:(H.Headers.empty)
+let get_headers ({ H.Response.headers; _ }, _) = headers
 
-let set_headers headers = function
-  | `HTTP (resp, body) ->
-    `HTTP ({ resp with H.Response.headers }, body)
-  | `WebSocket (_, handler) ->
-    `WebSocket (Some headers, handler)
+let set_headers headers (resp, body) = { resp with H.Response.headers }, body
 
 let add_header ?(replace=true) ~name ~value response =
-  let add =
-    if replace then H.Headers.add else H.Headers.add_unless_exists
-  in
+  let add = if replace then H.Headers.add else H.Headers.add_unless_exists in
   set_headers (add (get_headers response) name value) response
 
 let add_cookie cookie =
@@ -47,7 +32,7 @@ let add_cookies cookies = add_headers_multi [
     cookies
 ]
 
-let body (`HTTP (_, body)) = body
+let body (_, bod) = bod
 
 let cookies response = "set-cookie"
   |> H.Headers.get_multi (get_headers response)
@@ -58,15 +43,8 @@ let header name response = H.Headers.get (get_headers response) name
 let headers name response =
   H.Headers.get_multi (get_headers response) name
 
-let of_http ~status ~headers body =
-  let headers = match Piaf.Body.length body with
-    | `Chunked -> ("transfer-encoding", "chunked") :: headers
-    | _ -> headers
-  in
-  `HTTP (
-    H.Response.create ~headers:(H.Headers.of_list headers) status,
-    body
-  )
+let of_flow ~status ~headers body =
+  H.Response.create ~headers:(H.Headers.of_list headers) status, body
 
 let make_headers ?(headers=[]) ?(cookies=[]) ?content_length content_type =
   let cookie_headers = List.map Header.SetCookie.to_header cookies in
@@ -93,7 +71,7 @@ let of_binary
     ~content_length:(String.length body)
     content_type
   in
-  of_http ~status ~headers (Piaf.Body.of_string body)
+  of_flow ~status ~headers (Eio.Flow.string_source body)
 
 let of_html ?(status=`OK) ?headers ?cookies =
   of_binary ~status ~content_type:"text/html" ?headers ?cookies
@@ -117,57 +95,22 @@ let of_status ?(content_type=`text) ?headers ?cookies ?message status =
     of_html ~status ?headers ?cookies ("<h1>" ^ header ^ "</h1>" ^ body)
 
 let of_redirect ?(content_type="text/plain") ?(body="") location =
-  of_http
+  of_text
     ~status:`Moved_permanently
     ~headers:["location", location; "content-type", content_type]
-    (Piaf.Body.of_string body)
+    body
 
-let make_chunk line =
-  let off = 0 in
-  let len = String.length line in
-  { H.IOVec.off; len; buffer = Bigstringaf.of_string ~off ~len line }
-
-let of_view ?(status=`OK) ?(content_type="text/html") ?headers ?cookies view =
-  let stream, push_to_stream = Lwt_stream.create () in
-  let p string = push_to_stream (Some (make_chunk string)) in
-  view p;
-  push_to_stream None;
-
-  stream
-  |> Piaf.Body.of_stream
-  |> of_http ~status ~headers:(make_headers ?headers ?cookies content_type)
-
-let of_file ?(status=`OK) ?content_type ?headers ?cookies file_name =
-  let f () =
+let of_file ?(status=`OK) ?content_type ?headers ?cookies ~sw path filename =
+  let ( / ) = Eio.Path.( / ) in
+  match Eio.Path.open_in ~sw (path / filename) with
+  | flow ->
     let content_type =
-      Option.value content_type ~default:(Magic_mime.lookup file_name)
+      Option.value content_type ~default:(Magic_mime.lookup filename)
     in
-    let open Lwt.Syntax in
-    let* file_descr =
-      Lwt_unix.openfile file_name Unix.[O_RDONLY; O_NONBLOCK] 0o400
-    in
-    let fd = Lwt_unix.unix_file_descr file_descr in
-    (* TODO: not sure what [shared] means here, need to find out *)
-    let bigstring = Lwt_bytes.map_file ~fd ~shared:false () in
-    let+ () = Lwt_unix.close file_descr in
     let headers = make_headers ?headers ?cookies content_type in
-    let body = Piaf.Body.of_bigstring bigstring in
-    of_http ~status ~headers body
-  in
-  Lwt.catch f @@ fun exn ->
-    Lwt.return @@ match exn with
-      | Unix.Unix_error (error, _, _) ->
-        begin [@warning "-4"] match error with
-        | Unix.ENOENT -> of_status `Not_found
-        | EACCES | EPERM -> of_status `Unauthorized
-        | _ -> of_status `Internal_server_error
-        end
-      | _ -> of_status `Internal_server_error
+    of_flow ~status ~headers (flow :> Eio.Flow.source)
+  | exception Eio.Fs.Not_found (_, _) ->
+    of_status `Not_found
 
-let of_websocket ?headers handler =
-  let headers = Option.map H.Headers.of_list headers in
-  `WebSocket (headers, handler)
-
-let status (`HTTP ({ H.Response.status; _ }, _ )) = status
+let status ({ H.Response.status; _ }, _) = status
 let status_code response = response |> status |> H.Status.to_code
-

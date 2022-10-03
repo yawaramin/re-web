@@ -22,4 +22,3 @@ module Ch05_Filters = Ch05_Filters
 
 module Ch06_Configuration = Ch06_Configuration
 (** How to configure ReWeb. *)
-

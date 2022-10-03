@@ -19,7 +19,6 @@ end
 (** This interface abstracts away the Httpaf request descriptor. *)
 
 module type S = sig
-  module Config : ReWeb__Config.S
   module Reqd : REQD
 
   type 'ctx t
@@ -29,96 +28,89 @@ module type S = sig
       an OCaml object with a [prev] method that points to the old
       context. *)
 
-  val body : unit t -> Piaf.Body.t
-  (** [body(request)] gets the [request] body. There is a chance that
-      the body may already have been read, in which case trying to read
-      it again will error. However in a normal request pipeline as
-      bodies are read by filters, that should be minimized. *)
+  val body : _ t -> Eio.Flow.source
 
   val body_form_raw :
     ?buf_size:int ->
     unit t ->
-    ((string * string list) list, string) Lwt_result.t
-  (** [body_form_raw(?buf_size, request)] returns the request body form
-      decoded into an association list, internally using a buffer of
-      size [buf_size] with a default configured by
-      {!ReWeb.Config.S.buf_size}.
+    ((string * string list) list, string) result
+  (** [body_form_raw ?buf_size request] returns the request body form decoded
+      into an association list, internally using a buffer of size [buf_size] with
+      a default configured by {!Reweb.Cfg.S.buf_size}.
 
       @since 0.7.0 *)
 
-  val body_string : ?buf_size:int -> unit t -> string Lwt.t
-  (** [body_string(?buf_size, request)] returns the request body
+  val body_string : ?buf_size:int -> unit t -> string
+  (** [body_string ?buf_size request] returns the request body
       converted into a string, internally using a buffer of size
-      [buf_size] with a default configured by {!ReWeb.Config.S.buf_size}. *)
+      [buf_size] with a default configured by {!Reweb.Config.S.buf_size}. *)
 
   val context : 'ctx t -> 'ctx
 
   val cookies : _ t -> (string * string) list
 
   val header : string -> _ t -> string option
-  (** [header(name, request)] gets the last value corresponding to the
-      given header, if present. *)
+  (** [header name request] gets the last value corresponding to the given header,
+      if present. *)
 
   val headers : string -> _ t -> string list
-  (** [headers(name, request)] gets all the values corresponding to the
-      given header. *)
+  (** [headers name request] gets all the values corresponding to the given
+      header. *)
 
   val make : string -> Reqd.t -> unit t
-  (** [make(query, reqd)] returns a new request containing the given
-      [query] and Httpaf [reqd]. *)
+  (** [make query reqd] returns a new request containing the given [query] and
+      Httpaf [reqd]. *)
 
   val meth : _ t -> Httpaf.Method.t
-  (** [meth(request)] gets the request method ([`GET], [`POST], etc.). *)
+  (** [meth request] gets the request method ([`GET], [`POST], etc.). *)
 
   val query : _ t -> string
-  (** [query(request)] gets the query string of the [request]. This is
-      anything following the [?] in the request path, otherwise an empty
-      string. *)
+  (** [query request] gets the query string of the [request]. This is anything
+      following the [?] in the request path, otherwise an empty string. *)
 
   val set_context : 'ctx2 -> 'ctx1 t -> 'ctx2 t
-  (** [set_context(ctx, request)] is an updated [request] with the given
-      context [ctx]. *)
+  (** [set_context ctx request] is an updated [request] with the given context
+      [ctx]. *)
 end
 
 module H = Httpaf
 
-module Make
-  (C : ReWeb__Config.S)
-  (R : REQD) = struct
+module Make(R : REQD) = struct
   module B = R.Body
-  module Config = C
   module Reqd = R
 
   type 'ctx t = { ctx : 'ctx; query : string; reqd : Reqd.t }
 
-  let body request =
-    let request_body = Reqd.request_body request.reqd in
-    let stream, push_to_stream = Lwt_stream.create () in
-    let on_eof () = push_to_stream None in
-    let rec on_read buffer ~off ~len =
-      push_to_stream (Some {
-        H.IOVec.off;
-        len;
-        buffer = Bigstringaf.copy buffer ~off ~len;
-      });
-      B.schedule_read request_body ~on_eof ~on_read
-    in
-    B.schedule_read request_body ~on_eof ~on_read;
-    Piaf.Body.of_stream stream
 
-  let body_string ?(buf_size=Config.buf_size) request =
-    let request_body = Reqd.request_body request.reqd in
-    let body, set_body = Lwt.wait () in
-    let buffer = Buffer.create buf_size in
-    let on_eof () =
-      buffer |> Buffer.contents |> Lwt.wakeup_later set_body
-    in
-    let rec on_read data ~off ~len =
-      data |> Bigstringaf.substring ~off ~len |> Buffer.add_string buffer;
-      B.schedule_read request_body ~on_eof ~on_read
-    in
-    B.schedule_read request_body ~on_eof ~on_read;
-    body
+  let body_source reader : Eio.Flow.source = object
+    inherit Eio.Flow.source
+
+    method read_into dst =
+      let dst_off = ref 0 in
+      let read_bytes = ref 0 in
+      let dst_len = Cstruct.length dst in
+      let on_eof () = raise End_of_file in
+      let rec on_read buffer ~off ~len =
+        let len = min len (dst_len - !dst_off) in
+        let buf = Bigstringaf.copy buffer ~off ~len in
+        let src = Cstruct.of_bigarray ~len buf in
+        Cstruct.blit src 0 dst !dst_off len;
+        dst_off := !dst_off + len;
+        read_bytes := !read_bytes + len;
+        if !dst_off < dst_len then B.schedule_read reader ~on_eof ~on_read
+      in
+      B.schedule_read reader ~on_eof ~on_read;
+      !read_bytes
+  end
+
+  let body request = body_source @@ Reqd.request_body request.reqd
+
+  let body_string ?(buf_size=Reweb_cfg.buf_size) request =
+    let bod = body request in
+    let buf = Buffer.create buf_size in
+    let sink = Eio.Flow.buffer_sink buf in
+    Eio.Flow.copy bod sink;
+    Buffer.contents buf
 
   let context { ctx; _ } = ctx
 
@@ -133,8 +125,8 @@ module Make
          one would expect, i.e. understanding repeated (array) fields
          like [a[]=1&a[]=2], and erroring on invalid form data like [a]. *)
       let ok body = Ok (Uri.query_of_encoded body) in
-      request |> body_string ?buf_size |> Lwt.map ok
-    | _ -> Lwt_result.fail "request content-type is not form"
+      request |> body_string ?buf_size |> ok
+    | _ -> Error "request content-type is not form"
 
   let headers name { reqd; _ } =
     let { H.Request.headers; _ } = Reqd.request reqd in

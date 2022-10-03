@@ -1,6 +1,6 @@
 (executable
-  (name Main)
-  (public_name main)
-  (package re-web)
-  (libraries ReWeb lwt str)
+  (name bin)
+  (public_name reweb.bin)
+  (package reweb)
+  (libraries eio_main reweb str)
   (modes byte exe))

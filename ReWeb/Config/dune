@@ -1,5 +1,0 @@
-(library
-  (name ReWeb__Config)
-  (public_name re-web.ReWeb.Config)
-  (libraries lwt.unix))
-
