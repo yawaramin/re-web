@@ -1,0 +1,5 @@
+pin-depends: [
+  "angstrom" "git+https://github.com/talex5/angstrom.git#effects"
+  "httpaf" "git+https://github.com/talex5/httpaf.git#eio"
+  "httpaf-eio" "git+https://github.com/talex5/httpaf.git#eio"
+]
