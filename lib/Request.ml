@@ -93,7 +93,8 @@ module Make(R : REQD) = struct
     let rec on_read buffer ~off ~len =
       let buffer = Bigstringaf.copy buffer ~off ~len in
       cstructs := Cstruct.of_bigarray ~len buffer :: !cstructs;
-      B.schedule_read reader ~on_eof ~on_read
+      B.schedule_read reader ~on_eof ~on_read;
+      Eio.Fiber.yield ()
     in
     B.schedule_read reader ~on_eof ~on_read;
     Eio.Promise.await promise

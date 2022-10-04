@@ -108,12 +108,16 @@ let main net domain_mgr server =
       |> Body.to_sink
       |> Eio.Flow.copy body
     in
-    (* Will report error if fails *)
-    ignore @@ H.Reqd.try_with reqd @@ fun () ->
-    let meth, path, query = reqd |> H.Reqd.request |> parse_route in
-    let server = filter server in
-    Eio.Switch.run @@ fun sw ->
-    reqd |> Request.make query |> server ~sw (meth, path) |> respond
+    (* Will raise error if fails *)
+    match
+      H.Reqd.try_with reqd @@ fun () ->
+      let meth, path, query = reqd |> H.Reqd.request |> parse_route in
+      let server = filter server in
+      Eio.Switch.run @@ fun sw ->
+      reqd |> Request.make query |> server ~sw (meth, path) |> respond
+    with
+    | Ok () -> ()
+    | Error exn -> raise exn
   in
   let conn_handler = Httpaf_eio.Server.create_connection_handler
     ~error_handler

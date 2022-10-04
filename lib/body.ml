@@ -6,6 +6,7 @@ let to_sink writer : Eio.Flow.sink = object
     try
       while true do
         let got = src#read_into buf in
+        Eio.Fiber.yield ();
         Httpaf.Body.write_bigstring writer ~len:got buf.buffer
       done
     with End_of_file -> Httpaf.Body.close_writer writer
